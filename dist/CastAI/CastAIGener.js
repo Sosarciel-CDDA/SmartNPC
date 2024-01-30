@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDisableSpellVar = exports.genTrueEocID = exports.genCastEocID = exports.parseSpellNumObj = exports.parseNumObj = exports.revTalker = void 0;
+exports.getEventWeight = exports.getDisableSpellVar = exports.genTrueEocID = exports.genCastEocID = exports.parseSpellNumObj = exports.parseNumObj = exports.revTalker = void 0;
 const cdda_schema_1 = require("cdda-schema");
 const SADefine_1 = require("../SADefine");
 //翻转u与n
@@ -52,6 +52,15 @@ function genTrueEocID(spell, cast_condition) {
 exports.genTrueEocID = genTrueEocID;
 /**使某个技能停止使用的变量 */
 function getDisableSpellVar(talker, spell) {
-    return `${talker}_${spell.id}_disable`;
+    return `${talker}_${spell.id}_switch_disable`;
 }
 exports.getDisableSpellVar = getDisableSpellVar;
+/**获得施法的event权重 >0 <1 */
+function getEventWeight(skill, cond) {
+    const weight = cond.weight ?? skill.weight ?? 0;
+    const fixweight = weight / 200 + 0.5;
+    if (fixweight > 1 || fixweight < 0)
+        throw `${skill.id} 的 weight: ${weight} 超出施法权重取值范围 -99 ~ 99`;
+    return fixweight;
+}
+exports.getEventWeight = getEventWeight;

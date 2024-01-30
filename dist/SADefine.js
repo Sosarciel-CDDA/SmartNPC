@@ -23,6 +23,8 @@ files.forEach((file) => {
 });
 /**根据id从 ./spell 目录中寻找法术 */
 function getSpellByID(id) {
+    if (id === undefined)
+        throw `未找到法术 ${id}`;
     const spell = spellMap[id];
     if (spell == null)
         throw `未找到法术 ${id}`;

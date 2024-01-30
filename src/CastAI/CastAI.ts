@@ -44,8 +44,7 @@ export async function createCastAI(dm:DataManager){
     const out:JObject[] = [];
 
     //权重排序
-    const skills = (Object.values(CastAIDataMap) as CastAIData[])
-        .sort((a,b)=>(b.weight??0)-(a.weight??0));
+    const skills = (Object.values(CastAIDataMap) as CastAIData[]);
 
     //全局冷却事件
     const GCDEoc = SADef.genActEoc(`CoCooldown`,
@@ -114,6 +113,7 @@ export async function createCastAI(dm:DataManager){
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
             const base_cond: BoolObj[] = [
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
+                {not:"u_is_avatar"},
                 {math:[`u_val('spell_level', 'spell: ${spell.id}')`,">=","1"]},
                 {math:[gcdValName,"<=","0"]},
             ];

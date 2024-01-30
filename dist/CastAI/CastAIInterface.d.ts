@@ -1,5 +1,6 @@
 import { CharHook } from "cdda-event";
-import { BoolObj, EocEffect, SpellID } from "cdda-schema";
+import { BoolObj, EocEffect, NumObj, SpellID } from "cdda-schema";
+import { DefCastData } from "./DefData";
 /**技能选择目标类型 列表 */
 export declare const TargetTypeList: readonly ["auto", "random", "direct_hit", "filter_random", "control_cast"];
 /**技能选择目标类型
@@ -19,15 +20,17 @@ export declare const TargetTypeList: readonly ["auto", "random", "direct_hit", "
  * 相同的hook与target(包括auto或未指定)将覆盖
  */
 export type TargetType = typeof TargetTypeList[number];
-/**数据表 */
-export type AIDataTable = Partial<Record<SpellID, AIData>>;
-/**角色技能 */
-export type AIData = {
-    /**目标法术ID */
-    id: SpellID;
+/**数据表 技能ID : 施法数据
+ * @additionalProperties {"$ref": "#/definitions/RawCastAIData"}
+*/
+export type CastAIDataTable = Partial<Record<SpellID, RawCastAIData>>;
+/**施法数据 */
+export type CastAIData = {
+    /**目标法术ID 默认为键值 */
+    id?: SpellID;
     /**技能的释放条件 */
     cast_condition: CastCond | CastCond[];
-    /**权重 优先尝试触发高权重的spell 默认0 */
+    /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?: number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
     one_in_chance?: number;
@@ -42,6 +45,8 @@ export type AIData = {
     /**尝试释放时就运行的效果 */
     before_effect?: EocEffect[];
 };
+/**未处理的施法数据 */
+export type RawCastAIData = CastAIData | DefCastData;
 /**技能的释放条件 */
 export type CastCond = {
     /**唯一id 默认为下标 */
@@ -69,11 +74,17 @@ export type CastCond = {
     after_effect?: EocEffect[];
     /**尝试释放时就运行的效果 */
     before_effect?: EocEffect[];
+    /**忽略能量消耗 */
+    ignore_cost?: boolean;
+    /**强制使用某个法术等级 */
+    force_lvl?: NumObj;
+    /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */
+    weight?: number;
 };
 /**基础技能数据 */
 export type CastProcData = Readonly<{
     /**技能 */
-    skill: AIData;
+    skill: CastAIData;
     /**基础释放eoc条件 */
     base_cond: (BoolObj)[];
     /**基础成功eoc效果 */
@@ -82,4 +93,6 @@ export type CastProcData = Readonly<{
     pre_effect: EocEffect[];
     /**释放条件 */
     cast_condition: CastCond;
+    /**施法等级 */
+    min_level: NumObj;
 }>;

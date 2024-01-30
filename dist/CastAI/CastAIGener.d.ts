@@ -1,6 +1,6 @@
 import { EocID, Spell } from "cdda-schema";
 import { JToken } from "@zwa73/utils";
-import { CastCond } from "./CastAIInterface";
+import { CastAIData, CastCond } from "./CastAIInterface";
 export declare function revTalker<T extends JToken>(obj: T): T;
 /**解析NumObj为math表达式 */
 export declare function parseNumObj(value?: any): string;
@@ -12,3 +12,5 @@ export declare function genCastEocID(spell: Spell, cast_condition: CastCond): Eo
 export declare function genTrueEocID(spell: Spell, cast_condition: CastCond): EocID;
 /**使某个技能停止使用的变量 */
 export declare function getDisableSpellVar(talker: "u" | "n", spell: Spell): string;
+/**获得施法的event权重 >0 <1 */
+export declare function getEventWeight(skill: CastAIData, cond: CastCond): number;

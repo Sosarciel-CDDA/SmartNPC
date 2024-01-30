@@ -3,7 +3,7 @@ import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
 import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, SpeakerEffect,} from "cdda-schema";
 import { SPELL_M1T } from "@src/UtilSpell";
 import { CharHook, InteractHookList, DataManager } from "cdda-event";
-import { genCastEocID, genTrueEocID, parseSpellNumObj, revTalker } from "./CastAIGener";
+import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 
 
@@ -62,7 +62,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
         condition:{and:[...base_cond]},
     }
 
-    dm.addInvokeEoc(hook as CharHook,0,castEoc);
+    dm.addInvokeEoc(hook,getEventWeight(skill,cast_condition),castEoc);
 
     return [castEoc];
 }
@@ -157,7 +157,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         condition:{and:[...base_cond]},
     }
 
-    dm.addInvokeEoc(hook as CharHook,0,castSelEoc);
+    dm.addInvokeEoc(hook,getEventWeight(skill,cast_condition),castSelEoc);
 
     return [locEoc,castEoc,castSelEoc,filterTargetSpell];
 }
@@ -203,7 +203,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     //加入触发
     if(!InteractHookList.includes(hook as any))
         throw `直接命中 所用的事件必须为 交互事件: ${InteractHookList}`
-    dm.addInvokeEoc(hook as CharHook,0,castEoc);
+    dm.addInvokeEoc(hook,getEventWeight(skill,cast_condition),castEoc);
 
     return [castEoc];
 }
@@ -257,7 +257,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     min_level   = revTalker(min_level);
 
     //玩家的选择位置
-    const playerSelectLoc = { global_val:`${spell.id}_loc`};
+    const playerSelectLoc = { context_val:`${spell.id}_control_cast_loc`};
 
     const coneocid = genCastEocID(spell,cast_condition);
     //创建选择施法eoc
@@ -266,8 +266,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         id:coneocid,
         eoc_type:"ACTIVATION",
         effect:[
-            {u_cast_spell:{id:SPELL_M1T, hit_self:true}},
-            {npc_location_variable:{global_val:"tmp_casterloc"}},
+            //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
+            {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
             {queue_eocs:{
                 id:(coneocid+"_queue") as EocID,
                 eoc_type:"ACTIVATION",

@@ -1,11 +1,11 @@
 [
     {
         "type": "MOD_INFO",
-        "id": "cnpcai",
-        "name": "CnpcAI",
+        "id": "smartnpc",
+        "name": "SmartNPC",
         "authors": ["zwa73"],
         "maintainers": ["zwa73"],
-        "description": "CnpcAI",
+        "description": "SmartNPC",
         "category": "other",
         "dependencies": ["dda","aftershock","magiclysm"]
     }

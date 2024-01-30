@@ -1,7 +1,7 @@
 import { EocID, NoParamTalkerCondList, Spell } from "cdda-schema";
 import { JToken } from "@zwa73/utils";
 import { SADef } from "@src/SADefine";
-import { CastCond } from "./CastAIInterface";
+import { CastAIData, CastCond } from "./CastAIInterface";
 
 //翻转u与n
 export function revTalker<T extends JToken>(obj:T):T{
@@ -48,4 +48,11 @@ export function genTrueEocID(spell:Spell,cast_condition:CastCond):EocID{
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(talker:"u"|"n",spell:Spell){
     return `${talker}_${spell.id}_switch_disable`;
+}
+/**获得施法的event权重 >0 <1 */
+export function getEventWeight(skill:CastAIData,cond:CastCond){
+    const weight = cond.weight??skill.weight??0;
+    const fixweight = weight/200+0.5;
+    if(fixweight > 1 || fixweight < 0) throw `${skill.id} 的 weight: ${weight} 超出施法权重取值范围 -99 ~ 99`;
+    return fixweight;
 }

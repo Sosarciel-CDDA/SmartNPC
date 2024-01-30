@@ -37,7 +37,7 @@ export type CastAIData = {
     id?             :SpellID;
     /**技能的释放条件 */
     cast_condition  :CastCond|CastCond[];
-    /**权重 优先尝试触发高权重的spell 默认0 */
+    /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?         :number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
     one_in_chance?  :number;
@@ -86,6 +86,8 @@ export type CastCond={
     ignore_cost?    : boolean;
     /**强制使用某个法术等级 */
     force_lvl?      : NumObj;
+    /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */
+    weight?         : number;
 }
 
 /**基础技能数据 */
