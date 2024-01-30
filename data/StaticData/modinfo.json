@@ -1,0 +1,12 @@
+[
+    {
+        "type": "MOD_INFO",
+        "id": "cnpcai",
+        "name": "CnpcAI",
+        "authors": ["zwa73"],
+        "maintainers": ["zwa73"],
+        "description": "CnpcAI",
+        "category": "other",
+        "dependencies": ["dda","aftershock","magiclysm"]
+    }
+]
