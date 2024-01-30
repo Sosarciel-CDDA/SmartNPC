@@ -1,9 +1,9 @@
 import { JObject} from "@zwa73/utils";
-import { SADef, CON_SPELL_FLAG, getSpellByID } from "@src/SADefine";
-import { Spell, Eoc, EocID, SpellFlag,} from "cdda-schema";
+import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
+import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, SpeakerEffect,} from "cdda-schema";
 import { SPELL_M1T } from "@src/UtilSpell";
 import { CharHook, InteractHookList, DataManager } from "cdda-event";
-import { genCastEocID, genTrueEocID, revTalker } from "./CastAIGener";
+import { genCastEocID, genTrueEocID, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 
 
@@ -20,12 +20,15 @@ export async function procSpellTarget(target:TargetType|undefined,dm:DataManager
 }
 
 
+/**控制施法所需的效果 */
+export const ControlCastSpeakerEffects:SpeakerEffect[] = [];
+/**控制施法的回复 */
+export const ControlCastResps:Resp[]=[];
 
 async function randomProc(dm:DataManager,cpd:CastProcData){
-    const {skill,base_cond,true_effect,cast_condition,pre_effect} = cpd;
+    const {skill,base_cond,true_effect,cast_condition,pre_effect,min_level} = cpd;
     const {id,one_in_chance} = skill;
     const spell = getSpellByID(id);
-    const lvlObj = {math:[`u_val('spell_level', 'spell: ${spell.id}')`] as [string]};
     const {hook} = cast_condition;
 
     //添加条件效果
@@ -46,7 +49,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
                 u_cast_spell:{
                     id:spell.id,
                     once_in:one_in_chance,
-                    min_level:lvlObj,
+                    min_level,
                 },
                 targeted: false,
                 true_eocs:{
@@ -65,10 +68,9 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 }
 
 async function filter_randomProc(dm:DataManager,cpd:CastProcData){
-    let {skill,base_cond,true_effect,cast_condition,pre_effect} = cpd;
+    const {skill,base_cond,true_effect,cast_condition,pre_effect,min_level} = cpd;
     const {id,one_in_chance} = skill;
     const spell = getSpellByID(id);
-    const lvlObj = {math:[`u_val('spell_level', 'spell: ${spell.id}')`] as [string]};
     const {hook} = cast_condition;
 
     //添加条件效果
@@ -92,7 +94,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
                 u_cast_spell:{
                     id:spell.id,
                     once_in:one_in_chance,
-                    min_level:lvlObj,
+                    min_level,
                 },
                 true_eocs:{
                     id:genTrueEocID(spell,cast_condition),
@@ -161,10 +163,9 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
 }
 
 async function direct_hitProc(dm:DataManager,cpd:CastProcData){
-    const {skill,base_cond,true_effect,cast_condition,pre_effect} = cpd;
+    const {skill,base_cond,true_effect,cast_condition,pre_effect,min_level} = cpd;
     const {id,one_in_chance} = skill;
     const spell = getSpellByID(id);
-    const lvlObj = {math:[`u_val('spell_level', 'spell: ${spell.id}')`] as [string]};
     const {hook} = cast_condition;
 
     //添加条件效果
@@ -186,7 +187,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
                 u_cast_spell:{
                     id:spell.id,
                     once_in:one_in_chance,
-                    min_level:lvlObj,
+                    min_level,
                 },
                 true_eocs:{
                     id:genTrueEocID(spell,cast_condition),
@@ -235,10 +236,10 @@ async function autoProc(dm:DataManager,cpd:CastProcData){
 
 async function control_castProc(dm:DataManager,cpd:CastProcData){
     const {skill,cast_condition} = cpd;
-    let {base_cond,true_effect,pre_effect} = cpd;
+    let {base_cond,true_effect,pre_effect,min_level} = cpd;
     const {id} = skill;
     const spell = getSpellByID(id);
-    const lvlObj = {math:[`n_val('spell_level', 'spell: ${spell.id}')`] as [string]};
+
     //删除开关条件
     base_cond.shift();
 
@@ -253,6 +254,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     base_cond   = revTalker(base_cond);
     true_effect = revTalker(true_effect);
     pre_effect  = revTalker(pre_effect);
+    min_level   = revTalker(min_level);
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_loc`};
@@ -264,7 +266,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         id:coneocid,
         eoc_type:"ACTIVATION",
         effect:[
-            {u_cast_spell:{id:SPELL_M1T, hit_self:true, min_level:lvlObj}},
+            {u_cast_spell:{id:SPELL_M1T, hit_self:true}},
             {npc_location_variable:{global_val:"tmp_casterloc"}},
             {queue_eocs:{
                 id:(coneocid+"_queue") as EocID,
@@ -276,7 +278,10 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                         if:{u_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
                         then:[
                             ...pre_effect,{
-                            npc_cast_spell:{id:spell.id},
+                            npc_cast_spell:{
+                                id:spell.id,
+                                min_level
+                            },
                             targeted: false,
                             true_eocs:{
                                 id:genTrueEocID(spell,cast_condition),
@@ -293,16 +298,38 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         condition:{and:[...base_cond]}
     }
 
-    //生成面板数据
+    //预先计算能耗
+    const costVar = `${spell.id}_cost`;
+    const costStr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
+                    `u_val('spell_level', 'spell: ${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
+    const speakerEff:SpeakerEffect = {
+        effect:{math:["_"+costVar,"=",costStr]}
+    }
+    ControlCastSpeakerEffects.push(speakerEff);
+
+    //生成展示字符串
     const sourceNameMap = {
         "MANA"      : "魔力"    ,
         "BIONIC"    : "生化能量",
         "HP"        : "生命值"  ,
         "STAMINA"   : "耐力"    ,
     }
-    const source:string = (sourceNameMap as any)[spell.energy_source as any]??"";
-    const coststr = spell.base_energy_cost==0 || spell.base_energy_cost==undefined
-        ? ""
-        : `耗能:${spell.base_energy_cost}${source}`;
+    const source = (sourceNameMap as any)[spell.energy_source as any];
+    const costDisplay = source != null && cast_condition.ignore_cost !== true
+                        ? `耗能: <context_val:${costVar}> ${source} `
+                        : "";
+
+    //创建施法对话
+    const castResp:Resp={
+        condition:cast_condition.force_lvl ? undefined : {math:[`u_val('spell_level', 'spell: ${spell.id}')`,">","0"]},
+        truefalsetext:{
+            condition:{and:[...base_cond]},
+            true:`[可释放] <spell_name:${id}> ${costDisplay}`,
+            false:`[不可释放] <spell_name:${id}> ${costDisplay}冷却:<npc_val:${spell.id}_cooldown>`,
+        },
+        effect:{run_eocs:controlEoc.id},
+        topic:"TALK_DONE",
+    }
+    ControlCastResps.push(castResp);
     return [controlEoc];
 }

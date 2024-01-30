@@ -47,5 +47,5 @@ export function genTrueEocID(spell:Spell,cast_condition:CastCond):EocID{
 }
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(talker:"u"|"n",spell:Spell){
-    return `${talker}_${spell.id}_disable`;
+    return `${talker}_${spell.id}_switch_disable`;
 }

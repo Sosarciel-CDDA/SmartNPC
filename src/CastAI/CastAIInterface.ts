@@ -1,5 +1,6 @@
 import { CharHook } from "cdda-event";
-import { BoolObj, EocEffect, Spell, SpellID } from "cdda-schema";
+import { BoolObj, EocEffect, NumObj, Spell, SpellID } from "cdda-schema";
+import { DefCastData } from "./DefData";
 
 /**技能选择目标类型 列表 */
 export const TargetTypeList = [
@@ -27,11 +28,11 @@ export const TargetTypeList = [
  */
 export type TargetType = typeof TargetTypeList[number];
 /**数据表 技能ID : 施法数据
- * @additionalProperties {"$ref": "#/definitions/AIData"}
+ * @additionalProperties {"$ref": "#/definitions/RawCastAIData"}
 */
-export type AIDataTable = Partial<Record<SpellID,(AIData)>>;
+export type CastAIDataTable = Partial<Record<SpellID,RawCastAIData>>;
 /**施法数据 */
-export type AIData = {
+export type CastAIData = {
     /**目标法术ID 默认为键值 */
     id?             :SpellID;
     /**技能的释放条件 */
@@ -51,11 +52,13 @@ export type AIData = {
     /**尝试释放时就运行的效果 */
     before_effect?:EocEffect[];
 };
+/**未处理的施法数据 */
+export type RawCastAIData = CastAIData|DefCastData;
 
 /**技能的释放条件 */
 export type CastCond={
     /**唯一id 默认为下标 */
-    id?             :string;
+    id?             : string;
     /**释放条件 */
     condition?      : (BoolObj);
     /**时机 */
@@ -76,15 +79,19 @@ export type CastCond={
      */
     target?         : TargetType;
     /**释放成功后运行的效果 */
-    after_effect?   :EocEffect[];
+    after_effect?   : EocEffect[];
     /**尝试释放时就运行的效果 */
-    before_effect?  :EocEffect[];
+    before_effect?  : EocEffect[];
+    /**忽略能量消耗 */
+    ignore_cost?    : boolean;
+    /**强制使用某个法术等级 */
+    force_lvl?      : NumObj;
 }
 
 /**基础技能数据 */
 export type CastProcData = Readonly<{
     /**技能 */
-    skill:AIData;
+    skill:CastAIData;
     /**基础释放eoc条件 */
     base_cond: (BoolObj)[];
     /**基础成功eoc效果 */
@@ -93,4 +100,6 @@ export type CastProcData = Readonly<{
     pre_effect:EocEffect[];
     /**释放条件 */
     cast_condition:CastCond;
+    /**施法等级 */
+    min_level:NumObj;
 }>
