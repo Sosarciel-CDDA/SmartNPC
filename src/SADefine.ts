@@ -24,7 +24,8 @@ files.forEach((file)=>{
         .forEach((spell)=>spellMap[(spell as Spell).id]=spell as Spell)
 })
 /**根据id从 ./spell 目录中寻找法术 */
-export function getSpellByID(id:SpellID){
+export function getSpellByID(id?:SpellID){
+    if(id===undefined) throw `未找到法术 ${id}`;
     const spell = spellMap[id];
     if(spell==null) throw `未找到法术 ${id}`;
     return spell;

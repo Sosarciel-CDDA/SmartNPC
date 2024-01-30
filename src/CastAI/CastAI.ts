@@ -31,7 +31,10 @@ export async function createCastAI(dm:DataManager){
     const tableList = UtilFT.fileSearchGlob(path.join(DATA_PATH,"CastAI","**","*.json"));
     tableList.forEach((file)=>{
         const json = UtilFT.loadJSONFileSync(file) as AIDataTable;
-        Object.entries(json).forEach(([k,v])=>aiDataTable[k as SpellID]=v)
+        Object.entries(json).forEach(([k,v])=>{
+            v!.id = v!.id??k as SpellID;
+            aiDataTable[k as SpellID] = v;
+        })
     });
 
     //权重排序

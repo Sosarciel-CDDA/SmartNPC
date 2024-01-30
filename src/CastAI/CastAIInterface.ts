@@ -26,12 +26,14 @@ export const TargetTypeList = [
  * 相同的hook与target(包括auto或未指定)将覆盖  
  */
 export type TargetType = typeof TargetTypeList[number];
-/**数据表 */
-export type AIDataTable = Partial<Record<SpellID,AIData>>;
-/**角色技能 */
+/**数据表 技能ID : 施法数据
+ * @additionalProperties {"$ref": "#/definitions/AIData"}
+*/
+export type AIDataTable = Partial<Record<SpellID,(AIData)>>;
+/**施法数据 */
 export type AIData = {
-    /**目标法术ID */
-    id:SpellID;
+    /**目标法术ID 默认为键值 */
+    id?             :SpellID;
     /**技能的释放条件 */
     cast_condition  :CastCond|CastCond[];
     /**权重 优先尝试触发高权重的spell 默认0 */
