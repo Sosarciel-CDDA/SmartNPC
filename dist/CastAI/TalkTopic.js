@@ -6,19 +6,27 @@ const SADefine_1 = require("../SADefine");
 const CastAI_1 = require("./CastAI");
 const CastAIGener_1 = require("./CastAIGener");
 async function createCastAITalkTopic(dm) {
-    //扩展对话
-    const extTalkTopic = {
+    //主对话
+    const mainTalkTopic = {
         type: "talk_topic",
         id: ["TALK_FRIEND", "TALK_FRIEND_GUARD"],
+        insert_before_standard_exits: true,
         responses: [{
-                text: "[施法]我想你释放法术。",
+                text: "[施法]我想让你释放法术。",
                 topic: await createCastControlResp(dm)
-            }, {
-                text: "[施法]我想改变你的施法选择。",
+            }]
+    };
+    //战斗对话
+    const combatTalkTopic = {
+        type: "talk_topic",
+        id: ["TALK_COMBAT_COMMANDS"],
+        insert_before_standard_exits: true,
+        responses: [{
+                text: "改一下你的施法方式吧……",
                 topic: await createSkillResp(dm)
             }]
     };
-    dm.addStaticData([extTalkTopic], "CastAI", 'talk_topic');
+    dm.addStaticData([mainTalkTopic, combatTalkTopic], "CastAI", 'talk_topic');
 }
 exports.createCastAITalkTopic = createCastAITalkTopic;
 /**创建施法对话 */
@@ -29,10 +37,9 @@ async function createCastControlResp(dm) {
     const castControlTalkTopic = {
         type: "talk_topic",
         id: castControlTalkTopicId,
-        dynamic_line: `&当前魔法值: <npc_val:show_mana>`,
-        //dynamic_line:{concatenate:["&",...dynLine]},
+        dynamic_line: `&当前魔法值: <npc_val:show_mana> 公共冷却: <npc_val:coCooldown>`,
         responses: [...ProcFunc_1.ControlCastResps, {
-                text: "[返回]算了。",
+                text: "Never mind.",
                 topic: "TALK_NONE"
             }]
     };
@@ -42,7 +49,7 @@ async function createCastControlResp(dm) {
 /**创建技能对话 */
 async function createSkillResp(dm) {
     //主对话id
-    const skillTalkTopicId = SADefine_1.SADef.genTalkTopicID(`SkillSwitch`);
+    const skillTalkTopicId = SADefine_1.SADef.genTalkTopicID(`CastSwitch`);
     const skills = Object.values(CastAI_1.CastAIDataMap);
     //遍历技能
     const skillRespList = [];
@@ -65,14 +72,14 @@ async function createSkillResp(dm) {
         skillRespEocList.push(eoc);
         //开关对话
         const resp = {
-            condition: { math: [`u_val('spell_level', 'spell: ${spell.id}')`, ">", "0"] },
+            condition: { math: [`n_spell_level('${spell.id}')`, ">=", "0"] },
             truefalsetext: {
                 condition: { math: [nstopVar, "==", "1"] },
                 true: `[已停用] ${name}`,
                 false: `[已启用] ${name}`,
             },
             effect: { run_eocs: eoc.id },
-            topic: skillTalkTopicId,
+            topic: "TALK_NONE",
         };
         skillRespList.push(resp);
     }
@@ -82,8 +89,8 @@ async function createSkillResp(dm) {
         id: skillTalkTopicId,
         dynamic_line: "&",
         responses: [...skillRespList, {
-                text: "[继续]走吧。",
-                topic: "TALK_DONE"
+                text: "Never mind.",
+                topic: "TALK_NONE"
             }]
     };
     dm.addStaticData([skillTalkTopic, ...skillRespEocList], "CastAI", 'skillswitch_talk_topic');

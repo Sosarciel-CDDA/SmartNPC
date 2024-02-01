@@ -28,7 +28,7 @@ const COST_MAP:Record<SpellEnergySource,string|undefined>={
 //载入数据
 /**施法AI数据 */
 export const CastAIDataMap:CastAIDataTable = {};
-const tableList = UtilFT.fileSearchGlob(path.join(DATA_PATH,"CastAI","**","*.json"));
+const tableList = UtilFT.fileSearchGlob(path.join(DATA_PATH,"CastAI","**","*.json").replaceAll("\\","/"));
 tableList.forEach((file)=>{
     const json = UtilFT.loadJSONFileSync(file) as CastAIDataTable;
     Object.entries(json).forEach(([k,v])=>{
@@ -61,7 +61,7 @@ export async function createCastAI(dm:DataManager){
 
         //法术消耗字符串
         const spellCost=`min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
-                        `u_val('spell_level', 'spell: ${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
+                        `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
 
         //法术消耗变量类型
         const costVar = spell.energy_source !== undefined
@@ -99,7 +99,7 @@ export async function createCastAI(dm:DataManager){
             //施法时间
             if(spell.base_casting_time){
                 const ct =  `min(${parseSpellNumObj(spell,"base_casting_time")} + ${parseSpellNumObj(spell,"casting_time_increment")} * `+
-                            `u_val('spell_level', 'spell: ${spell.id}'), ${parseSpellNumObj(spell,"final_casting_time",MAX_NUM)})`;
+                            `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_casting_time",MAX_NUM)})`;
                 true_effect.push(
                     {math:[SPELL_CT_MODMOVE_VAR,"=",ct]},
                     {u_cast_spell:{id:SPELL_CT_MODMOVE,hit_self:true}}
@@ -113,20 +113,22 @@ export async function createCastAI(dm:DataManager){
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
             const base_cond: BoolObj[] = [
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
-                {not:"u_is_avatar"},
-                {math:[`u_val('spell_level', 'spell: ${spell.id}')`,">=","1"]},
+                "u_is_npc",
+                {math:[`u_spell_level('${spell.id}')`,">=","0"]},
                 {math:[gcdValName,"<=","0"]},
             ];
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
                 base_cond.push({math:[costVar,">=",spellCost]});
+            //物品消耗
+            //if(spell.)
             //冷却
             if(cooldown)
                 base_cond.push({math:[cdValName,"<=","0"]});
 
 
             //计算施法等级
-            let min_level:NumObj = {math:[`u_val('spell_level', 'spell: ${spell.id}')`] as [string]};
+            let min_level:NumObj = {math:[`u_spell_level('${spell.id}')`] as [string]};
             if(cast_condition.force_lvl!=null) min_level = cast_condition.force_lvl;
 
 

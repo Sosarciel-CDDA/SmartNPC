@@ -1,6 +1,6 @@
 import { DataManager } from "cdda-event";
 import { ControlCastResps } from "./ProcFunc";
-import { DynamicLine, Eoc, Resp, TalkTopic } from "cdda-schema";
+import { BoolObj, DynamicLine, EffectID, Eoc, Resp, TalkTopic, TalkTopicID } from "cdda-schema";
 import { SADef, getSpellByID } from "@src/SADefine";
 import { CastAIDataMap } from "./CastAI";
 import { CastAIData } from "./CastAIInterface";
@@ -9,19 +9,27 @@ import { getDisableSpellVar } from "./CastAIGener";
 
 
 export async function createCastAITalkTopic(dm:DataManager){
-    //扩展对话
-    const extTalkTopic:TalkTopic={
+    //主对话
+    const mainTalkTopic:TalkTopic={
         type:"talk_topic",
         id:["TALK_FRIEND","TALK_FRIEND_GUARD"],
+        insert_before_standard_exits:true,
         responses:[{
-            text : "[施法]我想你释放法术。",
+            text : "[施法]我想让你释放法术。",
             topic: await createCastControlResp(dm)
-        },{
-            text : "[施法]我想改变你的施法选择。",
+        }]
+    }
+    //战斗对话
+    const combatTalkTopic:TalkTopic={
+        type:"talk_topic",
+        id:["TALK_COMBAT_COMMANDS"],
+        insert_before_standard_exits:true,
+        responses:[{
+            text : "改一下你的施法方式吧……",
             topic: await createSkillResp(dm)
         }]
     }
-    dm.addStaticData([extTalkTopic],"CastAI",'talk_topic');
+    dm.addStaticData([mainTalkTopic,combatTalkTopic],"CastAI",'talk_topic');
 }
 
 /**创建施法对话 */
@@ -33,10 +41,9 @@ async function createCastControlResp(dm:DataManager){
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
         id:castControlTalkTopicId,
-        dynamic_line:`&当前魔法值: <npc_val:show_mana>`,
-        //dynamic_line:{concatenate:["&",...dynLine]},
+        dynamic_line:`&当前魔法值: <npc_val:show_mana> 公共冷却: <npc_val:coCooldown>`,
         responses:[...ControlCastResps,{
-            text : "[返回]算了。",
+            text: "Never mind.",
             topic: "TALK_NONE"
         }]
     }
@@ -48,7 +55,7 @@ async function createCastControlResp(dm:DataManager){
 /**创建技能对话 */
 async function createSkillResp(dm:DataManager){
     //主对话id
-    const skillTalkTopicId = SADef.genTalkTopicID(`SkillSwitch`);
+    const skillTalkTopicId = SADef.genTalkTopicID(`CastSwitch`);
 
     const skills = (Object.values(CastAIDataMap) as CastAIData[]);
 
@@ -76,14 +83,14 @@ async function createSkillResp(dm:DataManager){
 
         //开关对话
         const resp:Resp={
-            condition:{math:[`u_val('spell_level', 'spell: ${spell.id}')`,">","0"]},
+            condition:{math:[`n_spell_level('${spell.id}')`,">=","0"]},
             truefalsetext:{
                 condition:{math:[nstopVar,"==","1"]},
                 true:`[已停用] ${name}`,
                 false:`[已启用] ${name}`,
             },
             effect:{run_eocs:eoc.id},
-            topic:skillTalkTopicId,
+            topic:"TALK_NONE",
         }
         skillRespList.push(resp);
     }
@@ -94,8 +101,8 @@ async function createSkillResp(dm:DataManager){
         id:skillTalkTopicId,
         dynamic_line:"&",
         responses:[...skillRespList,{
-            text : "[继续]走吧。",
-            topic: "TALK_DONE"
+            text: "Never mind.",
+            topic: "TALK_NONE"
         }]
     }
 

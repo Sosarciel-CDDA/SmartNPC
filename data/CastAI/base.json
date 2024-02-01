@@ -1,5 +1,95 @@
 {
-    "schematest": {
-        "type": "ItemCast"
-    }
+    "cats_grace":{
+        "cast_condition":{
+            "hook": "BattleUpdate",
+            "condition": {"and":[
+                {"not":{"u_has_effect":"cats_grace"}},
+                {"not":{"u_has_effect":"eagles_sight"}},
+                {"not":{"u_has_effect":"ogres_strength"}},
+                {"not":{"u_has_effect":"foxs_cunning"}}
+            ]}
+        }
+    },
+    "eagles_sight":{
+        "cast_condition":{
+            "hook": "BattleUpdate",
+            "condition": {"and":[
+                {"not":{"u_has_effect":"cats_grace"}},
+                {"not":{"u_has_effect":"eagles_sight"}},
+                {"not":{"u_has_effect":"ogres_strength"}},
+                {"not":{"u_has_effect":"foxs_cunning"}}
+            ]}
+        }
+    },
+    "ogres_strength":{
+        "cast_condition":{
+            "hook": "BattleUpdate",
+            "condition": {"and":[
+                {"not":{"u_has_effect":"cats_grace"}},
+                {"not":{"u_has_effect":"eagles_sight"}},
+                {"not":{"u_has_effect":"ogres_strength"}},
+                {"not":{"u_has_effect":"foxs_cunning"}}
+            ]}
+        }
+    },
+    "foxs_cunning":{
+        "cast_condition":{
+            "hook": "BattleUpdate",
+            "condition": {"and":[
+                {"not":{"u_has_effect":"cats_grace"}},
+                {"not":{"u_has_effect":"eagles_sight"}},
+                {"not":{"u_has_effect":"ogres_strength"}},
+                {"not":{"u_has_effect":"foxs_cunning"}}
+            ]}
+        }
+    },
+    "light_healing":{
+        "cast_condition":[{
+            "hook": "BattleUpdate",
+            "condition": {"or":[
+                {"math":["n_hp('torso')","<=","n_hp_max('torso')/3"]},
+                {"math":["n_hp('head')" ,"<=","n_hp_max('head')/3" ]}
+            ]}
+        },{
+            "hook": "SlowUpdate",
+            "condition": {"or":[
+                {"math":["n_hp('torso')","<=","n_hp_max('torso')/3"]},
+                {"math":["n_hp('head')" ,"<=","n_hp_max('head')/3" ]}
+            ]}
+        }],
+        "weight": -1
+    },
+    "pain_split":{
+        "cast_condition":[{
+            "hook": "BattleUpdate",
+            "condition": {"and":[
+                {"math":["MaxHp()-MinHp()",">","max(AvgHp()/2, 10)"]},
+                {"or":[
+                    {"math":["u_hp('torso')","<=","u_hp_max('torso')/3"]},
+                    {"math":["u_hp('head')" ,"<=","u_hp_max('head')/3" ]}
+                ]}
+            ]}
+        },{
+            "hook": "SlowUpdate",
+            "condition": {"and":[
+                {"math":["MaxHp()-MinHp()",">","max(AvgHp()/2, 10)"]},
+                {"or":[
+                    {"math":["u_hp('torso')","<=","u_hp_max('torso')/3"]},
+                    {"math":["u_hp('head')" ,"<=","u_hp_max('head')/3" ]}
+                ]}
+            ]}
+        }]
+    },
+    "synaptic_stimulation":"BattleSelfBuff",
+    "bless":"BattleTargetBuff",
+    "windrun":"BattleSelfBuff",
+    "obfuscated_body":"BattleSelfBuff",
+    "obfuscated_body_plus":"BattleSelfBuff",
+    "magus_haste":"BattleSelfBuff",
+    "magic_missile":"TargetDamage",
+    "gravity_well":"TargetDamage",
+    "magus_mana_blast":"TargetDamage",
+    "magus_mana_bolt":"TargetDamage",
+    "magus_mana_beam":"TargetDamage",
+    "focused_bolt":"TargetDamage"
 }

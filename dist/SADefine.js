@@ -12,7 +12,7 @@ exports.MAX_NUM = 1000000;
 /**用于必定成功的控制法术的flags */
 exports.CON_SPELL_FLAG = ["SILENT", "NO_HANDS", "NO_LEGS", "NO_FAIL", "NO_EXPLOSION_SFX"];
 //初始化法术数据
-const files = utils_1.UtilFT.fileSearchGlob(path.join(process.cwd(), "spell", "**", "*.json"));
+const files = utils_1.UtilFT.fileSearchGlob(path.join(process.cwd(), "spell", "**", "*.json").replaceAll("\\", "/"));
 const spellMap = {};
 files.forEach((file) => {
     const jarr = utils_1.UtilFT.loadJSONFileSync(file);
@@ -34,4 +34,4 @@ exports.getSpellByID = getSpellByID;
 exports.DATA_PATH = path.join(process.cwd(), 'data');
 exports.ENV_PATH = path.join(process.cwd(), '..');
 exports.GAME_PATH = utils_1.UtilFT.loadJSONFileSync(path.join(exports.ENV_PATH, 'build_setting.json')).game_path;
-exports.OUT_PATH = path.join(exports.GAME_PATH, 'data', 'mods', 'CnpcAI');
+exports.OUT_PATH = path.join(exports.GAME_PATH, 'data', 'mods', 'SmartNPC');
