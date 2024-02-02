@@ -15,7 +15,7 @@ export const MAX_NUM = 1000000;
 export const CON_SPELL_FLAG = ["SILENT", "NO_HANDS", "NO_LEGS", "NO_FAIL","NO_EXPLOSION_SFX"] as const;
 
 //初始化法术数据
-const files = UtilFT.fileSearchGlob(path.join(process.cwd(),"spell","**","*.json"));
+const files = UtilFT.fileSearchGlob(path.join(process.cwd(),"spell","**","*.json").replaceAll("\\","/"));
 const spellMap:Partial<Record<SpellID,Spell>> = {};
 files.forEach((file)=>{
     const jarr = UtilFT.loadJSONFileSync(file)as any as AnyCddaJsonList;
@@ -35,4 +35,4 @@ export function getSpellByID(id?:SpellID){
 export const DATA_PATH = path.join(process.cwd(),'data');
 export const ENV_PATH = path.join(process.cwd(),'..');
 export const GAME_PATH = UtilFT.loadJSONFileSync(path.join(ENV_PATH,'build_setting.json')).game_path as string;
-export const OUT_PATH = path.join(GAME_PATH,'data','mods','CnpcAI');
+export const OUT_PATH = path.join(GAME_PATH,'data','mods','SmartNPC');

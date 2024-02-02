@@ -94,7 +94,7 @@ async function filter_randomProc(dm, cpd) {
     };
     //创建记录坐标Eoc
     const locEoc = {
-        id: SADefine_1.SADef.genEOCID(`${spell.id}_RecordLoc`),
+        id: SADefine_1.SADef.genEOCID(`${spell.id}_RecordLoc_${cast_condition.id}`),
         type: "effect_on_condition",
         eoc_type: "ACTIVATION",
         effect: [
@@ -265,7 +265,7 @@ async function control_castProc(dm, cpd) {
     //预先计算能耗
     const costVar = `${spell.id}_cost`;
     const costStr = `min(${(0, CastAIGener_1.parseSpellNumObj)(spell, "base_energy_cost")} + ${(0, CastAIGener_1.parseSpellNumObj)(spell, "energy_increment")} * ` +
-        `u_val('spell_level', 'spell: ${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_energy_cost", SADefine_1.MAX_NUM)})`;
+        `n_spell_level('${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_energy_cost", SADefine_1.MAX_NUM)})`;
     const speakerEff = {
         effect: { math: ["_" + costVar, "=", costStr] }
     };
@@ -283,7 +283,7 @@ async function control_castProc(dm, cpd) {
         : "";
     //创建施法对话
     const castResp = {
-        condition: cast_condition.force_lvl ? undefined : { math: [`u_val('spell_level', 'spell: ${spell.id}')`, ">", "0"] },
+        condition: cast_condition.force_lvl ? undefined : { math: [`n_spell_level('${spell.id}')`, ">=", "0"] },
         truefalsetext: {
             condition: { and: [...base_cond] },
             true: `[可释放] <spell_name:${id}> ${costDisplay}`,

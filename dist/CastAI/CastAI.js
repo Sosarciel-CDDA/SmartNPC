@@ -22,7 +22,7 @@ const COST_MAP = {
 //载入数据
 /**施法AI数据 */
 exports.CastAIDataMap = {};
-const tableList = utils_1.UtilFT.fileSearchGlob(path.join(SADefine_1.DATA_PATH, "CastAI", "**", "*.json"));
+const tableList = utils_1.UtilFT.fileSearchGlob(path.join(SADefine_1.DATA_PATH, "CastAI", "**", "*.json").replaceAll("\\", "/"));
 tableList.forEach((file) => {
     const json = utils_1.UtilFT.loadJSONFileSync(file);
     Object.entries(json).forEach(([k, v]) => {
@@ -49,7 +49,7 @@ async function createCastAI(dm) {
         const spell = (0, SADefine_1.getSpellByID)(id);
         //法术消耗字符串
         const spellCost = `min(${(0, CastAIGener_1.parseSpellNumObj)(spell, "base_energy_cost")} + ${(0, CastAIGener_1.parseSpellNumObj)(spell, "energy_increment")} * ` +
-            `u_val('spell_level', 'spell: ${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_energy_cost", SADefine_1.MAX_NUM)})`;
+            `u_spell_level('${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_energy_cost", SADefine_1.MAX_NUM)})`;
         //法术消耗变量类型
         const costVar = spell.energy_source !== undefined
             ? COST_MAP[spell.energy_source]
@@ -82,7 +82,7 @@ async function createCastAI(dm) {
             //施法时间
             if (spell.base_casting_time) {
                 const ct = `min(${(0, CastAIGener_1.parseSpellNumObj)(spell, "base_casting_time")} + ${(0, CastAIGener_1.parseSpellNumObj)(spell, "casting_time_increment")} * ` +
-                    `u_val('spell_level', 'spell: ${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_casting_time", SADefine_1.MAX_NUM)})`;
+                    `u_spell_level('${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_casting_time", SADefine_1.MAX_NUM)})`;
                 true_effect.push({ math: [UtilSpell_1.SPELL_CT_MODMOVE_VAR, "=", ct] }, { u_cast_spell: { id: UtilSpell_1.SPELL_CT_MODMOVE, hit_self: true } });
             }
             //能量消耗
@@ -91,18 +91,20 @@ async function createCastAI(dm) {
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
             const base_cond = [
                 { math: [(0, CastAIGener_1.getDisableSpellVar)("u", spell), "!=", "1"] },
-                { not: "u_is_avatar" },
-                { math: [`u_val('spell_level', 'spell: ${spell.id}')`, ">=", "1"] },
+                "u_is_npc",
+                { math: [`u_spell_level('${spell.id}')`, ">=", "0"] },
                 { math: [gcdValName, "<=", "0"] },
             ];
             //能量消耗
             if (spell.base_energy_cost != undefined && costVar != undefined && ignore_cost !== true)
                 base_cond.push({ math: [costVar, ">=", spellCost] });
+            //物品消耗
+            //if(spell.)
             //冷却
             if (cooldown)
                 base_cond.push({ math: [cdValName, "<=", "0"] });
             //计算施法等级
-            let min_level = { math: [`u_val('spell_level', 'spell: ${spell.id}')`] };
+            let min_level = { math: [`u_spell_level('${spell.id}')`] };
             if (cast_condition.force_lvl != null)
                 min_level = cast_condition.force_lvl;
             //处理并加入输出
