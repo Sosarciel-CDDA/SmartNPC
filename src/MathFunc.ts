@@ -60,13 +60,13 @@ export async function createMathFunc(dm:DataManager){
         type:"jmath_function",
         id:"U_SpellCastExp" as MathFunctionID,
         num_args: 1,
-        return:"((((u_val('intelligence') - 8) / 8) + (_1 / 20) + (u_skill('spellcraft') / 10)) / 5 + 1) * 75 * UAdjForFocus()"
+        return:"((((u_val('intelligence') - 8) / 8) + (_0 / 20) + (u_skill('spellcraft') / 10)) / 5 + 1) * 75 * UAdjForFocus()"
     }
     const NSpellCastExp:MathFunction={
         type:"jmath_function",
         id:"N_SpellCastExp" as MathFunctionID,
         num_args: 1,
-        return:"((((n_val('intelligence') - 8) / 8) + (_1 / 20) + (n_skill('spellcraft') / 10)) / 5 + 1) * 75 * NAdjForFocus()"
+        return:"((((n_val('intelligence') - 8) / 8) + (_0 / 20) + (n_skill('spellcraft') / 10)) / 5 + 1) * 75 * NAdjForFocus()"
     }
     dm.addStaticData([SumHp,AvgHp,MinHp,MaxHp,UAdjForFocus,NAdjForFocus,USpellCastExp,NSpellCastExp],"MathFunc");
 }
