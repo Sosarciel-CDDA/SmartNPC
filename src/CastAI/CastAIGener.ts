@@ -6,12 +6,15 @@ import { CastAIData, CastCond } from "./CastAIInterface";
 //翻转u与n
 export function revTalker<T extends JToken>(obj:T):T{
     let str = JSON.stringify(obj)
-        .replace(/"u_(\w+?)":/g  , '"tmpnpctmp_$1":')
-        .replace(/(?<!\w)u_/g    , 'tmpntmp_'       )
+        .replace(/"u_(\w+?)":/g  , '"tmpnpctmp_$1":')//缓存 eoc
+        .replace(/(?<!\w)u_/g    , 'tmpntmp_'       )//缓存 math内置函数
+        .replace(/(?<!\w)U_/g    , 'tmpNtmp_'       )//缓存 jmath函数
         .replace(/"npc_(\w+?)":/g, '"u_$1":'        )
         .replace(/(?<!\w)n_/g    , 'u_'             )
+        .replace(/(?<!\w)N_/g    , 'U_'             )
         .replace(/tmpnpctmp_/g   , 'npc_'           )
-        .replace(/tmpntmp_/g     , 'n_'             );
+        .replace(/tmpntmp_/g     , 'n_'             )
+        .replace(/tmpNtmp_/g     , 'N_'             );
 
     //修正无参条件
     const npcond = NoParamTalkerCondList.join('|');
@@ -55,4 +58,8 @@ export function getEventWeight(skill:CastAIData,cond:CastCond){
     const fixweight = weight/200+0.5;
     if(fixweight > 1 || fixweight < 0) throw `${skill.id} 的 weight: ${weight} 超出施法权重取值范围 -99 ~ 99`;
     return fixweight;
+}
+
+export function getSpellCastExp(spell:Spell){
+    return `u_spell_level('${spell.id}`
 }

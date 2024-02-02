@@ -84,6 +84,8 @@ export type CastCond={
     before_effect?  : EocEffect[];
     /**忽略能量消耗 */
     ignore_cost?    : boolean;
+    /**忽略经验增长 */
+    infoge_exp?    : boolean;
     /**强制使用某个法术等级 */
     force_lvl?      : NumObj;
     /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */

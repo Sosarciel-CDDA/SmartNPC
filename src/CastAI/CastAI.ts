@@ -108,6 +108,9 @@ export async function createCastAI(dm:DataManager){
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
                 true_effect.push({math:[costVar,"-=",spellCost]});
+            //经验增长
+            if(cast_condition.infoge_exp!=true)
+                true_effect.push({math:[`u_skill_exp('${spell.difficulty??0}')`,"+=",`N_SpellCastExp('${spell.difficulty??0}')`]});
 
 
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
