@@ -24,12 +24,22 @@ export type TargetType = typeof TargetTypeList[number];
  * @additionalProperties {"$ref": "#/definitions/RawCastAIData"}
 */
 export type CastAIDataTable = Partial<Record<SpellID, RawCastAIData>>;
+/**json格式
+ */
+export type CastAIDataJson = {
+    /**需求mod */
+    require_mod: string;
+    /**数据表 技能ID : 施法数据 */
+    table: (CastAIDataTable);
+};
 /**施法数据 */
 export type CastAIData = {
     /**目标法术ID 默认为键值 */
     id?: SpellID;
     /**技能的释放条件 */
     cast_condition: CastCond | CastCond[];
+    /**共同条件 与cast_condition相与 */
+    common_condition?: (BoolObj);
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?: number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
@@ -76,6 +86,8 @@ export type CastCond = {
     before_effect?: EocEffect[];
     /**忽略能量消耗 */
     ignore_cost?: boolean;
+    /**忽略经验增长 */
+    infoge_exp?: boolean;
     /**强制使用某个法术等级 */
     force_lvl?: NumObj;
     /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */

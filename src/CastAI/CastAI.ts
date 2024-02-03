@@ -4,7 +4,7 @@ import { Spell, SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj} from "cd
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
 import { DataManager } from "cdda-event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
-import { CastAIData, CastAIDataTable, CastProcData } from "./CastAIInterface";
+import { CastAIData, CastAIDataJson, CastAIDataTable, CastProcData } from "./CastAIInterface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'path';
 import { getDefCastData } from "./DefData";
@@ -30,12 +30,20 @@ const COST_MAP:Record<SpellEnergySource,string|undefined>={
 export const CastAIDataMap:CastAIDataTable = {};
 const tableList = UtilFT.fileSearchGlob(path.join(DATA_PATH,"CastAI","**","*.json").replaceAll("\\","/"));
 tableList.forEach((file)=>{
-    const json = UtilFT.loadJSONFileSync(file) as CastAIDataTable;
-    Object.entries(json).forEach(([k,v])=>{
-        if(v==undefined) throw "";
-        v = getDefCastData(v,k as SpellID);
-        v!.id = v!.id??k as SpellID;
-        CastAIDataMap[k as SpellID] = v;
+    const json = UtilFT.loadJSONFileSync(file) as CastAIDataJson;
+
+    Object.entries(json.table).forEach(([spellID,castData])=>{
+        if(castData==undefined) throw "";
+        //转换预定义castAiData
+        castData = getDefCastData(castData,spellID as SpellID);
+        castData!.id = castData!.id??spellID as SpellID;
+        CastAIDataMap[spellID as SpellID] = castData;
+
+        //处理共同条件
+        if(json.require_mod)
+            castData.common_condition = castData.common_condition !== undefined
+                ? {and:[castData.common_condition,{mod_is_loaded:json.require_mod}]}
+                : {mod_is_loaded:json.require_mod}
     })
 });
 
@@ -50,12 +58,12 @@ export async function createCastAI(dm:DataManager){
     const GCDEoc = SADef.genActEoc(`CoCooldown`,
         [{math:[gcdValName,"-=","1"]}],
         {math:[gcdValName,">","0"]});
-    dm.addInvokeEoc("Update",0,GCDEoc);
+    dm.addInvokeEoc("NpcUpdate",0,GCDEoc);
     out.push(GCDEoc);
 
     //遍历技能
     for(const skill of skills){
-        const {id,cast_condition,cooldown,common_cooldown,after_effect,before_effect} = skill;
+        const {id,cast_condition,cooldown,common_cooldown,after_effect,before_effect,common_condition} = skill;
         //获取法术数据
         const spell = getSpellByID(id);
 
@@ -120,6 +128,8 @@ export async function createCastAI(dm:DataManager){
                 {math:[`u_spell_level('${spell.id}')`,">=","0"]},
                 {math:[gcdValName,"<=","0"]},
             ];
+            //共同条件
+            if(common_condition) base_cond.push(common_condition);
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
                 base_cond.push({math:[costVar,">=",spellCost]});
@@ -149,7 +159,7 @@ export async function createCastAI(dm:DataManager){
             const CDEoc=SADef.genActEoc(`${spell.id}_cooldown`,
                 [{math:[cdValName,"-=","1"]}],
                 {math:[cdValName,">","0"]})
-            dm.addInvokeEoc("Update",0,CDEoc);
+            dm.addInvokeEoc("NpcUpdate",0,CDEoc);
             out.push(CDEoc);
         }
     }

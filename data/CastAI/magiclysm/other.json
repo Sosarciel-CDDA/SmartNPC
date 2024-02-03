@@ -1,0 +1,45 @@
+{
+    "require_mod": "magiclysm",
+    "table": {
+        "light_healing":{
+            "cast_condition":[{
+                "hook": "BattleUpdate",
+                "condition": {"or":[
+                    {"math":["n_hp('torso')","<=","n_hp_max('torso')/3"]},
+                    {"math":["n_hp('head')" ,"<=","n_hp_max('head')/3" ]}
+                ]}
+            },{
+                "hook": "SlowUpdate",
+                "condition": {"or":[
+                    {"math":["n_hp('torso')","<=","n_hp_max('torso')/3"]},
+                    {"math":["n_hp('head')" ,"<=","n_hp_max('head')/3" ]}
+                ]}
+            }],
+            "weight": -1
+        },
+        "pain_split":{
+            "cast_condition":[{
+                "hook": "BattleUpdate",
+                "condition": {"and":[
+                    {"math":["MaxHp()-MinHp()",">","max(AvgHp()/2, 10)"]},
+                    {"or":[
+                        {"math":["u_hp('torso')","<=","u_hp_max('torso')/3"]},
+                        {"math":["u_hp('head')" ,"<=","u_hp_max('head')/3" ]}
+                    ]}
+                ]}
+            },{
+                "hook": "SlowUpdate",
+                "condition": {"and":[
+                    {"math":["MaxHp()-MinHp()",">","max(AvgHp()/2, 10)"]},
+                    {"or":[
+                        {"math":["u_hp('torso')","<=","u_hp_max('torso')/3"]},
+                        {"math":["u_hp('head')" ,"<=","u_hp_max('head')/3" ]}
+                    ]}
+                ]}
+            }]
+        },
+        "synaptic_stimulation":"BattleSelfBuff",
+        "bless":"BattleTargetBuff",
+        "windrun":"BattleSelfBuff"
+    }
+}

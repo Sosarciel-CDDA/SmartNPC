@@ -1,11 +1,15 @@
-import * as path from 'path';
-import { UtilFunc } from "@zwa73/utils";
-import { expandSchema } from "cdda-schema";
+import { SchemaBuilder } from "cdda-schema";
 
 
 async function main(){
-    const log = await UtilFunc.exec(`typescript-json-schema tsconfig.json * --out schema/schemas.json --required --strictNullChecks --aliasRefs`);
-    console.log(log);
-    await expandSchema(path.join(process.cwd(),"schema","schemas.json"))
+    const builder = new SchemaBuilder();
+    builder.covetDefinitionsTable.CastAIDataJson = {
+        properties:{
+            table:{
+                $ref:"#/definitions/CastAIDataTable"
+            }
+        }
+    }
+    await builder.builSchema("tsconfig.json","./schema");
 }
 main()

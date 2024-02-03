@@ -27,30 +27,42 @@ export const TargetTypeList = [
  * 相同的hook与target(包括auto或未指定)将覆盖  
  */
 export type TargetType = typeof TargetTypeList[number];
+
 /**数据表 技能ID : 施法数据
  * @additionalProperties {"$ref": "#/definitions/RawCastAIData"}
 */
 export type CastAIDataTable = Partial<Record<SpellID,RawCastAIData>>;
+/**json格式  
+ */
+export type CastAIDataJson = {
+    /**需求mod */
+    require_mod:string;
+    /**数据表 技能ID : 施法数据 */
+    table:(CastAIDataTable);
+};
+
 /**施法数据 */
 export type CastAIData = {
     /**目标法术ID 默认为键值 */
-    id?             :SpellID;
+    id?              :SpellID;
     /**技能的释放条件 */
-    cast_condition  :CastCond|CastCond[];
+    cast_condition   :CastCond|CastCond[];
+    /**共同条件 与cast_condition相与 */
+    common_condition?:(BoolObj);
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
-    weight?         :number;
+    weight?          :number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
-    one_in_chance?  :number;
+    one_in_chance?   :number;
     /**冷却时间 单位为每次CharUpdate 默认0 */
-    cooldown?       :number;
+    cooldown?        :number;
     /**共同冷却时间 影响所有技能的释放 单位为每次CharUpdate 默认1  
      * 一个高权重0共同冷却的技能意味着可以同时触发  
      */
-    common_cooldown?:number;
+    common_cooldown? :number;
     /**释放成功后运行的效果 */
-    after_effect?:EocEffect[];
+    after_effect?    :EocEffect[];
     /**尝试释放时就运行的效果 */
-    before_effect?:EocEffect[];
+    before_effect?   :EocEffect[];
 };
 /**未处理的施法数据 */
 export type RawCastAIData = CastAIData|DefCastData;

@@ -1,17 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEventWeight = exports.getDisableSpellVar = exports.genTrueEocID = exports.genCastEocID = exports.parseSpellNumObj = exports.parseNumObj = exports.revTalker = void 0;
+exports.getSpellCastExp = exports.getEventWeight = exports.getDisableSpellVar = exports.genTrueEocID = exports.genCastEocID = exports.parseSpellNumObj = exports.parseNumObj = exports.revTalker = void 0;
 const cdda_schema_1 = require("cdda-schema");
 const SADefine_1 = require("../SADefine");
 //翻转u与n
 function revTalker(obj) {
     let str = JSON.stringify(obj)
-        .replace(/"u_(\w+?)":/g, '"tmpnpctmp_$1":')
-        .replace(/(?<!\w)u_/g, 'tmpntmp_')
+        .replace(/"u_(\w+?)":/g, '"tmpnpctmp_$1":') //缓存 eoc
+        .replace(/(?<!\w)u_/g, 'tmpntmp_') //缓存 math内置函数
+        .replace(/(?<!\w)U_/g, 'tmpNtmp_') //缓存 jmath函数
         .replace(/"npc_(\w+?)":/g, '"u_$1":')
         .replace(/(?<!\w)n_/g, 'u_')
+        .replace(/(?<!\w)N_/g, 'U_')
         .replace(/tmpnpctmp_/g, 'npc_')
-        .replace(/tmpntmp_/g, 'n_');
+        .replace(/tmpntmp_/g, 'n_')
+        .replace(/tmpNtmp_/g, 'N_');
     //修正无参条件
     const npcond = cdda_schema_1.NoParamTalkerCondList.join('|');
     const regex = new RegExp(`"n_(${npcond})"`, 'g');
@@ -64,3 +67,7 @@ function getEventWeight(skill, cond) {
     return fixweight;
 }
 exports.getEventWeight = getEventWeight;
+function getSpellCastExp(spell) {
+    return `u_spell_level('${spell.id}`;
+}
+exports.getSpellCastExp = getSpellCastExp;

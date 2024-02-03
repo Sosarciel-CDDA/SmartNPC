@@ -25,12 +25,18 @@ exports.CastAIDataMap = {};
 const tableList = utils_1.UtilFT.fileSearchGlob(path.join(SADefine_1.DATA_PATH, "CastAI", "**", "*.json").replaceAll("\\", "/"));
 tableList.forEach((file) => {
     const json = utils_1.UtilFT.loadJSONFileSync(file);
-    Object.entries(json).forEach(([k, v]) => {
-        if (v == undefined)
+    Object.entries(json.table).forEach(([spellID, castData]) => {
+        if (castData == undefined)
             throw "";
-        v = (0, DefData_1.getDefCastData)(v, k);
-        v.id = v.id ?? k;
-        exports.CastAIDataMap[k] = v;
+        //转换预定义castAiData
+        castData = (0, DefData_1.getDefCastData)(castData, spellID);
+        castData.id = castData.id ?? spellID;
+        exports.CastAIDataMap[spellID] = castData;
+        //处理共同条件
+        if (json.require_mod)
+            castData.common_condition = castData.common_condition !== undefined
+                ? { and: [castData.common_condition, { mod_is_loaded: json.require_mod }] }
+                : { mod_is_loaded: json.require_mod };
     });
 });
 /**处理角色技能 */
@@ -40,11 +46,11 @@ async function createCastAI(dm) {
     const skills = Object.values(exports.CastAIDataMap);
     //全局冷却事件
     const GCDEoc = SADefine_1.SADef.genActEoc(`CoCooldown`, [{ math: [gcdValName, "-=", "1"] }], { math: [gcdValName, ">", "0"] });
-    dm.addInvokeEoc("Update", 0, GCDEoc);
+    dm.addInvokeEoc("NpcUpdate", 0, GCDEoc);
     out.push(GCDEoc);
     //遍历技能
     for (const skill of skills) {
-        const { id, cast_condition, cooldown, common_cooldown, after_effect, before_effect } = skill;
+        const { id, cast_condition, cooldown, common_cooldown, after_effect, before_effect, common_condition } = skill;
         //获取法术数据
         const spell = (0, SADefine_1.getSpellByID)(id);
         //法术消耗字符串
@@ -88,6 +94,9 @@ async function createCastAI(dm) {
             //能量消耗
             if (spell.base_energy_cost != undefined && costVar != undefined && ignore_cost !== true)
                 true_effect.push({ math: [costVar, "-=", spellCost] });
+            //经验增长
+            if (cast_condition.infoge_exp != true)
+                true_effect.push({ math: [`u_skill_exp('${spell.difficulty ?? 0}')`, "+=", `N_SpellCastExp('${spell.difficulty ?? 0}')`] });
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
             const base_cond = [
                 { math: [(0, CastAIGener_1.getDisableSpellVar)("u", spell), "!=", "1"] },
@@ -95,6 +104,9 @@ async function createCastAI(dm) {
                 { math: [`u_spell_level('${spell.id}')`, ">=", "0"] },
                 { math: [gcdValName, "<=", "0"] },
             ];
+            //共同条件
+            if (common_condition)
+                base_cond.push(common_condition);
             //能量消耗
             if (spell.base_energy_cost != undefined && costVar != undefined && ignore_cost !== true)
                 base_cond.push({ math: [costVar, ">=", spellCost] });
@@ -118,7 +130,7 @@ async function createCastAI(dm) {
         //独立冷却事件
         if (cooldown) {
             const CDEoc = SADefine_1.SADef.genActEoc(`${spell.id}_cooldown`, [{ math: [cdValName, "-=", "1"] }], { math: [cdValName, ">", "0"] });
-            dm.addInvokeEoc("Update", 0, CDEoc);
+            dm.addInvokeEoc("NpcUpdate", 0, CDEoc);
             out.push(CDEoc);
         }
     }

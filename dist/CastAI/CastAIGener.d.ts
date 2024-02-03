@@ -14,3 +14,4 @@ export declare function genTrueEocID(spell: Spell, cast_condition: CastCond): Eo
 export declare function getDisableSpellVar(talker: "u" | "n", spell: Spell): string;
 /**获得施法的event权重 >0 <1 */
 export declare function getEventWeight(skill: CastAIData, cond: CastCond): number;
+export declare function getSpellCastExp(spell: Spell): string;
