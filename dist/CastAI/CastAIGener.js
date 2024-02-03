@@ -45,12 +45,12 @@ function parseSpellNumObj(spell, field, def) {
 exports.parseSpellNumObj = parseSpellNumObj;
 /**生成施法eocid */
 function genCastEocID(spell, cast_condition) {
-    return SADefine_1.SADef.genEOCID(`Cast${spell.id}_${cast_condition.id}`);
+    return SADefine_1.SADef.genEOCID(`Cast_${spell.id}_${cast_condition.id}`);
 }
 exports.genCastEocID = genCastEocID;
 /**生成施法true_eoc id */
 function genTrueEocID(spell, cast_condition) {
-    return SADefine_1.SADef.genEOCID(`${spell.id}TrueEoc_${cast_condition.id}`);
+    return SADefine_1.SADef.genEOCID(`${spell.id}_TrueEoc_${cast_condition.id}`);
 }
 exports.genTrueEocID = genTrueEocID;
 /**使某个技能停止使用的变量 */

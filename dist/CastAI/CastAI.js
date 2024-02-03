@@ -43,7 +43,12 @@ tableList.forEach((file) => {
 });
 /**处理角色技能 */
 async function createCastAI(dm) {
-    const out = [];
+    const out = [DefData_1.ConcentratedAttack];
+    //集火
+    const conattack = SADefine_1.SADef.genActEoc("ConcentratedAttack", [
+        { npc_add_effect: DefData_1.ConcentratedAttack.id, duration: 10 }
+    ]);
+    dm.addInvokeEoc("TryAttack", 0, conattack);
     //权重排序
     const skills = Object.values(exports.CastAIDataMap);
     //全局冷却事件

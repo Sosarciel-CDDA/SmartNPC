@@ -150,7 +150,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         id:SADef.genEOCID(`Cast${filterTargetSpell.id}`),
         eoc_type:"ACTIVATION",
         effect:[
-            {u_cast_spell:{id:filterTargetSpell.id,once_in:one_in_chance}},
+            {u_cast_spell:{id:filterTargetSpell.id,once_in:one_in_chance,max_level}},
             {run_eocs:castEoc.id},
             {math:[fhitvar,"=","0"]}
         ],

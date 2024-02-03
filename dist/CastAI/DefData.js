@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefCastData = exports.NoParamDefCastDataList = void 0;
+exports.getDefCastData = exports.ConcentratedAttack = exports.NoParamDefCastDataList = void 0;
 const SADefine_1 = require("../SADefine");
 /**无参预定义的施法数据 列表 */
 exports.NoParamDefCastDataList = [
@@ -10,6 +10,13 @@ exports.NoParamDefCastDataList = [
     "BattleTargetBuff", //战斗目标buff
     "AlawayTargetBuff", //常态目标buff
 ];
+//集火标记
+exports.ConcentratedAttack = {
+    type: "effect_type",
+    id: SADefine_1.SADef.genEffectID("ConcentratedAttack"),
+    name: ["被集火"],
+    desc: ["被集火"],
+};
 /**施法数据生成器 表 */
 const DefCastDataMap = {
     TargetDamage(data, spell) {
@@ -18,8 +25,13 @@ const DefCastDataMap = {
                     hook: "TryAttack",
                 }, {
                     hook: "BattleUpdate",
-                    target: "random",
+                    target: "filter_random",
+                    condition: { math: [`n_effect_intensity('${exports.ConcentratedAttack.id}')`, ">", "0"] },
                     fallback_with: 5,
+                }, {
+                    hook: "BattleUpdate",
+                    target: "random",
+                    fallback_with: 10,
                 }, {
                     hook: "TryAttack",
                     target: "control_cast",

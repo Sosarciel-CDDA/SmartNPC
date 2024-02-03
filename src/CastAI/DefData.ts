@@ -1,6 +1,6 @@
-import { AnyItemID, Spell, SpellID } from "cdda-schema";
+import { AnyItemID, Effect, Spell, SpellID } from "cdda-schema";
 import { CastAIData } from "./CastAIInterface";
-import { getSpellByID } from "@src/SADefine";
+import { SADef, getSpellByID } from "@src/SADefine";
 
 
 
@@ -43,6 +43,16 @@ export type DefCastDataType = NoParamDefCastData|ObjDefCastData["type"];
 
 /**施法数据生成器 */
 type DefCastDataGener = (data:DefCastData,spell:Spell)=>CastAIData;
+
+
+//集火标记
+export const ConcentratedAttack:Effect={
+    type:"effect_type",
+    id:SADef.genEffectID("ConcentratedAttack"),
+    name:["被集火"],
+    desc:["被集火"],
+}
+
 /**施法数据生成器 表 */
 const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
     TargetDamage(data:DefCastData,spell:Spell){
@@ -51,8 +61,13 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 hook:"TryAttack",
             },{
                 hook:"BattleUpdate",
-                target:"random",
+                target:"filter_random",
+                condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
+            },{
+                hook:"BattleUpdate",
+                target:"random",
+                fallback_with:10,
             },{
                 hook:"TryAttack",
                 target:"control_cast",

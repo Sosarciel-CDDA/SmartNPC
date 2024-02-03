@@ -1,4 +1,4 @@
-import { AnyItemID, SpellID } from "cdda-schema";
+import { AnyItemID, Effect, SpellID } from "cdda-schema";
 import { CastAIData } from "./CastAIInterface";
 /**无参预定义的施法数据 列表 */
 export declare const NoParamDefCastDataList: readonly ["TargetDamage", "BattleSelfBuff", "AlawaySelfBuff", "BattleTargetBuff", "AlawayTargetBuff"];
@@ -26,5 +26,6 @@ export type ObjDefCastData = [
 export type DefCastData = NoParamDefCastData | ObjDefCastData;
 /**预定义的施法数据类型 */
 export type DefCastDataType = NoParamDefCastData | ObjDefCastData["type"];
+export declare const ConcentratedAttack: Effect;
 /**根据预定义的ID获得预定义施法数据 */
 export declare function getDefCastData(data: DefCastData | CastAIData, spellid: SpellID): CastAIData;

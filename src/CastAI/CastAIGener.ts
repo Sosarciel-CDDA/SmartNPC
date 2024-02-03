@@ -42,11 +42,11 @@ export function parseSpellNumObj(spell:Spell,field:keyof Spell,def?:number){
 }
 /**生成施法eocid */
 export function genCastEocID(spell:Spell,cast_condition:CastCond):EocID{
-    return SADef.genEOCID(`Cast${spell.id}_${cast_condition.id}`);
+    return SADef.genEOCID(`Cast_${spell.id}_${cast_condition.id}`);
 }
 /**生成施法true_eoc id */
 export function genTrueEocID(spell:Spell,cast_condition:CastCond):EocID{
-    return SADef.genEOCID(`${spell.id}TrueEoc_${cast_condition.id}`)
+    return SADef.genEOCID(`${spell.id}_TrueEoc_${cast_condition.id}`)
 }
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(talker:"u"|"n",spell:Spell){
