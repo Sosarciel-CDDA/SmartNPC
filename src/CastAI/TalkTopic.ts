@@ -1,6 +1,6 @@
 import { DataManager } from "cdda-event";
-import { ControlCastResps } from "./ProcFunc";
-import { BoolObj, DynamicLine, EffectID, Eoc, Resp, TalkTopic, TalkTopicID } from "cdda-schema";
+import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
+import { BoolObj, DynamicLine, EffectID, Eoc, EocEffect, Resp, TalkTopic, TalkTopicID } from "cdda-schema";
 import { SADef, getSpellByID } from "@src/SADefine";
 import { CastAIDataMap } from "./CastAI";
 import { CastAIData } from "./CastAIInterface";
@@ -37,17 +37,26 @@ async function createCastControlResp(dm:DataManager){
     //主对话id
     const castControlTalkTopicId = SADef.genTalkTopicID(`CastControl`);
 
+    //刷新魔法值变量
+    const update = SADef.genActEoc("UpdateDisplayVal",[
+        {math:["u_display_mana","=","u_val('mana')"]}
+    ]);
+    dm.addInvokeEoc("NpcUpdate",0,update);
+
     //施法主对话
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
         id:castControlTalkTopicId,
-        dynamic_line:`&当前魔法值: <npc_val:show_mana> 公共冷却: <npc_val:coCooldown>`,
+        speaker_effect:{
+            effect:[...ControlCastSpeakerEffects]
+        },
+        dynamic_line:`&当前魔法值: <npc_val:display_mana> 公共冷却: <npc_val:coCooldown>`,
         responses:[...ControlCastResps,{
             text: "Never mind.",
             topic: "TALK_NONE"
         }]
     }
-    dm.addStaticData([castControlTalkTopic],"CastAI",'castcontrol_talk_topic');
+    dm.addStaticData([castControlTalkTopic,update],"CastAI",'castcontrol_talk_topic');
     return castControlTalkTopicId;
 }
 

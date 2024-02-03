@@ -1,6 +1,6 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
-import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, SpeakerEffect,} from "cdda-schema";
+import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, SpeakerEffect, EocEffect,} from "cdda-schema";
 import { SPELL_M1T } from "@src/UtilSpell";
 import { CharHook, InteractHookList, DataManager } from "cdda-event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
@@ -21,7 +21,7 @@ export async function procSpellTarget(target:TargetType|undefined,dm:DataManager
 
 
 /**控制施法所需的效果 */
-export const ControlCastSpeakerEffects:SpeakerEffect[] = [];
+export const ControlCastSpeakerEffects:EocEffect[] = [];
 /**控制施法的回复 */
 export const ControlCastResps:Resp[]=[];
 
@@ -291,7 +291,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                             loc:playerSelectLoc
                         }]
                     }]
-                },beta_loc:{global_val:"tmp_casterloc"}}]
+                },beta_loc:{global_val:"tmp_control_cast_casterloc"}}]
             },time_in_future:0},
         ],
         false_effect:[],
@@ -302,9 +302,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     const costVar = `${spell.id}_cost`;
     const costStr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
                     `n_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
-    const speakerEff:SpeakerEffect = {
-        effect:{math:["_"+costVar,"=",costStr]}
-    }
+    const speakerEff:EocEffect = {math:["_"+costVar,"=",costStr]}
     ControlCastSpeakerEffects.push(speakerEff);
 
     //生成展示字符串

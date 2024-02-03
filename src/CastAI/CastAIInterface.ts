@@ -102,6 +102,8 @@ export type CastCond={
     force_lvl?      : NumObj;
     /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */
     weight?         : number;
+    /**在 n 秒没有成功施法后才会启用此条件 */
+    fallback_with?  : number;
 }
 
 /**基础技能数据 */

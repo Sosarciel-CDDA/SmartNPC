@@ -14,7 +14,16 @@ exports.NoParamDefCastDataList = [
 const DefCastDataMap = {
     TargetDamage(data, spell) {
         const dat = {
-            cast_condition: { hook: "TryAttack" },
+            cast_condition: [{
+                    hook: "TryAttack",
+                }, {
+                    hook: "BattleUpdate",
+                    target: "random",
+                    fallback_with: 5,
+                }, {
+                    hook: "TryAttack",
+                    target: "control_cast",
+                }],
             one_in_chance: 2,
         };
         return dat;
@@ -46,11 +55,14 @@ const DefCastDataMap = {
     },
     BattleTargetBuff(data, spell) {
         const dat = {
-            cast_condition: {
-                condition: { math: [`n_effect_intensity('${spell.effect_str}')`, "<", "1"] },
-                hook: "BattleUpdate",
-                target: "filter_random"
-            },
+            cast_condition: [{
+                    condition: { math: [`n_effect_intensity('${spell.effect_str}')`, "<", "1"] },
+                    hook: "BattleUpdate",
+                    target: "filter_random"
+                }, {
+                    hook: "TryAttack",
+                    target: "control_cast",
+                }],
             one_in_chance: 2,
             weight: 1,
         };
@@ -66,6 +78,9 @@ const DefCastDataMap = {
                     condition: { math: [`n_effect_intensity('${spell.effect_str}')`, "<", "1"] },
                     hook: "SlowUpdate",
                     target: "filter_random"
+                }, {
+                    hook: "TryAttack",
+                    target: "control_cast",
                 }],
             one_in_chance: 2,
             weight: 1,
@@ -84,6 +99,7 @@ const DefCastDataMap = {
                         { math: [`u_val('charge_count', 'item: ${data.item_id}')`, ">=", `${data.charge ?? 1}`] },
                         ...cond.condition ? [cond.condition] : []
                     ] };
+                cond.fallback_with = cond.fallback_with !== undefined ? cond.fallback_with : 5;
                 cond.after_effect = cond.after_effect ?? [];
                 cond.after_effect.push({ u_consume_item: data.item_id, charges: data.charge });
             } //消耗物品
@@ -92,6 +108,7 @@ const DefCastDataMap = {
                         { math: [`u_val('item_count', 'item: ${data.item_id}')`, ">=", `${data.charge ?? 1}`] },
                         ...cond.condition ? [cond.condition] : []
                     ] };
+                cond.fallback_with = cond.fallback_with !== undefined ? cond.fallback_with : 5;
                 cond.after_effect = cond.after_effect ?? [];
                 cond.after_effect.push({ u_consume_item: data.item_id, count: data.charge });
             }

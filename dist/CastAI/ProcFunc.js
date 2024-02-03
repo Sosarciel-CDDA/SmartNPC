@@ -256,7 +256,7 @@ async function control_castProc(dm, cpd) {
                                             }
                                         ]
                                     }]
-                            }, beta_loc: { global_val: "tmp_casterloc" } }]
+                            }, beta_loc: { global_val: "tmp_control_cast_casterloc" } }]
                 }, time_in_future: 0 },
         ],
         false_effect: [],
@@ -266,9 +266,7 @@ async function control_castProc(dm, cpd) {
     const costVar = `${spell.id}_cost`;
     const costStr = `min(${(0, CastAIGener_1.parseSpellNumObj)(spell, "base_energy_cost")} + ${(0, CastAIGener_1.parseSpellNumObj)(spell, "energy_increment")} * ` +
         `n_spell_level('${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_energy_cost", SADefine_1.MAX_NUM)})`;
-    const speakerEff = {
-        effect: { math: ["_" + costVar, "=", costStr] }
-    };
+    const speakerEff = { math: ["_" + costVar, "=", costStr] };
     exports.ControlCastSpeakerEffects.push(speakerEff);
     //生成展示字符串
     const sourceNameMap = {

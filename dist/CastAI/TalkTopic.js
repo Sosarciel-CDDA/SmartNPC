@@ -33,17 +33,25 @@ exports.createCastAITalkTopic = createCastAITalkTopic;
 async function createCastControlResp(dm) {
     //主对话id
     const castControlTalkTopicId = SADefine_1.SADef.genTalkTopicID(`CastControl`);
+    //刷新魔法值变量
+    const update = SADefine_1.SADef.genActEoc("UpdateDisplayVal", [
+        { math: ["u_display_mana", "=", "u_val('mana')"] }
+    ]);
+    dm.addInvokeEoc("NpcUpdate", 0, update);
     //施法主对话
     const castControlTalkTopic = {
         type: "talk_topic",
         id: castControlTalkTopicId,
-        dynamic_line: `&当前魔法值: <npc_val:show_mana> 公共冷却: <npc_val:coCooldown>`,
+        speaker_effect: {
+            effect: [...ProcFunc_1.ControlCastSpeakerEffects]
+        },
+        dynamic_line: `&当前魔法值: <npc_val:display_mana> 公共冷却: <npc_val:coCooldown>`,
         responses: [...ProcFunc_1.ControlCastResps, {
                 text: "Never mind.",
                 topic: "TALK_NONE"
             }]
     };
-    dm.addStaticData([castControlTalkTopic], "CastAI", 'castcontrol_talk_topic');
+    dm.addStaticData([castControlTalkTopic, update], "CastAI", 'castcontrol_talk_topic');
     return castControlTalkTopicId;
 }
 /**创建技能对话 */
