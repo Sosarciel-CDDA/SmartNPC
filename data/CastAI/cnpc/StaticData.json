@@ -1,0 +1,7 @@
+{
+	"require_mod": "cnpc",
+	"common_condition": {
+		"u_has_trait": "StaticData_cnpc"
+	},
+	"table": {}
+}

@@ -222,7 +222,7 @@ async function control_castProc(dm, cpd) {
     pre_effect = (0, CastAIGener_1.revTalker)(pre_effect);
     min_level = (0, CastAIGener_1.revTalker)(min_level);
     //玩家的选择位置
-    const playerSelectLoc = { context_val: `${spell.id}_control_cast_loc` };
+    const playerSelectLoc = { global_val: `${spell.id}_control_cast_loc` };
     const coneocid = (0, CastAIGener_1.genCastEocID)(spell, cast_condition);
     //创建选择施法eoc
     const controlEoc = {
