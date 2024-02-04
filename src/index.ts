@@ -10,7 +10,7 @@ import { utilSpell } from "./UtilSpell";
 
 
 async function main(){
-    const AIDm = new DataManager(DATA_PATH,OUT_PATH,"CNPCAIEF");
+    const AIDm = new DataManager(DATA_PATH,OUT_PATH,"CNPCAIEF",{enableMoveStatus:false});
     await utilSpell(AIDm);
     await createCastAI(AIDm);
     await createMathFunc(AIDm);
