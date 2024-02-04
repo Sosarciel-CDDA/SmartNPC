@@ -34,15 +34,18 @@ tableList.forEach((file) => {
         castData = (0, DefData_1.getDefCastData)(castData, spellID);
         castData.id = castData.id ?? spellID;
         exports.CastAIDataMap[spellID] = castData;
-        //处理共同条件
-        if (json.require_mod)
-            castData.common_condition = castData.common_condition !== undefined
-                ? { and: [castData.common_condition, { mod_is_loaded: json.require_mod }] }
+        //处理辅助条件
+        if (json.require_mod !== undefined)
+            castData.merge_condition = castData.merge_condition !== undefined
+                ? { and: [castData.merge_condition, { mod_is_loaded: json.require_mod }] }
                 : { mod_is_loaded: json.require_mod };
         if (json.common_condition !== undefined)
-            castData.common_condition = castData.common_condition !== undefined
-                ? { and: [castData.common_condition, json.common_condition] }
+            castData.merge_condition = castData.merge_condition !== undefined
+                ? { and: [castData.merge_condition, json.common_condition] }
                 : json.common_condition;
+        castData.merge_condition = castData.merge_condition
+            ? { and: [castData.merge_condition, "u_is_npc", { math: [gcdValName, "<=", "0"] }] }
+            : { and: ["u_is_npc", { math: [gcdValName, "<=", "0"] }] };
     });
 });
 /**处理角色技能 */
@@ -119,9 +122,7 @@ async function createCastAI(dm) {
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
             const base_cond = [
                 { math: [(0, CastAIGener_1.getDisableSpellVar)("u", spell), "!=", "1"] },
-                "u_is_npc",
                 { math: [`u_spell_level('${spell.id}')`, ">=", "0"] },
-                { math: [gcdValName, "<=", "0"] },
             ];
             //共同条件
             if (common_condition)

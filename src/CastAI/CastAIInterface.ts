@@ -51,6 +51,8 @@ export type CastAIData = {
     cast_condition   :CastCond|CastCond[];
     /**共同条件 与cast_condition相与 */
     common_condition?:(BoolObj);
+    /**合并条件 用于辅助event合并的条件 无需填写 */
+    merge_condition?:(BoolObj);
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?          :number;
     /**概率 有1/chance的几率使用这个技能 默认1 */

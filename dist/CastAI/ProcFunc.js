@@ -22,7 +22,7 @@ exports.ControlCastSpeakerEffects = [];
 exports.ControlCastResps = [];
 async function randomProc(dm, cpd) {
     const { skill, base_cond, true_effect, cast_condition, pre_effect, min_level } = cpd;
-    const { id, one_in_chance } = skill;
+    const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
     //添加条件效果
@@ -54,12 +54,17 @@ async function randomProc(dm, cpd) {
         ],
         condition: { and: [...base_cond] },
     };
-    dm.addInvokeEoc(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), castEoc);
+    //建立便于event合并的if语法
+    const eff = {
+        if: merge_condition,
+        then: [{ run_eocs: [castEoc.id] }]
+    };
+    dm.addEvent(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), [eff]);
     return [castEoc];
 }
 async function filter_randomProc(dm, cpd) {
     const { skill, base_cond, true_effect, cast_condition, pre_effect, min_level } = cpd;
-    const { id, one_in_chance } = skill;
+    const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
     //添加条件效果
@@ -138,12 +143,17 @@ async function filter_randomProc(dm, cpd) {
         ],
         condition: { and: [...base_cond] },
     };
-    dm.addInvokeEoc(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), castSelEoc);
+    //建立便于event合并的if语法
+    const eff = {
+        if: merge_condition,
+        then: [{ run_eocs: [castSelEoc.id] }]
+    };
+    dm.addEvent(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), [eff]);
     return [locEoc, castEoc, castSelEoc, filterTargetSpell];
 }
 async function direct_hitProc(dm, cpd) {
     const { skill, base_cond, true_effect, cast_condition, pre_effect, min_level } = cpd;
-    const { id, one_in_chance } = skill;
+    const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
     //添加条件效果
@@ -179,7 +189,12 @@ async function direct_hitProc(dm, cpd) {
     //加入触发
     if (!cdda_event_1.InteractHookList.includes(hook))
         throw `直接命中 所用的事件必须为 交互事件: ${cdda_event_1.InteractHookList}`;
-    dm.addInvokeEoc(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), castEoc);
+    //建立便于event合并的if语法
+    const eff = {
+        if: merge_condition,
+        then: [{ run_eocs: [castEoc.id] }]
+    };
+    dm.addEvent(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), [eff]);
     return [castEoc];
 }
 async function autoProc(dm, cpd) {
@@ -206,7 +221,7 @@ async function autoProc(dm, cpd) {
 async function control_castProc(dm, cpd) {
     const { skill, cast_condition } = cpd;
     let { base_cond, true_effect, pre_effect, min_level } = cpd;
-    const { id } = skill;
+    const { id, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     //删除开关条件
     base_cond.shift();
@@ -217,7 +232,7 @@ async function control_castProc(dm, cpd) {
     if (cast_condition.condition)
         base_cond.push(cast_condition.condition);
     //翻转对话者 将u改为n使其适用npc
-    base_cond = (0, CastAIGener_1.revTalker)(base_cond);
+    base_cond = [...(0, CastAIGener_1.revTalker)(base_cond), (0, CastAIGener_1.revTalker)(merge_condition)];
     true_effect = (0, CastAIGener_1.revTalker)(true_effect);
     pre_effect = (0, CastAIGener_1.revTalker)(pre_effect);
     min_level = (0, CastAIGener_1.revTalker)(min_level);

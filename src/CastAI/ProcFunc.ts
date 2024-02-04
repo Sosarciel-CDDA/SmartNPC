@@ -27,7 +27,7 @@ export const ControlCastResps:Resp[]=[];
 
 async function randomProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,true_effect,cast_condition,pre_effect,min_level} = cpd;
-    const {id,one_in_chance} = skill;
+    const {id,one_in_chance,merge_condition} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
@@ -62,14 +62,19 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
         condition:{and:[...base_cond]},
     }
 
-    dm.addInvokeEoc(hook,getEventWeight(skill,cast_condition),castEoc);
+    //建立便于event合并的if语法
+    const eff:EocEffect={
+        if:merge_condition!,
+        then:[{run_eocs:[castEoc.id]}]
+    }
+    dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
     return [castEoc];
 }
 
 async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,true_effect,cast_condition,pre_effect,min_level} = cpd;
-    const {id,one_in_chance} = skill;
+    const {id,one_in_chance,merge_condition} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
@@ -157,14 +162,19 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         condition:{and:[...base_cond]},
     }
 
-    dm.addInvokeEoc(hook,getEventWeight(skill,cast_condition),castSelEoc);
+    //建立便于event合并的if语法
+    const eff:EocEffect={
+        if:merge_condition!,
+        then:[{run_eocs:[castSelEoc.id]}]
+    }
+    dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
     return [locEoc,castEoc,castSelEoc,filterTargetSpell];
 }
 
 async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,true_effect,cast_condition,pre_effect,min_level} = cpd;
-    const {id,one_in_chance} = skill;
+    const {id,one_in_chance,merge_condition} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
@@ -203,7 +213,13 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     //加入触发
     if(!InteractHookList.includes(hook as any))
         throw `直接命中 所用的事件必须为 交互事件: ${InteractHookList}`
-    dm.addInvokeEoc(hook,getEventWeight(skill,cast_condition),castEoc);
+
+    //建立便于event合并的if语法
+    const eff:EocEffect={
+        if:merge_condition!,
+        then:[{run_eocs:[castEoc.id]}]
+    }
+    dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
     return [castEoc];
 }
@@ -237,7 +253,7 @@ async function autoProc(dm:DataManager,cpd:CastProcData){
 async function control_castProc(dm:DataManager,cpd:CastProcData){
     const {skill,cast_condition} = cpd;
     let {base_cond,true_effect,pre_effect,min_level} = cpd;
-    const {id} = skill;
+    const {id,merge_condition} = skill;
     const spell = getSpellByID(id);
 
     //删除开关条件
@@ -251,7 +267,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     if(cast_condition.condition) base_cond.push(cast_condition.condition);
 
     //翻转对话者 将u改为n使其适用npc
-    base_cond   = revTalker(base_cond);
+    base_cond   = [...revTalker(base_cond),revTalker(merge_condition!)];
     true_effect = revTalker(true_effect);
     pre_effect  = revTalker(pre_effect);
     min_level   = revTalker(min_level);
