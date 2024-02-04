@@ -5,6 +5,8 @@ const SADefine_1 = require("../SADefine");
 /**无参预定义的施法数据 列表 */
 exports.NoParamDefCastDataList = [
     "TargetDamage", //目标伤害
+    "MeleeTargetDamage", //近战目标伤害
+    "RangeTargetDamage", //远程目标伤害
     "BattleSelfBuff", //战斗自身buff
     "AlawaySelfBuff", //常态自身buff
     "BattleTargetBuff", //战斗目标buff
@@ -23,6 +25,48 @@ const DefCastDataMap = {
         const dat = {
             cast_condition: [{
                     hook: "TryAttack",
+                }, {
+                    hook: "BattleUpdate",
+                    target: "filter_random",
+                    condition: { math: [`n_effect_intensity('${exports.ConcentratedAttack.id}')`, ">", "0"] },
+                    fallback_with: 5,
+                }, {
+                    hook: "BattleUpdate",
+                    target: "random",
+                    fallback_with: 10,
+                }, {
+                    hook: "TryAttack",
+                    target: "control_cast",
+                }],
+            one_in_chance: 2,
+        };
+        return dat;
+    },
+    MeleeTargetDamage(data, spell) {
+        const dat = {
+            cast_condition: [{
+                    hook: "TryMeleeAttack",
+                }, {
+                    hook: "BattleUpdate",
+                    target: "filter_random",
+                    condition: { math: [`n_effect_intensity('${exports.ConcentratedAttack.id}')`, ">", "0"] },
+                    fallback_with: 5,
+                }, {
+                    hook: "BattleUpdate",
+                    target: "random",
+                    fallback_with: 10,
+                }, {
+                    hook: "TryAttack",
+                    target: "control_cast",
+                }],
+            one_in_chance: 2,
+        };
+        return dat;
+    },
+    RangeTargetDamage(data, spell) {
+        const dat = {
+            cast_condition: [{
+                    hook: "TryRangeAttack",
                 }, {
                     hook: "BattleUpdate",
                     target: "filter_random",
@@ -129,6 +173,17 @@ const DefCastDataMap = {
         });
         return base;
     },
+    Inherit(data, spell) {
+        data = data;
+        const baseObj = DefCastDataMap[data.base](data.base, spell);
+        const { type, base, ...rest } = data;
+        for (const k in rest) {
+            const v = rest[k];
+            if (v !== undefined)
+                baseObj[k] = v;
+        }
+        return baseObj;
+    }
 };
 /**根据预定义的ID获得预定义施法数据 */
 function getDefCastData(data, spellid) {

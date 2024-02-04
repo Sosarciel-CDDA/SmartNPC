@@ -1,0 +1,110 @@
+{
+	"require_mod": "cnpc",
+	"common_condition": {
+		"u_has_trait": "Asuna_cnpc"
+	},
+	"table": {
+		"CNPC_SPELL_tactical_transfer": {
+			"cast_condition": {
+				"hook": "TryAttack",
+				"target": "control_cast"
+			},
+			"cooldown": 64
+		},
+		"EvaporateFuture": {
+			"type": "Inherit",
+			"base": "RangeTargetDamage",
+			"cooldown": 64,
+			"weight": 1,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AsunaM9"
+							}
+						]
+					}
+				]
+			}
+		},
+		"PreciseSnipe": {
+			"type": "Inherit",
+			"base": "BattleSelfBuff",
+			"cooldown": 16,
+			"weight": 2,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AsunaM9"
+							}
+						]
+					}
+				]
+			}
+		},
+		"CombatCommand": {
+			"type": "Inherit",
+			"base": "BattleSelfBuff",
+			"common_cooldown": 0,
+			"weight": 10
+		},
+		"BladeStrike": {
+			"type": "Inherit",
+			"base": "MeleeTargetDamage",
+			"cooldown": 64,
+			"weight": 1,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AsunaKnife"
+							}
+						]
+					}
+				]
+			}
+		},
+		"IntelligenceDeciphered": {
+			"base": "BattleTargetBuff",
+			"type": "Inherit",
+			"cooldown": 24,
+			"weight": 2
+		},
+		"BladeofTrauma": {
+			"base": "MeleeTargetDamage",
+			"cast_condition": {
+				"hook": "TryMeleeAttack"
+			},
+			"cooldown": 16,
+			"weight": 2,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AsunaKnife"
+							}
+						]
+					}
+				]
+			}
+		},
+		"BattlefieldVanguard": {
+			"base": "AlawaySelfBuff",
+			"type": "Inherit",
+			"common_cooldown": 0,
+			"weight": 10
+		},
+		"WeaknessHit": {
+			"cast_condition": {
+				"hook": "TryAttack"
+			},
+			"common_cooldown": 0,
+			"weight": 10
+		}
+	}
+}

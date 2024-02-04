@@ -39,6 +39,10 @@ tableList.forEach((file) => {
             castData.common_condition = castData.common_condition !== undefined
                 ? { and: [castData.common_condition, { mod_is_loaded: json.require_mod }] }
                 : { mod_is_loaded: json.require_mod };
+        if (json.common_condition !== undefined)
+            castData.common_condition = castData.common_condition !== undefined
+                ? { and: [castData.common_condition, json.common_condition] }
+                : json.common_condition;
     });
 });
 /**处理角色技能 */

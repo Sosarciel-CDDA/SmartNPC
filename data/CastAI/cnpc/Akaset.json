@@ -1,0 +1,134 @@
+{
+	"require_mod": "cnpc",
+	"common_condition": {
+		"u_has_trait": "Akaset_cnpc"
+	},
+	"table": {
+		"CNPC_SPELL_tactical_transfer": {
+			"cast_condition": {
+				"hook": "TryAttack",
+				"target": "control_cast"
+			},
+			"cooldown": 64
+		},
+		"FrostShield": {
+			"cast_condition": {
+				"hook": "BattleUpdate"
+			},
+			"cooldown": 64,
+			"weight": 2,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AkasetGauntlet"
+							}
+						]
+					}
+				]
+			}
+		},
+		"IntelligenceAnalysis": {
+			"cast_condition": {
+				"hook": "BattleUpdate"
+			},
+			"cooldown": 16,
+			"common_cooldown": 0,
+			"weight": 10,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AkasetGauntlet"
+							}
+						]
+					}
+				]
+			}
+		},
+		"BarrageIceSpike": {
+			"cast_condition": {
+				"hook": "TryMeleeAttack"
+			},
+			"cooldown": 24,
+			"weight": 1,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AkasetGauntlet"
+							}
+						]
+					}
+				]
+			}
+		},
+		"ElectricStrike": {
+			"type": "Inherit",
+			"base": "TargetDamage",
+			"weight": 2,
+			"cooldown": 16,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AkasetLaserCannon"
+							}
+						]
+					}
+				]
+			}
+		},
+		"IonStorm": {
+			"type": "Inherit",
+			"base": "TargetDamage",
+			"cooldown": 24,
+			"weight": 1,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AkasetLaserCannon"
+							}
+						]
+					}
+				]
+			}
+		},
+		"ThunderDischargeBeam": {
+			"type": "Inherit",
+			"base": "TargetDamage",
+			"cooldown": 64,
+			"weight": 3,
+			"common_condition": {
+				"and": [
+					{
+						"or": [
+							{
+								"u_has_wielded_with_flag": "AkasetLaserCannon"
+							}
+						]
+					}
+				]
+			}
+		},
+		"PowerBoost": {
+			"type": "Inherit",
+			"base": "AlawaySelfBuff",
+			"common_cooldown": 0,
+			"weight": 10
+		},
+		"EmergencyFreeze": {
+			"type": "Inherit",
+			"base": "AlawaySelfBuff",
+			"common_cooldown": 0,
+			"cooldown": 3600,
+			"weight": 10
+		}
+	}
+}

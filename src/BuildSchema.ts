@@ -1,7 +1,7 @@
 import { SchemaBuilder } from "cdda-schema";
 
 
-async function main(){
+export async function buildSchema(){
     const builder = new SchemaBuilder();
     builder.covetDefinitionsTable.CastAIDataJson = {
         properties:{
@@ -12,4 +12,3 @@ async function main(){
     }
     await builder.builSchema("tsconfig.json","./schema");
 }
-main()

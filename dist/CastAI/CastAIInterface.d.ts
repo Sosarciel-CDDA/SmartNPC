@@ -29,6 +29,8 @@ export type CastAIDataTable = Partial<Record<SpellID, RawCastAIData>>;
 export type CastAIDataJson = {
     /**需求mod */
     require_mod: string;
+    /**共同条件 */
+    common_condition?: (BoolObj);
     /**数据表 技能ID : 施法数据 */
     table: (CastAIDataTable);
 };

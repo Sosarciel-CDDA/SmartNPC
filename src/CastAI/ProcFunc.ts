@@ -257,7 +257,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     min_level   = revTalker(min_level);
 
     //玩家的选择位置
-    const playerSelectLoc = { context_val:`${spell.id}_control_cast_loc`};
+    const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};
 
     const coneocid = genCastEocID(spell,cast_condition);
     //创建选择施法eoc

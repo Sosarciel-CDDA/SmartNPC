@@ -8,6 +8,8 @@ import { SADef, getSpellByID } from "@src/SADefine";
 /**无参预定义的施法数据 列表 */
 export const NoParamDefCastDataList = [
     "TargetDamage"      ,//目标伤害
+    "MeleeTargetDamage" ,//近战目标伤害
+    "RangeTargetDamage" ,//远程目标伤害
     "BattleSelfBuff"    ,//战斗自身buff
     "AlawaySelfBuff"    ,//常态自身buff
     "BattleTargetBuff"  ,//战斗目标buff
@@ -31,9 +33,18 @@ export type ItemCast = {
     /**强制使用某个法术等级 默认使用已知等级 */
     force_lvl?:number;
 }
+/**从基础继承 */
+export type Inherit = {
+    /**从基础继承 */
+    type:"Inherit";
+    /**基于哪种基础类型 */
+    base:NoParamDefCastData;
+}&Partial<CastAIData>;
+
 /**预定义的施法数据 */
 export type ObjDefCastData = [
-    ItemCast
+    ItemCast,
+    Inherit
 ][number];
 
 /**预定义的施法数据 */
@@ -59,6 +70,48 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryAttack",
+            },{
+                hook:"BattleUpdate",
+                target:"filter_random",
+                condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
+                fallback_with:5,
+            },{
+                hook:"BattleUpdate",
+                target:"random",
+                fallback_with:10,
+            },{
+                hook:"TryAttack",
+                target:"control_cast",
+            }],
+            one_in_chance:2,
+        }
+        return dat;
+    },
+    MeleeTargetDamage(data:DefCastData,spell:Spell){
+        const dat:CastAIData = {
+            cast_condition:[{
+                hook:"TryMeleeAttack",
+            },{
+                hook:"BattleUpdate",
+                target:"filter_random",
+                condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
+                fallback_with:5,
+            },{
+                hook:"BattleUpdate",
+                target:"random",
+                fallback_with:10,
+            },{
+                hook:"TryAttack",
+                target:"control_cast",
+            }],
+            one_in_chance:2,
+        }
+        return dat;
+    },
+    RangeTargetDamage(data:DefCastData,spell:Spell){
+        const dat:CastAIData = {
+            cast_condition:[{
+                hook:"TryRangeAttack",
             },{
                 hook:"BattleUpdate",
                 target:"filter_random",
@@ -165,6 +218,17 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         })
         return base;
     },
+    Inherit(data:DefCastData,spell:Spell){
+        data = data as Inherit;
+        const baseObj = DefCastDataMap[data.base](data.base,spell);
+        const {type,base,...rest} = data;
+        for(const k in rest){
+            const v = (rest as any)[k];
+            if(v!==undefined)
+                (baseObj as any)[k] = v;
+        }
+        return baseObj;
+    }
 }
 /**根据预定义的ID获得预定义施法数据 */
 export function getDefCastData(data:DefCastData|CastAIData,spellid:SpellID):CastAIData{

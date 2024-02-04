@@ -1,0 +1,15 @@
+{
+	"require_mod": "cnpc",
+	"common_condition": {
+		"u_has_trait": "Remilia_cnpc"
+	},
+	"table": {
+		"CNPC_SPELL_tactical_transfer": {
+			"cast_condition": {
+				"hook": "TryAttack",
+				"target": "control_cast"
+			},
+			"cooldown": 64
+		}
+	}
+}

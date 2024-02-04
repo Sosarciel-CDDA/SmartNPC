@@ -1,0 +1,258 @@
+[
+	{
+		"type": "SPELL",
+		"id": "CNPC_SPELL_tactical_transfer",
+		"description": "传送到视野范围内的另一个位置。",
+		"name": "战术转移",
+		"valid_targets": [
+			"ground"
+		],
+		"effect": "attack",
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"shape": "blast",
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			},
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			}
+		]
+	},
+	{
+		"id": "EvaporateFuture",
+		"type": "SPELL",
+		"name": "蒸发未来",
+		"description": "对一条线上的敌人造成 2.1*感知系数 的伤害, 使用后随机降低本技能冷却时间。",
+		"min_damage": {
+			"math": [
+				"PerDamage(u_damage)*2.1"
+			]
+		},
+		"max_damage": 999999,
+		"damage_type": "bullet",
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"min_aoe": 1,
+		"shape": "cone",
+		"base_casting_time": 100,
+		"valid_targets": [
+			"hostile",
+			"ground"
+		],
+		"effect": "attack",
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_EvaporateFuture_Audio_0"
+			},
+			{
+				"id": "CNPC_SPELL_EvaporateFuture_RunEoc_1"
+			}
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "PreciseSnipe",
+		"name": "精准狙击",
+		"description": "为自身添加 120 秒 精准狙击 效果。",
+		"effect": "attack",
+		"valid_targets": [
+			"self"
+		],
+		"effect_str": "PreciseSnipe",
+		"shape": "blast",
+		"base_casting_time": 100,
+		"min_duration": 12000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_PreciseSnipe_Audio_0"
+			}
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "CombatCommand",
+		"name": "作战指挥",
+		"description": "为自身添加 120 秒 作战指挥 效果。",
+		"effect": "attack",
+		"valid_targets": [
+			"self"
+		],
+		"effect_str": "CombatCommand",
+		"shape": "blast",
+		"min_duration": 12000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		]
+	},
+	{
+		"id": "BladeStrike",
+		"type": "SPELL",
+		"name": "刀锋打击",
+		"description": "对目标造成 3.6*力量系数 的伤害, 为其添加 60 秒 重创 效果, 并造成 40 撕裂伤害。",
+		"min_damage": {
+			"math": [
+				"StrDamage(u_damage)*3.6"
+			]
+		},
+		"max_damage": 999999,
+		"damage_type": "cut",
+		"shape": "blast",
+		"base_casting_time": 100,
+		"min_range": {
+			"math": [
+				"MELEE_RANGE"
+			]
+		},
+		"valid_targets": [
+			"hostile"
+		],
+		"effect": "attack",
+		"effect_str": "HeavyTrauma",
+		"min_duration": 6000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_BladeStrike_ExtDamage_0"
+			},
+			{
+				"id": "CNPC_SPELL_BladeStrike_Audio_1"
+			}
+		]
+	},
+	{
+		"id": "IntelligenceDeciphered",
+		"type": "SPELL",
+		"name": "情报破译",
+		"description": "为目标添加 60 秒 情报破译 效果。",
+		"shape": "blast",
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"valid_targets": [
+			"hostile"
+		],
+		"effect": "attack",
+		"effect_str": "IntelligenceDeciphered",
+		"min_duration": 6000,
+		"base_casting_time": 100,
+		"min_aoe": 2,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_IntelligenceDeciphered_Audio_0"
+			}
+		]
+	},
+	{
+		"id": "BladeofTrauma",
+		"type": "SPELL",
+		"name": "创伤之刃",
+		"description": "对目标造成 1.2*力量系数 的伤害, 并造成 敏捷系数*0.6 创伤伤害。",
+		"min_damage": {
+			"math": [
+				"StrDamage(u_damage)*1.2"
+			]
+		},
+		"max_damage": 999999,
+		"damage_type": "cut",
+		"shape": "blast",
+		"base_casting_time": 100,
+		"min_range": {
+			"math": [
+				"MELEE_RANGE"
+			]
+		},
+		"valid_targets": [
+			"hostile"
+		],
+		"effect": "attack",
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_BladeofTrauma_ExtDamage_0"
+			},
+			{
+				"id": "CNPC_SPELL_BladeofTrauma_Audio_1"
+			}
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "BattlefieldVanguard",
+		"name": "战场先锋",
+		"description": "为自身添加 120 秒 战场先锋 效果。",
+		"effect": "attack",
+		"valid_targets": [
+			"self"
+		],
+		"effect_str": "BattlefieldVanguard",
+		"shape": "blast",
+		"min_duration": 12000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS",
+			"NO_EXPLOSION_SFX",
+			"SILENT"
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "WeaknessHit",
+		"name": "弱点重创",
+		"description": "任何一次成功的攻击都会额外造成 敏捷系数*0.02(至少1) 的 创伤伤害。",
+		"effect": "attack",
+		"damage_type": "Trauma",
+		"min_damage": {
+			"math": [
+				"max(1, DexDamage(u_damage) * 0.02)"
+			]
+		},
+		"max_damage": 999999,
+		"valid_targets": [
+			"hostile"
+		],
+		"shape": "blast",
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS",
+			"NO_EXPLOSION_SFX",
+			"SILENT"
+		]
+	}
+]

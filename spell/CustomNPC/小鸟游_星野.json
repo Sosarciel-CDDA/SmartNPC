@@ -1,0 +1,90 @@
+[
+	{
+		"type": "SPELL",
+		"id": "CNPC_SPELL_tactical_transfer",
+		"description": "传送到视野范围内的另一个位置。",
+		"name": "战术转移",
+		"valid_targets": [
+			"ground"
+		],
+		"effect": "attack",
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"shape": "blast",
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			},
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			},
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			},
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			},
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			}
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "战术镇压_充能",
+		"name": "战术镇压 充能",
+		"description": "准备释放 5 次 战术镇压 攻击",
+		"effect": "attack",
+		"effect_str": "战术镇压充能",
+		"valid_targets": [
+			"self"
+		],
+		"shape": "blast",
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_战术镇压_充能_AddEffect_0"
+			},
+			{
+				"id": "CNPC_SPELL_战术镇压_充能_Audio_1"
+			}
+		]
+	},
+	{
+		"id": "战术镇压_攻击",
+		"type": "SPELL",
+		"name": "战术镇压 攻击",
+		"description": "对锥形范围的敌人造成 0.32*感知系数 的 子弹伤害, 眩晕 2 秒 并击退 1 格",
+		"base_casting_time": 20,
+		"damage_type": "bullet",
+		"effect": "attack",
+		"min_damage": {
+			"math": [
+				"PerDamage(u_damage)*0.32"
+			]
+		},
+		"max_damage": 999999,
+		"shape": "cone",
+		"min_aoe": 45,
+		"min_range": 15,
+		"effect_str": "stunned",
+		"min_duration": 200,
+		"valid_targets": [
+			"ground",
+			"hostile"
+		],
+		"extra_effects": [
+			{
+				"id": "战术镇压_攻击_击退"
+			},
+			{
+				"id": "CNPC_SPELL_战术镇压_攻击_RunEoc_0"
+			},
+			{
+				"id": "CNPC_SPELL_战术镇压_攻击_Audio_1"
+			}
+		]
+	}
+]

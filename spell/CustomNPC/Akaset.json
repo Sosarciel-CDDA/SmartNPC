@@ -1,0 +1,272 @@
+[
+	{
+		"type": "SPELL",
+		"id": "CNPC_SPELL_tactical_transfer",
+		"description": "传送到视野范围内的另一个位置。",
+		"name": "战术转移",
+		"valid_targets": [
+			"ground"
+		],
+		"effect": "attack",
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"shape": "blast",
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_CNPC_SPELL_tactical_transfer_RunEoc_0"
+			}
+		]
+	},
+	{
+		"id": "FrostShield",
+		"type": "SPELL",
+		"name": "霜盾",
+		"description": "为周围友军添加 120 秒 霜盾 效果。",
+		"valid_targets": [
+			"ally"
+		],
+		"shape": "blast",
+		"min_aoe": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"effect": "attack",
+		"base_casting_time": 100,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS",
+			"IGNORE_WALLS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_FrostShield_AddEffect_0"
+			},
+			{
+				"id": "CNPC_SPELL_FrostShield_AddEffect_1"
+			},
+			{
+				"id": "CNPC_SPELL_FrostShield_Audio_2"
+			}
+		]
+	},
+	{
+		"id": "IntelligenceAnalysis",
+		"type": "SPELL",
+		"name": "情报分析",
+		"description": "为自己及周围友军添加 120 秒 情报分析 效果。",
+		"valid_targets": [
+			"ally",
+			"self"
+		],
+		"shape": "blast",
+		"min_aoe": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"effect": "attack",
+		"effect_str": "IntelligenceAnalysis",
+		"min_duration": 12000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS",
+			"IGNORE_WALLS",
+			"NO_EXPLOSION_SFX"
+		]
+	},
+	{
+		"id": "BarrageIceSpike",
+		"type": "SPELL",
+		"name": "弹幕冰刺",
+		"description": "对周围敌人造成 0.7*力量系数 的伤害, 并造成 2 点 冻结伤害。",
+		"valid_targets": [
+			"hostile",
+			"ground"
+		],
+		"shape": "blast",
+		"min_aoe": 10,
+		"effect": "attack",
+		"damage_type": "cold",
+		"min_damage": {
+			"math": [
+				"CalcDamage(u_damage, u_val('strength'))*0.7"
+			]
+		},
+		"max_damage": 999999,
+		"base_casting_time": 100,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_BarrageIceSpike_ExtDamage_0"
+			},
+			{
+				"id": "CNPC_SPELL_BarrageIceSpike_Audio_1"
+			}
+		]
+	},
+	{
+		"id": "ElectricStrike",
+		"type": "SPELL",
+		"name": "雷霆轰击",
+		"description": "对一条线上的敌人造成 1.1*感知系数 的 感电伤害。",
+		"min_damage": {
+			"math": [
+				"PerDamage(u_damage)*1.1"
+			]
+		},
+		"max_damage": 999999,
+		"damage_type": "Electrify",
+		"min_aoe": 1,
+		"shape": "cone",
+		"base_casting_time": 100,
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"valid_targets": [
+			"hostile",
+			"ground"
+		],
+		"effect": "attack",
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_ElectricStrike_Audio_0"
+			}
+		]
+	},
+	{
+		"id": "IonStorm",
+		"type": "SPELL",
+		"name": "离子风暴",
+		"description": "对目标点周围敌人造成 1.1*感知系数 的 感电伤害, 为其添加 60 秒 离子风暴 效果, 并造成 10 点 放电伤害。",
+		"valid_targets": [
+			"hostile",
+			"ground"
+		],
+		"shape": "blast",
+		"min_aoe": 10,
+		"base_casting_time": 100,
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"effect": "attack",
+		"effect_str": "IonStorm",
+		"damage_type": "Electrify",
+		"min_damage": {
+			"math": [
+				"PerDamage(u_damage)*1.1"
+			]
+		},
+		"max_damage": 999999,
+		"min_duration": 6000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_IonStorm_ExtDamage_0"
+			},
+			{
+				"id": "CNPC_SPELL_IonStorm_Audio_1"
+			}
+		]
+	},
+	{
+		"id": "ThunderDischargeBeam",
+		"type": "SPELL",
+		"name": "TD光束",
+		"description": "对目标点周围敌人造成 1.6*感知系数 的 感电伤害, 并为其添加 60 秒 串流 效果。",
+		"valid_targets": [
+			"hostile",
+			"ground"
+		],
+		"shape": "blast",
+		"min_aoe": 10,
+		"base_casting_time": 100,
+		"min_range": {
+			"math": [
+				"BATTLE_RANGE"
+			]
+		},
+		"effect": "attack",
+		"effect_str": "Serial",
+		"damage_type": "Electrify",
+		"min_damage": {
+			"math": [
+				"PerDamage(u_damage)*1.6"
+			]
+		},
+		"max_damage": 999999,
+		"min_duration": 6000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS"
+		],
+		"extra_effects": [
+			{
+				"id": "CNPC_SPELL_ThunderDischargeBeam_Audio_0"
+			}
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "PowerBoost",
+		"name": "功率强化",
+		"description": "为自身添加 120 秒 功率强化 效果。",
+		"effect": "attack",
+		"valid_targets": [
+			"self"
+		],
+		"effect_str": "PowerBoost",
+		"shape": "blast",
+		"min_duration": 12000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS",
+			"NO_EXPLOSION_SFX",
+			"SILENT"
+		]
+	},
+	{
+		"type": "SPELL",
+		"id": "EmergencyFreeze",
+		"name": "紧急冻结",
+		"description": "为自身添加 24小时 紧急冻结 效果, 冷却 3600 回合。",
+		"effect": "attack",
+		"valid_targets": [
+			"self"
+		],
+		"effect_str": "EmergencyFreeze",
+		"shape": "blast",
+		"min_duration": 86400000,
+		"flags": [
+			"NO_FAIL",
+			"NO_HANDS",
+			"NO_LEGS",
+			"NO_EXPLOSION_SFX",
+			"SILENT"
+		]
+	}
+]
