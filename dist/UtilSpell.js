@@ -36,6 +36,6 @@ async function utilSpell(dm) {
         max_damage: 100
     };
     out.push(mod1Turn);
-    dm.addStaticData(out, "UtilSpell");
+    dm.addData(out, "UtilSpell");
 }
 exports.utilSpell = utilSpell;

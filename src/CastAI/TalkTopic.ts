@@ -29,7 +29,7 @@ export async function createCastAITalkTopic(dm:DataManager){
             topic: await createSkillResp(dm)
         }]
     }
-    dm.addStaticData([mainTalkTopic,combatTalkTopic],"CastAI",'talk_topic');
+    dm.addData([mainTalkTopic,combatTalkTopic],"CastAI",'talk_topic');
 }
 
 /**创建施法对话 */
@@ -56,7 +56,7 @@ async function createCastControlResp(dm:DataManager){
             topic: "TALK_NONE"
         }]
     }
-    dm.addStaticData([castControlTalkTopic,update],"CastAI",'castcontrol_talk_topic');
+    dm.addData([castControlTalkTopic,update],"CastAI",'castcontrol_talk_topic');
     return castControlTalkTopicId;
 }
 
@@ -115,6 +115,6 @@ async function createSkillResp(dm:DataManager){
         }]
     }
 
-    dm.addStaticData([skillTalkTopic,...skillRespEocList],"CastAI",'skillswitch_talk_topic');
+    dm.addData([skillTalkTopic,...skillRespEocList],"CastAI",'skillswitch_talk_topic');
     return skillTalkTopicId;
 }

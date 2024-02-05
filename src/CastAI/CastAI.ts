@@ -197,7 +197,7 @@ export async function createCastAI(dm:DataManager){
         }
     }
 
-    dm.addStaticData(out,"CastAI","skill");
+    dm.addData(out,"CastAI","skill");
 
     //创建对话
     await createCastAITalkTopic(dm);

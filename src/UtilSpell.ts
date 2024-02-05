@@ -38,6 +38,6 @@ export async function utilSpell(dm:DataManager){
         max_damage:100
     }
     out.push(mod1Turn);
-    dm.addStaticData(out,"UtilSpell");
+    dm.addData(out,"UtilSpell");
 }
 

@@ -26,7 +26,7 @@ async function createCastAITalkTopic(dm) {
                 topic: await createSkillResp(dm)
             }]
     };
-    dm.addStaticData([mainTalkTopic, combatTalkTopic], "CastAI", 'talk_topic');
+    dm.addData([mainTalkTopic, combatTalkTopic], "CastAI", 'talk_topic');
 }
 exports.createCastAITalkTopic = createCastAITalkTopic;
 /**创建施法对话 */
@@ -51,7 +51,7 @@ async function createCastControlResp(dm) {
                 topic: "TALK_NONE"
             }]
     };
-    dm.addStaticData([castControlTalkTopic, update], "CastAI", 'castcontrol_talk_topic');
+    dm.addData([castControlTalkTopic, update], "CastAI", 'castcontrol_talk_topic');
     return castControlTalkTopicId;
 }
 /**创建技能对话 */
@@ -101,6 +101,6 @@ async function createSkillResp(dm) {
                 topic: "TALK_NONE"
             }]
     };
-    dm.addStaticData([skillTalkTopic, ...skillRespEocList], "CastAI", 'skillswitch_talk_topic');
+    dm.addData([skillTalkTopic, ...skillRespEocList], "CastAI", 'skillswitch_talk_topic');
     return skillTalkTopicId;
 }

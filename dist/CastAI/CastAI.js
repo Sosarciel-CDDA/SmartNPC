@@ -44,7 +44,7 @@ tableList.forEach((file) => {
                 ? { and: [castData.merge_condition, json.common_condition] }
                 : json.common_condition;
         castData.merge_condition = castData.merge_condition
-            ? { and: [castData.merge_condition, "u_is_npc", { math: [gcdValName, "<=", "0"] }] }
+            ? { and: ["u_is_npc", { math: [gcdValName, "<=", "0"] }, castData.merge_condition] }
             : { and: ["u_is_npc", { math: [gcdValName, "<=", "0"] }] };
     });
 });
@@ -160,7 +160,7 @@ async function createCastAI(dm) {
             out.push(CDEoc, CDInit);
         }
     }
-    dm.addStaticData(out, "CastAI", "skill");
+    dm.addData(out, "CastAI", "skill");
     //创建对话
     await (0, TalkTopic_1.createCastAITalkTopic)(dm);
 }
