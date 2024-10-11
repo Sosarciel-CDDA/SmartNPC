@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDefCastData = exports.ConcentratedAttack = exports.NoParamDefCastDataList = void 0;
+exports.ConcentratedAttack = exports.NoParamDefCastDataList = void 0;
+exports.getDefCastData = getDefCastData;
 const SADefine_1 = require("../SADefine");
 /**无参预定义的施法数据 列表 */
 exports.NoParamDefCastDataList = [
@@ -196,4 +197,3 @@ function getDefCastData(data, spellid) {
         return DefCastDataMap[dtype](data, (0, SADefine_1.getSpellByID)(spellid));
     return data;
 }
-exports.getDefCastData = getDefCastData;

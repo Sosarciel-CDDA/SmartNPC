@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createMathFunc = void 0;
+exports.createMathFunc = createMathFunc;
 async function createMathFunc(dm) {
     /**血量总和
      * function()
@@ -68,4 +68,3 @@ async function createMathFunc(dm) {
     };
     dm.addData([SumHp, AvgHp, MinHp, MaxHp, UAdjForFocus, NAdjForFocus, USpellCastExp, NSpellCastExp], "MathFunc");
 }
-exports.createMathFunc = createMathFunc;

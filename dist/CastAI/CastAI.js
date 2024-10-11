@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCastAI = exports.CastAIDataMap = void 0;
+exports.CastAIDataMap = void 0;
+exports.createCastAI = createCastAI;
 const utils_1 = require("@zwa73/utils");
 const SADefine_1 = require("../SADefine");
 const UtilSpell_1 = require("../UtilSpell");
@@ -24,7 +25,7 @@ const COST_MAP = {
 //载入数据
 /**施法AI数据 */
 exports.CastAIDataMap = {};
-const tableList = utils_1.UtilFT.fileSearchGlob(path.join(SADefine_1.DATA_PATH, "CastAI", "**", "*.json").replaceAll("\\", "/"));
+const tableList = utils_1.UtilFT.fileSearchGlobSync(SADefine_1.DATA_PATH, path.join("CastAI", "**", "*.json").replaceAll("\\", "/"));
 tableList.forEach((file) => {
     const json = utils_1.UtilFT.loadJSONFileSync(file);
     Object.entries(json.table).forEach(([spellID, castData]) => {
@@ -50,12 +51,12 @@ tableList.forEach((file) => {
 });
 /**处理角色技能 */
 async function createCastAI(dm) {
-    const out = [DefData_1.ConcentratedAttack];
     //集火
     const conattack = SADefine_1.SADef.genActEoc("ConcentratedAttack", [
         { npc_add_effect: DefData_1.ConcentratedAttack.id, duration: 10 }
     ]);
     dm.addInvokeEoc("TryAttack", 0, conattack);
+    const out = [DefData_1.ConcentratedAttack, conattack];
     //权重排序
     const skills = Object.values(exports.CastAIDataMap);
     //全局冷却事件
@@ -69,7 +70,7 @@ async function createCastAI(dm) {
     out.push(GCDEoc, FBEoc, GCDInit);
     //遍历技能
     for (const skill of skills) {
-        const { id, cast_condition, cooldown, common_cooldown, after_effect, before_effect, common_condition } = skill;
+        const { id, cast_condition, cooldown, common_cooldown, common_condition } = skill;
         //获取法术数据
         const spell = (0, SADefine_1.getSpellByID)(id);
         //法术消耗字符串
@@ -82,9 +83,9 @@ async function createCastAI(dm) {
         //生成冷却变量名
         const cdValName = `u_${spell.id}_cooldown`;
         //前置效果
-        const pre_effect = [];
-        if (before_effect)
-            pre_effect.push(...before_effect);
+        const before_effect = [];
+        if (skill.before_effect)
+            before_effect.push(...skill.before_effect);
         //遍历释放条件
         const ccs = Array.isArray(cast_condition)
             ? cast_condition
@@ -94,31 +95,31 @@ async function createCastAI(dm) {
         for (const cast_condition of ccs) {
             const { target, ignore_cost, fallback_with } = cast_condition;
             //计算成功效果
-            const true_effect = [];
+            const after_effect = [];
             //共通冷却
             if (common_cooldown != 0)
-                true_effect.push({ math: [gcdValName, "=", `${common_cooldown ?? 1}`] });
+                after_effect.push({ math: [gcdValName, "=", `${common_cooldown ?? 1}`] });
             //独立冷却
             if (cooldown)
-                true_effect.push({ math: [cdValName, "=", `${cooldown ?? 0}`] });
+                after_effect.push({ math: [cdValName, "=", `${cooldown ?? 0}`] });
             //追加效果
-            if (after_effect)
-                true_effect.push(...after_effect);
+            if (skill.after_effect)
+                after_effect.push(...skill.after_effect);
             //施法时间
             if (spell.base_casting_time) {
                 const ct = `min(${(0, CastAIGener_1.parseSpellNumObj)(spell, "base_casting_time")} + ${(0, CastAIGener_1.parseSpellNumObj)(spell, "casting_time_increment")} * ` +
                     `u_spell_level('${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "final_casting_time", SADefine_1.MAX_NUM)})`;
-                true_effect.push({ math: [UtilSpell_1.SPELL_CT_MODMOVE_VAR, "=", ct] }, { u_cast_spell: { id: UtilSpell_1.SPELL_CT_MODMOVE, hit_self: true } });
+                after_effect.push({ math: [UtilSpell_1.SPELL_CT_MODMOVE_VAR, "=", ct] }, { u_cast_spell: { id: UtilSpell_1.SPELL_CT_MODMOVE, hit_self: true } });
             }
             //能量消耗
             if (spell.base_energy_cost != undefined && costVar != undefined && ignore_cost !== true)
-                true_effect.push({ math: [costVar, "-=", spellCost] });
+                after_effect.push({ math: [costVar, "-=", spellCost] });
             //经验增长
             if (cast_condition.infoge_exp != true)
-                true_effect.push({ math: [`u_skill_exp('${spell.difficulty ?? 0}')`, "+=", `U_SpellCastExp(${spell.difficulty ?? 0})`] });
+                after_effect.push({ math: [`u_skill_exp('${spell.difficulty ?? 0}')`, "+=", `U_SpellCastExp(${spell.difficulty ?? 0})`] });
             //清空备用计数器
             if (fallback_with === undefined)
-                true_effect.push({ math: [fallbackValName, "=", "0"] });
+                after_effect.push({ math: [fallbackValName, "=", "0"] });
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取
             const base_cond = [
                 { math: [(0, CastAIGener_1.getDisableSpellVar)("u", spell), "!=", "1"] },
@@ -144,7 +145,7 @@ async function createCastAI(dm) {
                 min_level = cast_condition.force_lvl;
             //处理并加入输出
             const dat = {
-                skill, true_effect, pre_effect,
+                skill, after_effect, before_effect,
                 base_cond, cast_condition, min_level
             };
             //生成法术
@@ -164,4 +165,3 @@ async function createCastAI(dm) {
     //创建对话
     await (0, TalkTopic_1.createCastAITalkTopic)(dm);
 }
-exports.createCastAI = createCastAI;

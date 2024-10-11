@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.build = void 0;
+exports.build = build;
 const cdda_event_1 = require("cdda-event");
 const CastAI_1 = require("./CastAI");
 const SADefine_1 = require("./SADefine");
@@ -13,4 +13,3 @@ async function build() {
     await (0, MathFunc_1.createMathFunc)(AIDm);
     await AIDm.saveAllData();
 }
-exports.build = build;

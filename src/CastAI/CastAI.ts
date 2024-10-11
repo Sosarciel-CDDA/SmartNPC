@@ -31,7 +31,7 @@ const COST_MAP:Record<SpellEnergySource,string|undefined>={
 //载入数据
 /**施法AI数据 */
 export const CastAIDataMap:CastAIDataTable = {};
-const tableList = UtilFT.fileSearchGlob(path.join(DATA_PATH,"CastAI","**","*.json").replaceAll("\\","/"));
+const tableList = UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json").replaceAll("\\","/"));
 tableList.forEach((file)=>{
     const json = UtilFT.loadJSONFileSync(file) as CastAIDataJson;
 
@@ -62,13 +62,13 @@ tableList.forEach((file)=>{
 
 /**处理角色技能 */
 export async function createCastAI(dm:DataManager){
-    const out:JObject[] = [ConcentratedAttack];
-
     //集火
     const conattack = SADef.genActEoc("ConcentratedAttack",[
         {npc_add_effect:ConcentratedAttack.id,duration:10}
     ])
     dm.addInvokeEoc("TryAttack",0,conattack);
+    
+    const out:JObject[] = [ConcentratedAttack,conattack];
 
     //权重排序
     const skills = (Object.values(CastAIDataMap) as CastAIData[]);

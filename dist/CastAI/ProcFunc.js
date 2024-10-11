@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ControlCastResps = exports.ControlCastSpeakerEffects = exports.procSpellTarget = void 0;
+exports.ControlCastResps = exports.ControlCastSpeakerEffects = void 0;
+exports.procSpellTarget = procSpellTarget;
 const SADefine_1 = require("../SADefine");
 const cdda_event_1 = require("cdda-event");
 const CastAIGener_1 = require("./CastAIGener");
@@ -15,19 +16,18 @@ const ProcMap = {
 async function procSpellTarget(target, dm, cpd) {
     return ProcMap[target ?? "auto"](dm, cpd);
 }
-exports.procSpellTarget = procSpellTarget;
 /**控制施法所需的效果 */
 exports.ControlCastSpeakerEffects = [];
 /**控制施法的回复 */
 exports.ControlCastResps = [];
 async function randomProc(dm, cpd) {
-    const { skill, base_cond, true_effect, cast_condition, pre_effect, min_level } = cpd;
+    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level } = cpd;
     const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
     //添加条件效果
-    pre_effect.push(...cast_condition.before_effect ?? []);
-    true_effect.push(...cast_condition.after_effect ?? []);
+    before_effect.push(...cast_condition.before_effect ?? []);
+    after_effect.push(...cast_condition.after_effect ?? []);
     //合并基础条件
     if (cast_condition.condition)
         base_cond.push(cast_condition.condition);
@@ -37,7 +37,7 @@ async function randomProc(dm, cpd) {
         id: (0, CastAIGener_1.genCastEocID)(spell, cast_condition),
         eoc_type: "ACTIVATION",
         effect: [
-            ...pre_effect,
+            ...before_effect,
             {
                 u_cast_spell: {
                     id: spell.id,
@@ -47,7 +47,7 @@ async function randomProc(dm, cpd) {
                 targeted: false,
                 true_eocs: {
                     id: (0, CastAIGener_1.genTrueEocID)(spell, cast_condition),
-                    effect: [...true_effect],
+                    effect: [...after_effect],
                     eoc_type: "ACTIVATION",
                 }
             }
@@ -63,13 +63,13 @@ async function randomProc(dm, cpd) {
     return [castEoc];
 }
 async function filter_randomProc(dm, cpd) {
-    const { skill, base_cond, true_effect, cast_condition, pre_effect, min_level } = cpd;
+    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level } = cpd;
     const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
     //添加条件效果
-    pre_effect.push(...cast_condition.before_effect ?? []);
-    true_effect.push(...cast_condition.after_effect ?? []);
+    before_effect.push(...cast_condition.before_effect ?? []);
+    after_effect.push(...cast_condition.after_effect ?? []);
     //设置翻转条件
     const filterCond = cast_condition.condition ? (0, CastAIGener_1.revTalker)(cast_condition.condition) : undefined;
     //命中id
@@ -80,7 +80,7 @@ async function filter_randomProc(dm, cpd) {
         id: (0, CastAIGener_1.genCastEocID)(spell, cast_condition),
         eoc_type: "ACTIVATION",
         effect: [
-            ...pre_effect,
+            ...before_effect,
             {
                 u_cast_spell: {
                     id: spell.id,
@@ -89,7 +89,7 @@ async function filter_randomProc(dm, cpd) {
                 },
                 true_eocs: {
                     id: (0, CastAIGener_1.genTrueEocID)(spell, cast_condition),
-                    effect: [...true_effect],
+                    effect: [...after_effect],
                     eoc_type: "ACTIVATION",
                 },
                 loc: { global_val: "tmp_loc" }
@@ -152,24 +152,28 @@ async function filter_randomProc(dm, cpd) {
     return [locEoc, castEoc, castSelEoc, filterTargetSpell];
 }
 async function direct_hitProc(dm, cpd) {
-    const { skill, base_cond, true_effect, cast_condition, pre_effect, min_level } = cpd;
+    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level } = cpd;
     const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
     //添加条件效果
-    pre_effect.push(...cast_condition.before_effect ?? []);
-    true_effect.push(...cast_condition.after_effect ?? []);
+    before_effect.push(...cast_condition.before_effect ?? []);
+    after_effect.push(...cast_condition.after_effect ?? []);
     //合并基础条件
     if (cast_condition.condition)
         base_cond.push(cast_condition.condition);
+    //射程条件
+    const spellRange = `min(${(0, CastAIGener_1.parseSpellNumObj)(spell, "min_range")} + ${(0, CastAIGener_1.parseSpellNumObj)(spell, "range_increment")} * ` +
+        `u_spell_level('${spell.id}'), ${(0, CastAIGener_1.parseSpellNumObj)(spell, "max_range", SADefine_1.MAX_NUM)})`;
+    base_cond.push({ math: ["distance('u', 'npc')", "<=", spellRange] });
     //创建施法EOC
     const castEoc = {
         type: "effect_on_condition",
         id: (0, CastAIGener_1.genCastEocID)(spell, cast_condition),
         eoc_type: "ACTIVATION",
         effect: [
-            ...pre_effect,
-            { npc_location_variable: { global_val: "tmp_loc" } },
+            ...before_effect,
+            { npc_location_variable: { context_val: "_target_loc" } },
             {
                 u_cast_spell: {
                     id: spell.id,
@@ -178,10 +182,10 @@ async function direct_hitProc(dm, cpd) {
                 },
                 true_eocs: {
                     id: (0, CastAIGener_1.genTrueEocID)(spell, cast_condition),
-                    effect: [...true_effect],
+                    effect: [...after_effect],
                     eoc_type: "ACTIVATION",
                 },
-                loc: { global_val: "tmp_loc" }
+                loc: { context_val: "_target_loc" }
             }
         ],
         condition: { and: [...base_cond] },
@@ -220,21 +224,21 @@ async function autoProc(dm, cpd) {
 }
 async function control_castProc(dm, cpd) {
     const { skill, cast_condition } = cpd;
-    let { base_cond, true_effect, pre_effect, min_level } = cpd;
+    let { base_cond, after_effect, before_effect, min_level } = cpd;
     const { id, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     //删除开关条件
     base_cond.shift();
     //添加条件效果
-    pre_effect.push(...cast_condition.before_effect ?? []);
-    true_effect.push(...cast_condition.after_effect ?? []);
+    before_effect.push(...cast_condition.before_effect ?? []);
+    after_effect.push(...cast_condition.after_effect ?? []);
     //合并基础条件
     if (cast_condition.condition)
         base_cond.push(cast_condition.condition);
     //翻转对话者 将u改为n使其适用npc
     base_cond = [...(0, CastAIGener_1.revTalker)(base_cond), (0, CastAIGener_1.revTalker)(merge_condition)];
-    true_effect = (0, CastAIGener_1.revTalker)(true_effect);
-    pre_effect = (0, CastAIGener_1.revTalker)(pre_effect);
+    after_effect = (0, CastAIGener_1.revTalker)(after_effect);
+    before_effect = (0, CastAIGener_1.revTalker)(before_effect);
     min_level = (0, CastAIGener_1.revTalker)(min_level);
     //玩家的选择位置
     const playerSelectLoc = { global_val: `${spell.id}_control_cast_loc` };
@@ -256,7 +260,7 @@ async function control_castProc(dm, cpd) {
                                 effect: [{
                                         if: { u_query_tile: "line_of_sight", target_var: playerSelectLoc, range: 30 },
                                         then: [
-                                            ...pre_effect, {
+                                            ...before_effect, {
                                                 npc_cast_spell: {
                                                     id: spell.id,
                                                     min_level
@@ -264,7 +268,7 @@ async function control_castProc(dm, cpd) {
                                                 targeted: false,
                                                 true_eocs: {
                                                     id: (0, CastAIGener_1.genTrueEocID)(spell, cast_condition),
-                                                    effect: [...true_effect],
+                                                    effect: [...after_effect],
                                                     eoc_type: "ACTIVATION",
                                                 },
                                                 loc: playerSelectLoc

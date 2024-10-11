@@ -4,7 +4,7 @@
 		"u_has_trait": "Akaset_cnpc"
 	},
 	"table": {
-		"CNPC_SPELL_tactical_transfer": {
+		"tactical_transfer": {
 			"cast_condition": {
 				"hook": "TryAttack",
 				"target": "control_cast"

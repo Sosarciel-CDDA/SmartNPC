@@ -106,9 +106,9 @@ export type CastProcData = Readonly<{
     /**基础释放eoc条件 */
     base_cond: (BoolObj)[];
     /**基础成功eoc效果 */
-    true_effect: EocEffect[];
+    after_effect: EocEffect[];
     /**基础准备释放Eoc */
-    pre_effect: EocEffect[];
+    before_effect: EocEffect[];
     /**释放条件 */
     cast_condition: CastCond;
     /**施法等级 */

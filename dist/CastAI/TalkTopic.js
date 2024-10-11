@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCastAITalkTopic = void 0;
+exports.createCastAITalkTopic = createCastAITalkTopic;
 const ProcFunc_1 = require("./ProcFunc");
 const SADefine_1 = require("../SADefine");
 const CastAI_1 = require("./CastAI");
@@ -28,7 +28,6 @@ async function createCastAITalkTopic(dm) {
     };
     dm.addData([mainTalkTopic, combatTalkTopic], "CastAI", 'talk_topic');
 }
-exports.createCastAITalkTopic = createCastAITalkTopic;
 /**创建施法对话 */
 async function createCastControlResp(dm) {
     //主对话id

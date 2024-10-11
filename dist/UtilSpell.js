@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.utilSpell = exports.SPELL_M1T = exports.SPELL_CT_MODMOVE = exports.SPELL_CT_MODMOVE_VAR = void 0;
+exports.SPELL_M1T = exports.SPELL_CT_MODMOVE = exports.SPELL_CT_MODMOVE_VAR = void 0;
+exports.utilSpell = utilSpell;
 const SADefine_1 = require("./SADefine");
 /**施法后摇变量 */
 exports.SPELL_CT_MODMOVE_VAR = 'casttime_modmove';
@@ -38,4 +39,3 @@ async function utilSpell(dm) {
     out.push(mod1Turn);
     dm.addData(out, "UtilSpell");
 }
-exports.utilSpell = utilSpell;
