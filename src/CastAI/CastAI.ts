@@ -1,6 +1,6 @@
 import { JObject, UtilFT, UtilFunc } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@src/SADefine";
-import { Spell, SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Effect} from "cdda-schema";
+import { Spell, SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Effect, Mutation, Eoc} from "cdda-schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
 import { DataManager } from "cdda-event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
@@ -58,6 +58,17 @@ tableList.forEach((file)=>{
 });
 
 
+//关闭默认施法AI
+export const TurnOffCast:Mutation={
+    type:'mutation',
+    id:SADef.genMutationID('TurnOffCast'),
+    flags:['NO_SPELLCASTING'] as any,
+    name:"关闭默认施法AI",
+    description:"关闭默认施法AI",
+    points:0,
+    valid:false,
+    player_display:false,
+}
 
 
 /**处理角色技能 */
@@ -67,8 +78,19 @@ export async function createCastAI(dm:DataManager){
         {npc_add_effect:ConcentratedAttack.id,duration:10}
     ])
     dm.addInvokeEoc("TryAttack",0,conattack);
-    
-    const out:JObject[] = [ConcentratedAttack,conattack];
+
+    //关闭施法
+    const TurnOffCastEoc = SADef.genActEoc('TurnOffCast',[{
+        if:{not:{"u_has_trait":TurnOffCast.id}},
+        then:[
+            {"u_add_trait":TurnOffCast.id}
+        ]
+    }]);
+    dm.addInvokeEoc("Init",0,TurnOffCastEoc);
+
+    const out:JObject[] = [ConcentratedAttack,conattack,TurnOffCast,TurnOffCastEoc];
+
+
 
     //权重排序
     const skills = (Object.values(CastAIDataMap) as CastAIData[]);

@@ -45,10 +45,12 @@
 		"shape": "blast",
 		"extra_effects": [
 			{
-				"id": "CNPC_SPELL_战术镇压_充能_AddEffect_0"
+				"id": "CNPC_SPELL_战术镇压_充能_AddEffect_0",
+				"hit_self": true
 			},
 			{
-				"id": "CNPC_SPELL_战术镇压_充能_Audio_1"
+				"id": "CNPC_SPELL_战术镇压_充能_Audio_1",
+				"hit_self": true
 			}
 		]
 	},
@@ -83,7 +85,8 @@
 				"id": "CNPC_SPELL_战术镇压_攻击_RunEoc_0"
 			},
 			{
-				"id": "CNPC_SPELL_战术镇压_攻击_Audio_1"
+				"id": "CNPC_SPELL_战术镇压_攻击_Audio_1",
+				"hit_self": true
 			}
 		]
 	}

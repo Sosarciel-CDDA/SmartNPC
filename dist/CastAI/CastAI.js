@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CastAIDataMap = void 0;
+exports.TurnOffCast = exports.CastAIDataMap = void 0;
 exports.createCastAI = createCastAI;
 const utils_1 = require("@zwa73/utils");
 const SADefine_1 = require("../SADefine");
@@ -49,6 +49,17 @@ tableList.forEach((file) => {
             : { and: ["u_is_npc", { math: [gcdValName, "<=", "0"] }] };
     });
 });
+//关闭默认施法AI
+exports.TurnOffCast = {
+    type: 'mutation',
+    id: SADefine_1.SADef.genMutationID('TurnOffCast'),
+    flags: ['NO_SPELLCASTING'],
+    name: "关闭默认施法AI",
+    description: "关闭默认施法AI",
+    points: 0,
+    valid: false,
+    player_display: false,
+};
 /**处理角色技能 */
 async function createCastAI(dm) {
     //集火
@@ -56,7 +67,15 @@ async function createCastAI(dm) {
         { npc_add_effect: DefData_1.ConcentratedAttack.id, duration: 10 }
     ]);
     dm.addInvokeEoc("TryAttack", 0, conattack);
-    const out = [DefData_1.ConcentratedAttack, conattack];
+    //关闭施法
+    const TurnOffCastEoc = SADefine_1.SADef.genActEoc('TurnOffCast', [{
+            if: { not: { "u_has_trait": exports.TurnOffCast.id } },
+            then: [
+                { "u_add_trait": exports.TurnOffCast.id }
+            ]
+        }]);
+    dm.addInvokeEoc("Init", 0, TurnOffCastEoc);
+    const out = [DefData_1.ConcentratedAttack, conattack, exports.TurnOffCast, TurnOffCastEoc];
     //权重排序
     const skills = Object.values(exports.CastAIDataMap);
     //全局冷却事件

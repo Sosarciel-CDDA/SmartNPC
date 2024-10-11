@@ -50,7 +50,8 @@
 				"id": "CNPC_SPELL_FrostShield_AddEffect_1"
 			},
 			{
-				"id": "CNPC_SPELL_FrostShield_Audio_2"
+				"id": "CNPC_SPELL_FrostShield_Audio_2",
+				"hit_self": true
 			}
 		]
 	},
@@ -110,7 +111,8 @@
 				"id": "CNPC_SPELL_BarrageIceSpike_ExtDamage_0"
 			},
 			{
-				"id": "CNPC_SPELL_BarrageIceSpike_Audio_1"
+				"id": "CNPC_SPELL_BarrageIceSpike_Audio_1",
+				"hit_self": true
 			}
 		]
 	},
@@ -146,7 +148,8 @@
 		],
 		"extra_effects": [
 			{
-				"id": "CNPC_SPELL_ElectricStrike_Audio_0"
+				"id": "CNPC_SPELL_ElectricStrike_Audio_0",
+				"hit_self": true
 			}
 		]
 	},
@@ -187,7 +190,8 @@
 				"id": "CNPC_SPELL_IonStorm_ExtDamage_0"
 			},
 			{
-				"id": "CNPC_SPELL_IonStorm_Audio_1"
+				"id": "CNPC_SPELL_IonStorm_Audio_1",
+				"hit_self": true
 			}
 		]
 	},
@@ -225,7 +229,8 @@
 		],
 		"extra_effects": [
 			{
-				"id": "CNPC_SPELL_ThunderDischargeBeam_Audio_0"
+				"id": "CNPC_SPELL_ThunderDischargeBeam_Audio_0",
+				"hit_self": true
 			}
 		]
 	},

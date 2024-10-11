@@ -55,7 +55,8 @@
 		],
 		"extra_effects": [
 			{
-				"id": "CNPC_SPELL_EvaporateFuture_Audio_0"
+				"id": "CNPC_SPELL_EvaporateFuture_Audio_0",
+				"hit_self": true
 			},
 			{
 				"id": "CNPC_SPELL_EvaporateFuture_RunEoc_1"
@@ -82,7 +83,8 @@
 		],
 		"extra_effects": [
 			{
-				"id": "CNPC_SPELL_PreciseSnipe_Audio_0"
+				"id": "CNPC_SPELL_PreciseSnipe_Audio_0",
+				"hit_self": true
 			}
 		]
 	},
@@ -139,7 +141,8 @@
 				"id": "CNPC_SPELL_BladeStrike_ExtDamage_0"
 			},
 			{
-				"id": "CNPC_SPELL_BladeStrike_Audio_1"
+				"id": "CNPC_SPELL_BladeStrike_Audio_1",
+				"hit_self": true
 			}
 		]
 	},
@@ -169,7 +172,8 @@
 		],
 		"extra_effects": [
 			{
-				"id": "CNPC_SPELL_IntelligenceDeciphered_Audio_0"
+				"id": "CNPC_SPELL_IntelligenceDeciphered_Audio_0",
+				"hit_self": true
 			}
 		]
 	},
@@ -206,7 +210,8 @@
 				"id": "CNPC_SPELL_BladeofTrauma_ExtDamage_0"
 			},
 			{
-				"id": "CNPC_SPELL_BladeofTrauma_Audio_1"
+				"id": "CNPC_SPELL_BladeofTrauma_Audio_1",
+				"hit_self": true
 			}
 		]
 	},
