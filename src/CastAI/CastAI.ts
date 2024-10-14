@@ -1,12 +1,12 @@
-import { JObject, UtilFT, UtilFunc } from "@zwa73/utils";
+import { JObject, UtilFT } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@src/SADefine";
-import { Spell, SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Effect, Mutation, Eoc} from "cdda-schema";
+import { SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Mutation} from "cdda-schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
 import { DataManager } from "cdda-event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
 import { CastAIData, CastAIDataJson, CastAIDataTable, CastProcData } from "./CastAIInterface";
 import { procSpellTarget } from "./ProcFunc";
-import * as path from 'path';
+import * as path from 'pathe';
 import { ConcentratedAttack, getDefCastData } from "./DefData";
 import { createCastAITalkTopic } from "./TalkTopic";
 
@@ -58,16 +58,26 @@ tableList.forEach((file)=>{
 });
 
 
-//关闭默认施法AI
-export const TurnOffCast:Mutation={
+
+
+//Npc属性优化
+export const SmartNpcMut:Mutation={
     type:'mutation',
-    id:SADef.genMutationID('TurnOffCast'),
-    flags:['NO_SPELLCASTING'] as any,
-    name:"关闭默认施法AI",
-    description:"关闭默认施法AI",
+    id:SADef.genMutationID('SmartNpc'),
+    flags:['NO_SPELLCASTING'] as any,//关闭自动施法
+    name:"Npc属性优化",
+    description:"Npc属性优化",
     points:0,
+    purifiable:false,
     valid:false,
     player_display:false,
+    enchantments:[{
+        condition:'ALWAYS',
+        ench_effects:[{
+            effect:'AVOID_FRIENDRY_FIRE',
+            intensity:1.0,
+        }]
+    }]
 }
 
 
@@ -79,16 +89,13 @@ export async function createCastAI(dm:DataManager){
     ])
     dm.addInvokeEoc("TryAttack",0,conattack);
 
-    //关闭施法
-    const TurnOffCastEoc = SADef.genActEoc('TurnOffCast',[{
-        if:{not:{"u_has_trait":TurnOffCast.id}},
-        then:[
-            {"u_add_trait":TurnOffCast.id}
-        ]
-    }]);
+    //初始化
+    const TurnOffCastEoc = SADef.genActEoc('Init',[
+        {"u_add_trait":SmartNpcMut.id},
+    ]);
     dm.addInvokeEoc("Init",0,TurnOffCastEoc);
 
-    const out:JObject[] = [ConcentratedAttack,conattack,TurnOffCast,TurnOffCastEoc];
+    const out:JObject[] = [ConcentratedAttack,conattack,SmartNpcMut,TurnOffCastEoc];
 
 
 
