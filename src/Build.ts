@@ -3,6 +3,7 @@ import { createCastAI } from "./CastAI";
 import { DATA_PATH, OUT_PATH } from "./SADefine";
 import { createMathFunc } from "./MathFunc";
 import { utilSpell } from "./UtilSpell";
+import { buildStrengthen } from "./Strengthen";
 
 
 
@@ -14,5 +15,6 @@ export async function build(){
     await utilSpell(AIDm);
     await createCastAI(AIDm);
     await createMathFunc(AIDm);
+    await buildStrengthen(AIDm);
     await AIDm.saveAllData();
 }

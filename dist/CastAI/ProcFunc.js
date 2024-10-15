@@ -104,7 +104,7 @@ async function filter_randomProc(dm, cpd) {
         eoc_type: "ACTIVATION",
         effect: [
             { math: [fhitvar, "=", "1"] },
-            { npc_location_variable: { global_val: "tmp_loc" } },
+            { u_location_variable: { global_val: "tmp_loc" } },
         ],
         condition: { and: [
                 ...filterCond ? [filterCond] : [],
@@ -137,7 +137,8 @@ async function filter_randomProc(dm, cpd) {
         id: SADefine_1.SADef.genEOCID(`Cast${filterTargetSpell.id}`),
         eoc_type: "ACTIVATION",
         effect: [
-            { u_cast_spell: { id: filterTargetSpell.id, once_in: one_in_chance, max_level } },
+            { set_string_var: `try ${spell.id}`, target_var: { global_val: 'tmpstr' } },
+            { u_cast_spell: { id: filterTargetSpell.id, once_in: one_in_chance, min_level } },
             { run_eocs: castEoc.id },
             { math: [fhitvar, "=", "0"] }
         ],
@@ -300,7 +301,7 @@ async function control_castProc(dm, cpd) {
         : "";
     //创建施法对话
     const castResp = {
-        condition: cast_condition.force_lvl ? undefined : { math: [`n_spell_level('${spell.id}')`, ">=", "0"] },
+        condition: cast_condition.force_lvl != null ? undefined : { math: [`n_spell_level('${spell.id}')`, ">=", "0"] },
         truefalsetext: {
             condition: { and: [...base_cond] },
             true: `[可释放] <spell_name:${id}> ${costDisplay}`,

@@ -3,13 +3,5 @@
 	"common_condition": {
 		"u_has_trait": "Remilia_cnpc"
 	},
-	"table": {
-		"tactical_transfer": {
-			"cast_condition": {
-				"hook": "TryAttack",
-				"target": "control_cast"
-			},
-			"cooldown": 64
-		}
-	}
+	"table": {}
 }

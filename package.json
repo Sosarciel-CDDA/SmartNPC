@@ -10,8 +10,9 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "build-schema": "node buildSchema",
-    "compile": "tsc && tsc-alias",
+    "expand-macro": "powershell scripts/expand-macro",
+    "compile": "powershell scripts/compile",
+    "build-schema": "powershell scripts/build-schema",
     "build": "npm run compile && node --trace-warnings build"
   },
   "repository": {

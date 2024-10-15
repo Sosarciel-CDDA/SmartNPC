@@ -1,8 +1,7 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
-import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, SpeakerEffect, EocEffect,} from "cdda-schema";
-import { SPELL_M1T } from "@src/UtilSpell";
-import { CharHook, InteractHookList, DataManager } from "cdda-event";
+import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, EocEffect,} from "cdda-schema";
+import { InteractHookList, DataManager } from "cdda-event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 
@@ -119,7 +118,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         eoc_type:"ACTIVATION",
         effect:[
             {math:[fhitvar,"=","1"]},
-            {npc_location_variable: { global_val: "tmp_loc" }},
+            {u_location_variable: { global_val: "tmp_loc" }},
         ],
         condition:{and:[
             ... filterCond ? [filterCond] : [],
@@ -155,7 +154,8 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         id:SADef.genEOCID(`Cast${filterTargetSpell.id}`),
         eoc_type:"ACTIVATION",
         effect:[
-            {u_cast_spell:{id:filterTargetSpell.id,once_in:one_in_chance,max_level}},
+            //{set_string_var:`try ${spell.id}`,target_var:{global_val:'tmpstr'}},
+            {u_cast_spell:{id:filterTargetSpell.id,once_in:one_in_chance,min_level}},
             {run_eocs:castEoc.id},
             {math:[fhitvar,"=","0"]}
         ],
@@ -340,7 +340,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
 
     //创建施法对话
     const castResp:Resp={
-        condition:cast_condition.force_lvl ? undefined : {math:[`n_spell_level('${spell.id}')`,">=","0"]},
+        condition:cast_condition.force_lvl!=null ? undefined : {math:[`n_spell_level('${spell.id}')`,">=","0"]},
         truefalsetext:{
             condition:{and:[...base_cond]},
             true:`[可释放] <spell_name:${id}> ${costDisplay}`,

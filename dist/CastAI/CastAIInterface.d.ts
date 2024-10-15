@@ -13,7 +13,7 @@ export declare const TargetTypeList: readonly ["auto", "random", "direct_hit", "
  *
  * filter_random 为根据条件筛选可能的目标 命中第一个通过筛选的目标 条件中u为施法者n为目标 适用于队友buff;
  *
- * control_cast 为玩家控制施法 u 为玩家 n 为npc hook字段无效 `${spell.id}_loc` 为玩家选择坐标
+ * control_cast 为玩家控制施法 u 为玩家 n 为npc hook字段无效 全局变量 `${spell.id}_control_cast_loc` 为玩家选择坐标
  *
  * 默认为auto
  * 若允许多个cast_condition 请指定具体type
@@ -21,14 +21,14 @@ export declare const TargetTypeList: readonly ["auto", "random", "direct_hit", "
  */
 export type TargetType = typeof TargetTypeList[number];
 /**数据表 技能ID : 施法数据
- * @additionalProperties {"$ref": "#/definitions/RawCastAIData"}
 */
-export type CastAIDataTable = Partial<Record<SpellID, RawCastAIData>>;
-/**json格式
- */
-export type CastAIDataJson = {
+export type CastAIDataTable = {
+    [key: string]: RawCastAIData;
+};
+/**json格式  */
+export type CastAIDataJsonTable = {
     /**需求mod */
-    require_mod: string;
+    require_mod?: string;
     /**共同条件 */
     common_condition?: (BoolObj);
     /**数据表 技能ID : 施法数据 */
@@ -68,7 +68,7 @@ export type CastCond = {
     /**释放条件 */
     condition?: (BoolObj);
     /**时机 */
-    hook: CharHook;
+    hook: CharHook | "None";
     /**瞄准方式
      * auto 为 根据施法目标自动选择;
      *
@@ -92,8 +92,8 @@ export type CastCond = {
     ignore_cost?: boolean;
     /**忽略经验增长 */
     infoge_exp?: boolean;
-    /**强制使用某个法术等级 */
-    force_lvl?: NumObj;
+    /**不检查是否学会, 强制使用某个法术等级 */
+    force_lvl?: (NumObj);
     /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */
     weight?: number;
     /**在 n 秒没有成功施法后才会启用此条件 */

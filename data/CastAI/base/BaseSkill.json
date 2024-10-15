@@ -1,0 +1,12 @@
+{
+	"table": {
+		"tactical_transfer": {
+			"cast_condition": {
+				"hook": "None",
+				"target": "control_cast",
+				"force_lvl": 0
+			},
+			"cooldown": 64
+		}
+	}
+}

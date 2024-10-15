@@ -1,39 +1,6 @@
 [
 	{
 		"type": "SPELL",
-		"id": "tactical_transfer",
-		"description": "传送到视野范围内的另一个位置。",
-		"name": "战术转移",
-		"valid_targets": [
-			"ground"
-		],
-		"effect": "attack",
-		"min_range": {
-			"math": [
-				"BATTLE_RANGE"
-			]
-		},
-		"shape": "blast",
-		"extra_effects": [
-			{
-				"id": "CNPC_SPELL_tactical_transfer_RunEoc_0"
-			},
-			{
-				"id": "CNPC_SPELL_tactical_transfer_RunEoc_0"
-			},
-			{
-				"id": "CNPC_SPELL_tactical_transfer_RunEoc_0"
-			},
-			{
-				"id": "CNPC_SPELL_tactical_transfer_RunEoc_0"
-			},
-			{
-				"id": "CNPC_SPELL_tactical_transfer_RunEoc_0"
-			}
-		]
-	},
-	{
-		"type": "SPELL",
 		"id": "战术镇压_充能",
 		"name": "战术镇压 充能",
 		"description": "准备释放 5 次 战术镇压 攻击",

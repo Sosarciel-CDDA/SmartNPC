@@ -4,13 +4,6 @@
 		"u_has_trait": "Akaset_cnpc"
 	},
 	"table": {
-		"tactical_transfer": {
-			"cast_condition": {
-				"hook": "TryAttack",
-				"target": "control_cast"
-			},
-			"cooldown": 64
-		},
 		"FrostShield": {
 			"cast_condition": {
 				"hook": "BattleUpdate"

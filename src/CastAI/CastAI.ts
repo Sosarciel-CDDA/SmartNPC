@@ -4,7 +4,7 @@ import { SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Mutation} from 
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
 import { DataManager } from "cdda-event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
-import { CastAIData, CastAIDataJson, CastAIDataTable, CastProcData } from "./CastAIInterface";
+import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./CastAIInterface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
 import { ConcentratedAttack, getDefCastData } from "./DefData";
@@ -33,7 +33,7 @@ const COST_MAP:Record<SpellEnergySource,string|undefined>={
 export const CastAIDataMap:CastAIDataTable = {};
 const tableList = UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json").replaceAll("\\","/"));
 tableList.forEach((file)=>{
-    const json = UtilFT.loadJSONFileSync(file) as CastAIDataJson;
+    const json = UtilFT.loadJSONFileSync(file) as CastAIDataJsonTable;
 
     Object.entries(json.table).forEach(([spellID,castData])=>{
         if(castData==undefined) throw "";
@@ -71,13 +71,13 @@ export const SmartNpcMut:Mutation={
     purifiable:false,
     valid:false,
     player_display:false,
-    enchantments:[{
-        condition:'ALWAYS',
-        ench_effects:[{
-            effect:'AVOID_FRIENDRY_FIRE',
-            intensity:1.0,
-        }]
-    }]
+    //enchantments:[{
+    //    condition:'ALWAYS',
+    //    ench_effects:[{
+    //        effect:'AVOID_FRIENDRY_FIRE',
+    //        intensity:1.0,
+    //    }]
+    //}]
 }
 
 
@@ -179,10 +179,9 @@ export async function createCastAI(dm:DataManager){
             if(fallback_with === undefined)
                 after_effect.push({math:[fallbackValName,"=","0"]})
 
-            //计算基础条件 确保第一个为技能开关, 用于cast_control读取
+            //计算基础条件 确保第一个为技能开关, 用于cast_control读取 
             const base_cond: BoolObj[] = [
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
-                {math:[`u_spell_level('${spell.id}')`,">=","0"]},
             ];
             //共同条件
             if(common_condition) base_cond.push(common_condition);
@@ -200,7 +199,9 @@ export async function createCastAI(dm:DataManager){
 
             //计算施法等级
             let min_level:NumObj = {math:[`u_spell_level('${spell.id}')`] as [string]};
-            if(cast_condition.force_lvl!=null) min_level = cast_condition.force_lvl;
+            if(cast_condition.force_lvl!=null)
+                min_level = cast_condition.force_lvl;
+            else base_cond.push({math:[`u_spell_level('${spell.id}')`,">=","0"]});
 
 
             //处理并加入输出

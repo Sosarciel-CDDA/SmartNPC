@@ -80,7 +80,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 target:"random",
                 fallback_with:10,
             },{
-                hook:"TryAttack",
+                hook:"None",
                 target:"control_cast",
             }],
             one_in_chance:2,
@@ -101,7 +101,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 target:"random",
                 fallback_with:10,
             },{
-                hook:"TryAttack",
+                hook:"None",
                 target:"control_cast",
             }],
             one_in_chance:2,
@@ -122,7 +122,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 target:"random",
                 fallback_with:10,
             },{
-                hook:"TryAttack",
+                hook:"None",
                 target:"control_cast",
             }],
             one_in_chance:2,
@@ -161,7 +161,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 hook:"BattleUpdate",
                 target:"filter_random"
             },{
-                hook:"TryAttack",
+                hook:"None",
                 target:"control_cast",
             }],
             one_in_chance:2,
@@ -180,7 +180,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 hook:"SlowUpdate",
                 target:"filter_random"
             },{
-                hook:"TryAttack",
+                hook:"None",
                 target:"control_cast",
             }],
             one_in_chance:2,

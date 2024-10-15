@@ -36,7 +36,7 @@ const DefCastDataMap = {
                     target: "random",
                     fallback_with: 10,
                 }, {
-                    hook: "TryAttack",
+                    hook: "None",
                     target: "control_cast",
                 }],
             one_in_chance: 2,
@@ -57,7 +57,7 @@ const DefCastDataMap = {
                     target: "random",
                     fallback_with: 10,
                 }, {
-                    hook: "TryAttack",
+                    hook: "None",
                     target: "control_cast",
                 }],
             one_in_chance: 2,
@@ -78,7 +78,7 @@ const DefCastDataMap = {
                     target: "random",
                     fallback_with: 10,
                 }, {
-                    hook: "TryAttack",
+                    hook: "None",
                     target: "control_cast",
                 }],
             one_in_chance: 2,
@@ -117,7 +117,7 @@ const DefCastDataMap = {
                     hook: "BattleUpdate",
                     target: "filter_random"
                 }, {
-                    hook: "TryAttack",
+                    hook: "None",
                     target: "control_cast",
                 }],
             one_in_chance: 2,
@@ -136,7 +136,7 @@ const DefCastDataMap = {
                     hook: "SlowUpdate",
                     target: "filter_random"
                 }, {
-                    hook: "TryAttack",
+                    hook: "None",
                     target: "control_cast",
                 }],
             one_in_chance: 2,

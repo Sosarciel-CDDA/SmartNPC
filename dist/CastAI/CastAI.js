@@ -1,13 +1,36 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TurnOffCast = exports.CastAIDataMap = void 0;
+exports.SmartNpcMut = exports.CastAIDataMap = void 0;
 exports.createCastAI = createCastAI;
 const utils_1 = require("@zwa73/utils");
 const SADefine_1 = require("../SADefine");
 const UtilSpell_1 = require("../UtilSpell");
 const CastAIGener_1 = require("./CastAIGener");
 const ProcFunc_1 = require("./ProcFunc");
-const path = require("path");
+const path = __importStar(require("pathe"));
 const DefData_1 = require("./DefData");
 const TalkTopic_1 = require("./TalkTopic");
 //全局冷却字段名
@@ -49,16 +72,24 @@ tableList.forEach((file) => {
             : { and: ["u_is_npc", { math: [gcdValName, "<=", "0"] }] };
     });
 });
-//关闭默认施法AI
-exports.TurnOffCast = {
+//Npc属性优化
+exports.SmartNpcMut = {
     type: 'mutation',
-    id: SADefine_1.SADef.genMutationID('TurnOffCast'),
-    flags: ['NO_SPELLCASTING'],
-    name: "关闭默认施法AI",
-    description: "关闭默认施法AI",
+    id: SADefine_1.SADef.genMutationID('SmartNpc'),
+    flags: ['NO_SPELLCASTING'], //关闭自动施法
+    name: "Npc属性优化",
+    description: "Npc属性优化",
     points: 0,
+    purifiable: false,
     valid: false,
     player_display: false,
+    //enchantments:[{
+    //    condition:'ALWAYS',
+    //    ench_effects:[{
+    //        effect:'AVOID_FRIENDRY_FIRE',
+    //        intensity:1.0,
+    //    }]
+    //}]
 };
 /**处理角色技能 */
 async function createCastAI(dm) {
@@ -67,15 +98,12 @@ async function createCastAI(dm) {
         { npc_add_effect: DefData_1.ConcentratedAttack.id, duration: 10 }
     ]);
     dm.addInvokeEoc("TryAttack", 0, conattack);
-    //关闭施法
-    const TurnOffCastEoc = SADefine_1.SADef.genActEoc('TurnOffCast', [{
-            if: { not: { "u_has_trait": exports.TurnOffCast.id } },
-            then: [
-                { "u_add_trait": exports.TurnOffCast.id }
-            ]
-        }]);
+    //初始化
+    const TurnOffCastEoc = SADefine_1.SADef.genActEoc('Init', [
+        { "u_add_trait": exports.SmartNpcMut.id },
+    ]);
     dm.addInvokeEoc("Init", 0, TurnOffCastEoc);
-    const out = [DefData_1.ConcentratedAttack, conattack, exports.TurnOffCast, TurnOffCastEoc];
+    const out = [DefData_1.ConcentratedAttack, conattack, exports.SmartNpcMut, TurnOffCastEoc];
     //权重排序
     const skills = Object.values(exports.CastAIDataMap);
     //全局冷却事件
@@ -139,10 +167,9 @@ async function createCastAI(dm) {
             //清空备用计数器
             if (fallback_with === undefined)
                 after_effect.push({ math: [fallbackValName, "=", "0"] });
-            //计算基础条件 确保第一个为技能开关, 用于cast_control读取
+            //计算基础条件 确保第一个为技能开关, 用于cast_control读取 
             const base_cond = [
                 { math: [(0, CastAIGener_1.getDisableSpellVar)("u", spell), "!=", "1"] },
-                { math: [`u_spell_level('${spell.id}')`, ">=", "0"] },
             ];
             //共同条件
             if (common_condition)
@@ -162,6 +189,8 @@ async function createCastAI(dm) {
             let min_level = { math: [`u_spell_level('${spell.id}')`] };
             if (cast_condition.force_lvl != null)
                 min_level = cast_condition.force_lvl;
+            else
+                base_cond.push({ math: [`u_spell_level('${spell.id}')`, ">=", "0"] });
             //处理并加入输出
             const dat = {
                 skill, after_effect, before_effect,

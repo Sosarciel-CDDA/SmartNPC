@@ -4,13 +4,6 @@
 		"u_has_trait": "小鸟游_星野_cnpc"
 	},
 	"table": {
-		"tactical_transfer": {
-			"cast_condition": {
-				"hook": "TryAttack",
-				"target": "control_cast"
-			},
-			"cooldown": 64
-		},
 		"战术镇压_充能": {
 			"cast_condition": [
 				{
