@@ -30,12 +30,42 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
+    const {max_level,range_increment,min_range,max_range,valid_targets,targeted_monster_ids,targeted_monster_species} = spell;
+
     //添加条件效果
     before_effect.push(...cast_condition.before_effect??[]);
     after_effect.push(...cast_condition.after_effect??[]);
 
     //合并基础条件
     if(cast_condition.condition) base_cond.push(cast_condition.condition);
+
+    //创建辅助法术
+    const helperflags:SpellFlag[] = [...CON_SPELL_FLAG];
+    if(spell.flags?.includes("IGNORE_WALLS")) helperflags.push("IGNORE_WALLS");
+    const subHelperSpell:Spell={
+        type: "SPELL",
+        id: SADef.genSpellID(`${spell.id}_RandomTargetSub_${cast_condition.id}`),
+        name:spell.name+"_子随机索敌",
+        description:`${spell.name}的子随机索敌法术`,
+        effect: "attack",
+        shape: "blast",
+        flags: [...helperflags,'RANDOM_TARGET'],
+        extra_effects:[{id:spell.id}],
+        max_level,range_increment,min_range,max_range,
+        valid_targets,targeted_monster_ids,targeted_monster_species,
+    }
+    const helperSpell:Spell={
+        type: "SPELL",
+        id: SADef.genSpellID(`${spell.id}_RandomTarget_${cast_condition.id}`),
+        name:spell.name+"_主随机索敌",
+        description:`${spell.name}的主随机索敌法术`,
+        valid_targets: ["self"],
+        effect: "attack",
+        shape: "blast",
+        flags: [...helperflags],
+        extra_effects:[{id:subHelperSpell.id}],
+        max_level,
+    }
 
     //创建施法EOC
     const castEoc:Eoc={
@@ -46,7 +76,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
             ...before_effect,
             {
                 u_cast_spell:{
-                    id:spell.id,
+                    id:helperSpell.id,
                     once_in:one_in_chance,
                     min_level,
                 },
@@ -68,7 +98,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     }
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
-    return [castEoc];
+    return [castEoc,helperSpell,subHelperSpell];
 }
 
 async function filter_randomProc(dm:DataManager,cpd:CastProcData){
