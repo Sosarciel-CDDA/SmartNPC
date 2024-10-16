@@ -1,6 +1,7 @@
 import { DataManager } from "cdda-event";
-import { Spell } from "cdda-schema";
+import { Spell, TalkTopic } from "cdda-schema";
 import { SADef } from "./SADefine";
+import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "./UtilSpell";
 
 /**用于必定成功的控制法术的flags */
 export const CON_SPELL_FLAG = [
@@ -33,24 +34,43 @@ const TacticalTransferEoc = {
     ],
 };
 
+
+
+const QuickBackRange = 10;
+
 /**快速后退击退子法术 */
-const QuickBackEocSub: Spell = {
+const QuickBackEocSubPush: Spell = {
     type: "SPELL",
-    id: "quick_back_eoc_sub",
-    description: "快速后退委托法术",
-    name: "快速后退委托法术",
+    id: "quick_back_eoc_pushsub",
+    description: "快速后退委托击退法术",
+    name: "快速后退委托击退法术",
     valid_targets: ["hostile","ally","self"],
     effect: "directed_push",
-    min_range: 6,
+    min_range: QuickBackRange,
     min_damage: 1,
     max_damage: 1,
+    shape: "blast",
+    flags: [...CON_SPELL_FLAG],
+}
+/**快速后退移动调整子法术 */
+const QuickBackEocSubMovemod: Spell = {
+    type: "SPELL",
+    id: "quick_back_eoc_movemodsub",
+    description: "快速后退委托movemod法术",
+    name: "快速后退委托movemod法术",
+    valid_targets: ["hostile","ally","self"],
+    effect: "mod_moves",
+    min_range: QuickBackRange,
+    min_damage: 50,
+    max_damage: 50,
     shape: "blast",
     flags: [...CON_SPELL_FLAG],
 }
 /**快速后退施法委托 */
 const QuickBackEoc = SADef.genActEoc('QuickBack',[
     {npc_location_variable:{context_val:"tmploc"}},
-    {u_cast_spell: {id:QuickBackEocSub.id},loc:{context_val:'tmploc'}}
+    {u_cast_spell: {id:QuickBackEocSubPush.id},loc:{context_val:'tmploc'}},
+    {u_cast_spell: {id:QuickBackEocSubMovemod.id},loc:{context_val:'tmploc'}}
 ],{or:['u_is_character','u_is_monster']});
 /**快速后退 */
 const QuickBackSub: Spell = {
@@ -60,7 +80,7 @@ const QuickBackSub: Spell = {
     name: "快速后退子法术",
     valid_targets: ["hostile"],
     effect: "effect_on_condition",
-    min_range: 6,
+    min_range: QuickBackRange,
     shape: "blast",
     flags: [...CON_SPELL_FLAG,'RANDOM_TARGET'],
     effect_str:QuickBackEoc.id,
@@ -77,7 +97,27 @@ const QuickBack: Spell = {
     flags: [...CON_SPELL_FLAG],
     extra_effects:[{id:QuickBackSub.id}]
 }
-
+//战斗对话
+const QuickBackTalkTopic:TalkTopic={
+    type:"talk_topic",
+    id:["TALK_COMBAT_COMMANDS"],
+    insert_before_standard_exits:true,
+    responses:[{
+        truefalsetext:{
+            condition:{math:['n_EnableQuickBack',"==","1"]},
+            true:`不要再和怪物保持射击距离了。`,
+            false:`和怪物保持射击距离。`,
+        },
+        effect:{run_eocs:{
+            id:SADef.genEOCID('QuickBackTopicSwitch'),
+            eoc_type:'ACTIVATION',
+            effect:[{math:['n_EnableQuickBack',"=","0"]}],
+            false_effect:[{math:['n_EnableQuickBack',"=","1"]}],
+            condition:{math:['n_EnableQuickBack',"==","1"]},
+        }},
+        topic:"TALK_COMBAT_COMMANDS",
+    }]
+}
 
 
 
@@ -88,10 +128,10 @@ const QuickBack: Spell = {
 export async function buildStrengthen(dm:DataManager){
     const autoback = SADef.genActEoc('AutoQuickBack',[
         {u_cast_spell: {id:QuickBack.id}},
-        {u_message:"<global_val:tmpstr>"},
+        //{u_message:"<global_val:tmpstr>"},
         //{u_cast_spell: {id:'fireball',min_level:10}},
-    ]);
+    ],{and:['u_is_npc',{math:['u_EnableQuickBack','==','1']}]});
     dm.addInvokeID('Update',0,autoback.id);
 
-    dm.addData([autoback,TacticalTransfer,TacticalTransferEoc,QuickBack,QuickBackSub,QuickBackEoc,QuickBackEocSub],'strength.json');
+    dm.addData([autoback,TacticalTransfer,TacticalTransferEoc,QuickBack,QuickBackSub,QuickBackEoc,QuickBackEocSubMovemod,QuickBackEocSubPush,QuickBackTalkTopic],'strength.json');
 }

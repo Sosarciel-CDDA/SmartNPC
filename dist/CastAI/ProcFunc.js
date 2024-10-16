@@ -25,12 +25,41 @@ async function randomProc(dm, cpd) {
     const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
+    const { max_level, range_increment, min_range, max_range, valid_targets, targeted_monster_ids, targeted_monster_species } = spell;
     //添加条件效果
     before_effect.push(...cast_condition.before_effect ?? []);
     after_effect.push(...cast_condition.after_effect ?? []);
     //合并基础条件
     if (cast_condition.condition)
         base_cond.push(cast_condition.condition);
+    //创建辅助法术
+    const helperflags = [...SADefine_1.CON_SPELL_FLAG];
+    if (spell.flags?.includes("IGNORE_WALLS"))
+        helperflags.push("IGNORE_WALLS");
+    const subHelperSpell = {
+        type: "SPELL",
+        id: SADefine_1.SADef.genSpellID(`${spell.id}_RandomTargetSub_${cast_condition.id}`),
+        name: spell.name + "_子随机索敌",
+        description: `${spell.name}的子随机索敌法术`,
+        effect: "attack",
+        shape: "blast",
+        flags: [...helperflags, 'RANDOM_TARGET'],
+        extra_effects: [{ id: spell.id }],
+        max_level, range_increment, min_range, max_range,
+        valid_targets, targeted_monster_ids, targeted_monster_species,
+    };
+    const helperSpell = {
+        type: "SPELL",
+        id: SADefine_1.SADef.genSpellID(`${spell.id}_RandomTarget_${cast_condition.id}`),
+        name: spell.name + "_主随机索敌",
+        description: `${spell.name}的主随机索敌法术`,
+        valid_targets: ["self"],
+        effect: "attack",
+        shape: "blast",
+        flags: [...helperflags],
+        extra_effects: [{ id: subHelperSpell.id }],
+        max_level,
+    };
     //创建施法EOC
     const castEoc = {
         type: "effect_on_condition",
@@ -40,7 +69,7 @@ async function randomProc(dm, cpd) {
             ...before_effect,
             {
                 u_cast_spell: {
-                    id: spell.id,
+                    id: helperSpell.id,
                     once_in: one_in_chance,
                     min_level,
                 },
@@ -60,7 +89,7 @@ async function randomProc(dm, cpd) {
         then: [{ run_eocs: [castEoc.id] }]
     };
     dm.addEvent(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), [eff]);
-    return [castEoc];
+    return [castEoc, helperSpell, subHelperSpell];
 }
 async function filter_randomProc(dm, cpd) {
     const { skill, base_cond, after_effect, cast_condition, before_effect, min_level } = cpd;
@@ -137,7 +166,7 @@ async function filter_randomProc(dm, cpd) {
         id: SADefine_1.SADef.genEOCID(`Cast${filterTargetSpell.id}`),
         eoc_type: "ACTIVATION",
         effect: [
-            { set_string_var: `try ${spell.id}`, target_var: { global_val: 'tmpstr' } },
+            //{set_string_var:`try ${spell.id}`,target_var:{global_val:'tmpstr'}},
             { u_cast_spell: { id: filterTargetSpell.id, once_in: one_in_chance, min_level } },
             { run_eocs: castEoc.id },
             { math: [fhitvar, "=", "0"] }
