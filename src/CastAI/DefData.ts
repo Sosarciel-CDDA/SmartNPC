@@ -84,11 +84,12 @@ const DefCastDataMap:{
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
             },
-            //{
-            //    hook:"BattleUpdate",
-            //    target:"random",
-            //    fallback_with:10,
-            //},
+            {
+                hook:"BattleUpdate",
+                target:"random",
+                fallback_with:10,
+                force_vaild_target:['hostile'],
+            },
             {
                 hook:"None",
                 target:"control_cast",
@@ -107,11 +108,12 @@ const DefCastDataMap:{
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
             },
-            //{
-            //    hook:"BattleUpdate",
-            //    target:"random",
-            //    fallback_with:10,
-            //},
+            {
+                hook:"BattleUpdate",
+                target:"random",
+                fallback_with:10,
+                force_vaild_target:['hostile'],
+            },
             {
                 hook:"None",
                 target:"control_cast",
@@ -130,11 +132,12 @@ const DefCastDataMap:{
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
             },
-            //{
-            //    hook:"BattleUpdate",
-            //    target:"random",
-            //    fallback_with:10,
-            //},
+            {
+                hook:"BattleUpdate",
+                target:"random",
+                fallback_with:10,
+                force_vaild_target:['hostile'],
+            },
             {
                 hook:"None",
                 target:"control_cast",
@@ -147,7 +150,9 @@ const DefCastDataMap:{
         const dat:CastAIData = {
             cast_condition:{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
-                hook:"BattleUpdate"
+                hook:"BattleUpdate",
+                target:'random',
+                force_vaild_target:['self'],
             },
             one_in_chance:2,
             weight:1,
@@ -158,10 +163,14 @@ const DefCastDataMap:{
         const dat:CastAIData = {
             cast_condition:[{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
-                hook:"BattleUpdate"
+                hook:"BattleUpdate",
+                target:'random',
+                force_vaild_target:['self'],
             },{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
-                hook:"SlowUpdate"
+                hook:"SlowUpdate",
+                target:'random',
+                force_vaild_target:['self'],
             }],
             one_in_chance:2,
             weight:1,
@@ -169,9 +178,13 @@ const DefCastDataMap:{
         return dat;
     },
     BattleTargetBuff(data,spell){
+        const affbps = spell.affected_body_parts;
+
         const dat:CastAIData = {
             cast_condition:[{
-                condition:{math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]},
+                condition:affbps==undefined
+                    ? {math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]}
+                    : {or:affbps.map(bp=>({math:[`n_effect_intensity('${spell.effect_str}', 'bodypart': '${bp}')`,"<","1"]}))},
                 hook:"BattleUpdate",
                 target:"filter_random"
             },{

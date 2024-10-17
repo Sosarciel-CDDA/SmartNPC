@@ -1,5 +1,5 @@
 import { DataManager } from "cdda-event";
-import { Spell, TalkTopic } from "cdda-schema";
+import { Effect, Spell, TalkTopic } from "cdda-schema";
 import { SADef } from "./SADefine";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "./UtilSpell";
 
@@ -120,6 +120,15 @@ const QuickBackTalkTopic:TalkTopic={
 }
 
 
+/**取消逃跑效果 */
+const Courage:Effect={
+    type:"effect_type",
+    id:SADef.genEffectID("Courage"),
+    name:["勇气"],
+    desc:["npc不会逃跑"],
+    removes_effects:["npc_run_away"],
+}
+
 
 /**构建强化数据，将指定的战术转移和快速回退相关数据添加到数据管理器中。
  * @param dm - 数据管理器实例，用于添加数据。
@@ -133,9 +142,15 @@ export async function buildStrengthen(dm:DataManager){
     ],{and:['u_is_npc',{math:['u_EnableQuickBack','==','1']}]});
     dm.addInvokeID('Update',0,autoback.id);
 
+    const courageInit = SADef.genActEoc('InitCourage',[
+        {u_add_effect:Courage.id,duration:'PERMANENT'}
+    ]);
+    dm.addInvokeID('Init',0,courageInit.id);
+
     dm.addData([
         autoback,TacticalTransfer,TacticalTransferEoc,
         QuickBack,QuickBackSub,QuickBackEoc,
-        QuickBackEocSubMovemod,QuickBackEocSubPush,QuickBackTalkTopic
+        QuickBackEocSubMovemod,QuickBackEocSubPush,QuickBackTalkTopic,
+        courageInit,Courage,
     ],'strength.json');
 }

@@ -21,7 +21,7 @@ exports.ControlCastSpeakerEffects = [];
 /**控制施法的回复 */
 exports.ControlCastResps = [];
 async function randomProc(dm, cpd) {
-    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level } = cpd;
+    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level, force_vaild_target } = cpd;
     const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
@@ -32,6 +32,19 @@ async function randomProc(dm, cpd) {
     //合并基础条件
     if (cast_condition.condition)
         base_cond.push(cast_condition.condition);
+    //命中id
+    const fhitvar = `${spell.id}_hasTarget`;
+    //创建记录坐标Eoc
+    const locEoc = {
+        id: SADefine_1.SADef.genEOCID(`${spell.id}_RandomRecordLoc_${cast_condition.id}`),
+        type: "effect_on_condition",
+        eoc_type: "ACTIVATION",
+        effect: [
+            { math: [fhitvar, "=", "1"] },
+            { u_location_variable: { global_val: "tmp_loc" } },
+        ],
+        condition: { math: [fhitvar, "!=", "1"] },
+    };
     //创建辅助法术
     const helperflags = [...SADefine_1.CON_SPELL_FLAG];
     if (spell.flags?.includes("IGNORE_WALLS"))
@@ -41,12 +54,15 @@ async function randomProc(dm, cpd) {
         id: SADefine_1.SADef.genSpellID(`${spell.id}_RandomTargetSub_${cast_condition.id}`),
         name: spell.name + "_子随机索敌",
         description: `${spell.name}的子随机索敌法术`,
-        effect: "attack",
+        effect: "effect_on_condition",
+        effect_str: locEoc.id,
         shape: "blast",
         flags: [...helperflags, 'RANDOM_TARGET'],
-        extra_effects: [{ id: spell.id }],
         max_level, range_increment, min_range, max_range,
-        valid_targets, targeted_monster_ids, targeted_monster_species,
+        targeted_monster_ids, targeted_monster_species,
+        valid_targets: force_vaild_target != null
+            ? force_vaild_target
+            : valid_targets.filter(item => item != "ground"),
     };
     const helperSpell = {
         type: "SPELL",
@@ -60,7 +76,7 @@ async function randomProc(dm, cpd) {
         extra_effects: [{ id: subHelperSpell.id }],
         max_level,
     };
-    //创建施法EOC
+    //创建施法EOC 应与filter一样使用标记法术 待修改
     const castEoc = {
         type: "effect_on_condition",
         id: (0, CastAIGener_1.genCastEocID)(spell, cast_condition),
@@ -69,7 +85,7 @@ async function randomProc(dm, cpd) {
             ...before_effect,
             {
                 u_cast_spell: {
-                    id: helperSpell.id,
+                    id: spell.id,
                     once_in: one_in_chance,
                     min_level,
                 },
@@ -78,21 +94,34 @@ async function randomProc(dm, cpd) {
                     id: (0, CastAIGener_1.genTrueEocID)(spell, cast_condition),
                     effect: [...after_effect],
                     eoc_type: "ACTIVATION",
-                }
+                },
+                loc: { global_val: "tmp_loc" }
             }
+        ],
+        condition: { math: [fhitvar, "!=", "0"] },
+    };
+    //创建释放索敌法术的eoc
+    const castSelEoc = {
+        type: "effect_on_condition",
+        id: SADefine_1.SADef.genEOCID(`Cast${helperSpell.id}`),
+        eoc_type: "ACTIVATION",
+        effect: [
+            { u_cast_spell: { id: helperSpell.id, once_in: one_in_chance, min_level } },
+            { run_eocs: castEoc.id },
+            { math: [fhitvar, "=", "0"] }
         ],
         condition: { and: [...base_cond] },
     };
     //建立便于event合并的if语法
     const eff = {
         if: merge_condition,
-        then: [{ run_eocs: [castEoc.id] }]
+        then: [{ run_eocs: [castSelEoc.id] }]
     };
     dm.addEvent(hook, (0, CastAIGener_1.getEventWeight)(skill, cast_condition), [eff]);
-    return [castEoc, helperSpell, subHelperSpell];
+    return [castEoc, helperSpell, subHelperSpell, locEoc, castSelEoc];
 }
 async function filter_randomProc(dm, cpd) {
-    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level } = cpd;
+    const { skill, base_cond, after_effect, cast_condition, before_effect, min_level, force_vaild_target } = cpd;
     const { id, one_in_chance, merge_condition } = skill;
     const spell = (0, SADefine_1.getSpellByID)(id);
     const { hook } = cast_condition;
@@ -145,11 +174,12 @@ async function filter_randomProc(dm, cpd) {
     if (spell.flags?.includes("IGNORE_WALLS"))
         flags.push("IGNORE_WALLS");
     const { min_range, max_range, range_increment, max_level, valid_targets, targeted_monster_ids } = spell;
+    //console.log(spell.id);
     const filterTargetSpell = {
         id: SADefine_1.SADef.genSpellID(`${spell.id}_FilterTarget_${cast_condition.id}`),
         type: "SPELL",
-        name: spell.name + "_筛选索敌",
-        description: `${spell.name}的筛选索敌法术`,
+        name: spell.id + "_筛选索敌",
+        description: `${spell.id}的筛选索敌法术`,
         effect: "effect_on_condition",
         effect_str: locEoc.id,
         flags,
@@ -158,7 +188,9 @@ async function filter_randomProc(dm, cpd) {
         max_aoe: max_range,
         aoe_increment: range_increment,
         max_level, targeted_monster_ids,
-        valid_targets: valid_targets.filter(item => item != "ground"),
+        valid_targets: force_vaild_target != null
+            ? force_vaild_target
+            : valid_targets.filter(item => item != "ground"),
     };
     //创建释放索敌法术的eoc
     const castSelEoc = {

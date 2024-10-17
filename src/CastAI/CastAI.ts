@@ -52,8 +52,8 @@ tableList.forEach((file)=>{
                 ? {and:[castData.merge_condition,json.common_condition]}
                 : json.common_condition
         castData.merge_condition = castData.merge_condition
-            ? {and:["u_is_npc",{math:[gcdValName,"<=","0"]},castData.merge_condition]}
-            : {and:["u_is_npc",{math:[gcdValName,"<=","0"]}]}
+            ? {and:["u_is_npc",castData.merge_condition]}
+            : {and:["u_is_npc"]}
     })
 });
 
@@ -148,6 +148,7 @@ export async function createCastAI(dm:DataManager){
         //遍历释放条件生成施法eoc
         for(const cast_condition of ccs){
             const {target, ignore_cost, fallback_with} = cast_condition;
+            const force_vaild_target = cast_condition.force_vaild_target ?? skill.force_vaild_target;
 
             //计算成功效果
             const after_effect:EocEffect[]=[];
@@ -182,6 +183,7 @@ export async function createCastAI(dm:DataManager){
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取 
             const base_cond: BoolObj[] = [
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
+                {math:[gcdValName,"<=","0"]},
             ];
             //共同条件
             if(common_condition) base_cond.push(common_condition);
@@ -198,7 +200,8 @@ export async function createCastAI(dm:DataManager){
                 base_cond.push({math:[fallbackValName,">=",`${fallback_with}`]})
 
             //计算施法等级
-            let min_level:NumObj = {math:[`u_spell_level('${spell.id}')`] as [string]};
+            const maxstr = parseSpellNumObj(spell,'max_level');
+            let min_level:NumObj = {math:[`min(u_spell_level('${spell.id}'), ${maxstr})`] as [string]};
             if(cast_condition.force_lvl!=null)
                 min_level = cast_condition.force_lvl;
             else base_cond.push({math:[`u_spell_level('${spell.id}')`,">=","0"]});
@@ -207,7 +210,8 @@ export async function createCastAI(dm:DataManager){
             //处理并加入输出
             const dat:CastProcData = {
                 skill, after_effect, before_effect,
-                base_cond, cast_condition,min_level
+                base_cond, cast_condition,min_level,
+                force_vaild_target,
             }
             //生成法术
             out.push(...(await procSpellTarget(target,dm,dat)));

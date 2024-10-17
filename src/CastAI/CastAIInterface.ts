@@ -13,7 +13,7 @@ export const TargetTypeList = [
 /**技能选择目标类型  
  * auto 为 根据施法目标自动选择;  
  *  
- * random 为 原版随机 适用于自身buff;  
+ * random 为 原版随机 适用于自身buff 若作为伤害将会击中任何有效目标;  
  *  
  * direct_hit 为 直接命中交互单位 适用于任何目标技能  
  * hook 必须为互动事件  
@@ -68,6 +68,8 @@ export type CastAIData = {
     after_effect?    :EocEffect[];
     /**尝试释放时就运行的效果 */
     before_effect?   :EocEffect[];
+    /**强制覆盖的有效目标 适用于random与filter_random */
+    force_vaild_target?  : Spell['valid_targets'];
 };
 /**未处理的施法数据 */
 export type RawCastAIData = CastAIData|DefCastData;
@@ -109,6 +111,8 @@ export type CastCond={
     weight?         : number;
     /**在 n 秒没有成功施法后才会启用此条件 */
     fallback_with?  : number;
+    /**强制覆盖的有效目标 适用于random与filter_random */
+    force_vaild_target?  : Spell['valid_targets'];
 }
 
 /**基础技能数据 */
@@ -125,4 +129,6 @@ export type CastProcData = Readonly<{
     cast_condition:CastCond;
     /**施法等级 */
     min_level:NumObj;
+    /**覆盖的有效目标 */
+    force_vaild_target?:Spell['valid_targets'];
 }>

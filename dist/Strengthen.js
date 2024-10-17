@@ -113,6 +113,14 @@ const QuickBackTalkTopic = {
             topic: "TALK_COMBAT_COMMANDS",
         }]
 };
+/**取消逃跑效果 */
+const Courage = {
+    type: "effect_type",
+    id: SADefine_1.SADef.genEffectID("Courage"),
+    name: ["勇气"],
+    desc: ["npc不会逃跑"],
+    removes_effects: ["npc_run_away"],
+};
 /**构建强化数据，将指定的战术转移和快速回退相关数据添加到数据管理器中。
  * @param dm - 数据管理器实例，用于添加数据。
  * @returns 无返回值，异步操作完成后数据将被添加。
@@ -124,9 +132,14 @@ async function buildStrengthen(dm) {
         //{u_cast_spell: {id:'fireball',min_level:10}},
     ], { and: ['u_is_npc', { math: ['u_EnableQuickBack', '==', '1'] }] });
     dm.addInvokeID('Update', 0, autoback.id);
+    const courageInit = SADefine_1.SADef.genActEoc('InitCourage', [
+        { u_add_effect: Courage.id, duration: 'PERMANENT' }
+    ]);
+    dm.addInvokeID('Init', 0, courageInit.id);
     dm.addData([
         autoback, TacticalTransfer, TacticalTransferEoc,
         QuickBack, QuickBackSub, QuickBackEoc,
-        QuickBackEocSubMovemod, QuickBackEocSubPush, QuickBackTalkTopic
+        QuickBackEocSubMovemod, QuickBackEocSubPush, QuickBackTalkTopic,
+        courageInit, Courage,
     ], 'strength.json');
 }
