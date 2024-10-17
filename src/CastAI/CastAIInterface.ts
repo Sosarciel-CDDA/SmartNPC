@@ -30,7 +30,10 @@ export type TargetType = typeof TargetTypeList[number];
 
 /**数据表 技能ID : 施法数据
 */
-export type CastAIDataTable = {[key:string]:RawCastAIData};
+export type CastAIDataTable = {
+    /**技能ID : 施法数据 */
+    [key:string]:(RawCastAIData)
+};
 /**json格式  */
 export type CastAIDataJsonTable = {
     /**需求mod */

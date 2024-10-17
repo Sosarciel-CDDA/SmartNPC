@@ -93,7 +93,7 @@ const QuickBack = {
     extra_effects: [{ id: QuickBackSub.id }]
 };
 //战斗对话
-const quickBackTalkTopic = {
+const QuickBackTalkTopic = {
     type: "talk_topic",
     id: ["TALK_COMBAT_COMMANDS"],
     insert_before_standard_exits: true,
@@ -124,5 +124,9 @@ async function buildStrengthen(dm) {
         //{u_cast_spell: {id:'fireball',min_level:10}},
     ], { and: ['u_is_npc', { math: ['u_EnableQuickBack', '==', '1'] }] });
     dm.addInvokeID('Update', 0, autoback.id);
-    dm.addData([autoback, TacticalTransfer, TacticalTransferEoc, QuickBack, QuickBackSub, QuickBackEoc, QuickBackEocSubMovemod, QuickBackEocSubPush, quickBackTalkTopic], 'strength.json');
+    dm.addData([
+        autoback, TacticalTransfer, TacticalTransferEoc,
+        QuickBack, QuickBackSub, QuickBackEoc,
+        QuickBackEocSubMovemod, QuickBackEocSubPush, QuickBackTalkTopic
+    ], 'strength.json');
 }

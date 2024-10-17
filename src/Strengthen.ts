@@ -133,5 +133,9 @@ export async function buildStrengthen(dm:DataManager){
     ],{and:['u_is_npc',{math:['u_EnableQuickBack','==','1']}]});
     dm.addInvokeID('Update',0,autoback.id);
 
-    dm.addData([autoback,TacticalTransfer,TacticalTransferEoc,QuickBack,QuickBackSub,QuickBackEoc,QuickBackEocSubMovemod,QuickBackEocSubPush,QuickBackTalkTopic],'strength.json');
+    dm.addData([
+        autoback,TacticalTransfer,TacticalTransferEoc,
+        QuickBack,QuickBackSub,QuickBackEoc,
+        QuickBackEocSubMovemod,QuickBackEocSubPush,QuickBackTalkTopic
+    ],'strength.json');
 }

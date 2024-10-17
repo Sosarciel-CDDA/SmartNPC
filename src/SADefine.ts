@@ -28,6 +28,11 @@ export function getSpellByID(id?:SpellID){
     if(id===undefined) throw `未找到法术 ${id}`;
     const spell = spellMap[id];
     if(spell==null) throw `未找到法术 ${id}`;
+
+    if((spell as any)['copy-from']!=undefined){
+        const base = getSpellByID((spell as any)['copy-from']) as Spell;
+        return Object.assign({},base,spell);
+    }
     return spell;
 }
 

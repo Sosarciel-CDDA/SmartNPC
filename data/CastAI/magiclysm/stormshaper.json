@@ -1,0 +1,22 @@
+{
+    "require_mod": "magiclysm",
+    "table": {
+        "windrun":"BattleSelfBuff",
+        "jolt":"TargetDamage",
+        "shocking_lash":"TargetDamage",
+        "lightning_bolt":"TargetDamage",
+        "windstrike":"TargetDamage",
+        "lightning_blast":"TargetDamage",
+        "stormshaper_ionization":"TargetDamage",
+        "stormshaper_repelling_arc":"BattleSelfBuff",
+        "stormshaper_repelling_arc_plus":"BattleSelfBuff",
+        "storm_shipwrecker":"BattleSelfBuff",
+        "explosive_decompression":"TargetDamage",
+        "vacuum_decompression":"TargetDamage",
+        "storm_superconductor":"TargetDamage",
+        "toxtricity":"TargetDamage",
+        "electric_waves":"BattleSelfBuff",
+        "electric_arts":"BattleSelfBuff",
+        "stormshaper_heart_of_hurricane":"BattleSelfBuff"
+    }
+}

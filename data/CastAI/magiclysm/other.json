@@ -37,9 +37,6 @@
                     ]}
                 ]}
             }]
-        },
-        "synaptic_stimulation":"BattleSelfBuff",
-        "bless":"BattleTargetBuff",
-        "windrun":"BattleSelfBuff"
+        }
     }
 }

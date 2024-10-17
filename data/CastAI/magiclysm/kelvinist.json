@@ -1,0 +1,14 @@
+{
+  "require_mod": "magiclysm",
+  "table":{
+    "point_flare":"TargetDamage",
+    "fireball":"TargetDamage",
+    "cone_cold":"TargetDamage",
+    "burning_hands":"TargetDamage",
+    "frost_spray":"TargetDamage",
+    "chilling_touch":"TargetDamage",
+    "hoary_blast":"TargetDamage",
+    "kelvinist_flamebreath":"TargetDamage",
+    "freezing_touch":"TargetDamage"
+  }
+}

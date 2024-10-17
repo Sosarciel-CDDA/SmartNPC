@@ -31,11 +31,13 @@ const DefCastDataMap = {
                     target: "filter_random",
                     condition: { math: [`n_effect_intensity('${exports.ConcentratedAttack.id}')`, ">", "0"] },
                     fallback_with: 5,
-                }, {
-                    hook: "BattleUpdate",
-                    target: "random",
-                    fallback_with: 10,
-                }, {
+                },
+                //{
+                //    hook:"BattleUpdate",
+                //    target:"random",
+                //    fallback_with:10,
+                //},
+                {
                     hook: "None",
                     target: "control_cast",
                 }],
@@ -52,11 +54,13 @@ const DefCastDataMap = {
                     target: "filter_random",
                     condition: { math: [`n_effect_intensity('${exports.ConcentratedAttack.id}')`, ">", "0"] },
                     fallback_with: 5,
-                }, {
-                    hook: "BattleUpdate",
-                    target: "random",
-                    fallback_with: 10,
-                }, {
+                },
+                //{
+                //    hook:"BattleUpdate",
+                //    target:"random",
+                //    fallback_with:10,
+                //},
+                {
                     hook: "None",
                     target: "control_cast",
                 }],
@@ -73,11 +77,13 @@ const DefCastDataMap = {
                     target: "filter_random",
                     condition: { math: [`n_effect_intensity('${exports.ConcentratedAttack.id}')`, ">", "0"] },
                     fallback_with: 5,
-                }, {
-                    hook: "BattleUpdate",
-                    target: "random",
-                    fallback_with: 10,
-                }, {
+                },
+                //{
+                //    hook:"BattleUpdate",
+                //    target:"random",
+                //    fallback_with:10,
+                //},
+                {
                     hook: "None",
                     target: "control_cast",
                 }],
@@ -145,8 +151,7 @@ const DefCastDataMap = {
         return dat;
     },
     ItemCast(data, spell) {
-        data = data;
-        const base = DefCastDataMap[data.base](data.base, spell);
+        const base = DefCastDataMap[data.base](undefined, spell);
         const conds = Array.isArray(base.cast_condition) ? base.cast_condition : [base.cast_condition];
         conds.forEach((cond) => {
             data = data;
@@ -175,8 +180,7 @@ const DefCastDataMap = {
         return base;
     },
     Inherit(data, spell) {
-        data = data;
-        const baseObj = DefCastDataMap[data.base](data.base, spell);
+        const baseObj = DefCastDataMap[data.base](undefined, spell);
         const { type, base, ...rest } = data;
         for (const k in rest) {
             const v = rest[k];
@@ -193,7 +197,8 @@ function getDefCastData(data, spellid) {
         dtype = data.type;
     else if (typeof data === "string")
         dtype = data;
-    if (DefCastDataMap[dtype] !== undefined)
-        return DefCastDataMap[dtype](data, (0, SADefine_1.getSpellByID)(spellid));
-    return data;
+    if (dtype == undefined)
+        return data;
+    const gener = DefCastDataMap[dtype];
+    return gener(data, (0, SADefine_1.getSpellByID)(spellid));
 }

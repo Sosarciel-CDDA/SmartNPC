@@ -53,7 +53,7 @@ export type DefCastData = NoParamDefCastData|ObjDefCastData;
 export type DefCastDataType = NoParamDefCastData|ObjDefCastData["type"];
 
 /**施法数据生成器 */
-type DefCastDataGener = (data:DefCastData,spell:Spell)=>CastAIData;
+type DefCastDataGener<T extends DefCastData|undefined> = (data:T,spell:Spell)=>CastAIData;
 
 
 //集火标记
@@ -64,9 +64,17 @@ export const ConcentratedAttack:Effect={
     desc:["被集火"],
 }
 
+type b = Extract<DefCastData,"nul">;
+type e = Extract<DefCastData,{type:"Inherit"}>
+type a = b extends string ? 1 : 0;
+type c = e extends never ? 1 : 2;
 /**施法数据生成器 表 */
-const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
-    TargetDamage(data:DefCastData,spell:Spell){
+const DefCastDataMap:{
+    [K in DefCastDataType]: Extract<DefCastData,{type:K}> extends never
+            ? DefCastDataGener<undefined>
+            : DefCastDataGener<Extract<DefCastData,{type:K}>>
+} = {
+    TargetDamage(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryAttack",
@@ -75,11 +83,13 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 target:"filter_random",
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
-            },{
-                hook:"BattleUpdate",
-                target:"random",
-                fallback_with:10,
-            },{
+            },
+            //{
+            //    hook:"BattleUpdate",
+            //    target:"random",
+            //    fallback_with:10,
+            //},
+            {
                 hook:"None",
                 target:"control_cast",
             }],
@@ -87,7 +97,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    MeleeTargetDamage(data:DefCastData,spell:Spell){
+    MeleeTargetDamage(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryMeleeAttack",
@@ -96,11 +106,13 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 target:"filter_random",
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
-            },{
-                hook:"BattleUpdate",
-                target:"random",
-                fallback_with:10,
-            },{
+            },
+            //{
+            //    hook:"BattleUpdate",
+            //    target:"random",
+            //    fallback_with:10,
+            //},
+            {
                 hook:"None",
                 target:"control_cast",
             }],
@@ -108,7 +120,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    RangeTargetDamage(data:DefCastData,spell:Spell){
+    RangeTargetDamage(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryRangeAttack",
@@ -117,11 +129,13 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
                 target:"filter_random",
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
-            },{
-                hook:"BattleUpdate",
-                target:"random",
-                fallback_with:10,
-            },{
+            },
+            //{
+            //    hook:"BattleUpdate",
+            //    target:"random",
+            //    fallback_with:10,
+            //},
+            {
                 hook:"None",
                 target:"control_cast",
             }],
@@ -129,7 +143,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    BattleSelfBuff(data:DefCastData,spell:Spell){
+    BattleSelfBuff(data,spell){
         const dat:CastAIData = {
             cast_condition:{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
@@ -140,7 +154,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    AlawaySelfBuff(data:DefCastData,spell:Spell){
+    AlawaySelfBuff(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
@@ -154,7 +168,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    BattleTargetBuff(data:DefCastData,spell:Spell){
+    BattleTargetBuff(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
                 condition:{math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]},
@@ -169,7 +183,7 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    AlawayTargetBuff(data:DefCastData,spell:Spell){
+    AlawayTargetBuff(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
                 condition:{math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]},
@@ -188,9 +202,8 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         }
         return dat;
     },
-    ItemCast(data:DefCastData,spell:Spell){
-        data = data as ItemCast;
-        const base = DefCastDataMap[data.base](data.base,spell);
+    ItemCast(data,spell){
+        const base = DefCastDataMap[data.base](undefined,spell);
         const conds = Array.isArray(base.cast_condition) ? base.cast_condition : [base.cast_condition];
         conds.forEach((cond)=>{
             data = data as ItemCast;
@@ -218,9 +231,8 @@ const DefCastDataMap:Record<DefCastDataType,DefCastDataGener> = {
         })
         return base;
     },
-    Inherit(data:DefCastData,spell:Spell){
-        data = data as Inherit;
-        const baseObj = DefCastDataMap[data.base](data.base,spell);
+    Inherit(data,spell){
+        const baseObj = DefCastDataMap[data.base](undefined,spell);
         const {type,base,...rest} = data;
         for(const k in rest){
             const v = (rest as any)[k];
@@ -236,7 +248,8 @@ export function getDefCastData(data:DefCastData|CastAIData,spellid:SpellID):Cast
     if(typeof data === "object" && "type" in data) dtype = data.type;
     else if(typeof data === "string") dtype = data;
 
-    if(DefCastDataMap[dtype!]!==undefined)
-        return DefCastDataMap[dtype!](data as DefCastData,getSpellByID(spellid));
-    return data as any;
+    if(dtype==undefined) return data as any;
+
+    const gener = DefCastDataMap[dtype] as any;
+    return gener(data,getSpellByID(spellid));
 }

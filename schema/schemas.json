@@ -469,6 +469,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -481,6 +482,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -972,6 +974,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -984,6 +987,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -1473,6 +1477,7 @@
 									"is_by_radio",
 									"npc_can_drop_weapon",
 									"npc_driving",
+									"npc_exists",
 									"npc_female",
 									"npc_has_weapon",
 									"npc_is_alive",
@@ -1485,6 +1490,7 @@
 									"npc_male",
 									"u_can_drop_weapon",
 									"u_driving",
+									"u_exists",
 									"u_female",
 									"u_has_weapon",
 									"u_is_alive",
@@ -1975,6 +1981,7 @@
 									"is_by_radio",
 									"npc_can_drop_weapon",
 									"npc_driving",
+									"npc_exists",
 									"npc_female",
 									"npc_has_weapon",
 									"npc_is_alive",
@@ -1987,6 +1994,7 @@
 									"npc_male",
 									"u_can_drop_weapon",
 									"u_driving",
+									"u_exists",
 									"u_female",
 									"u_has_weapon",
 									"u_is_alive",
@@ -6455,6 +6463,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -6467,6 +6476,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -6942,6 +6952,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -6954,6 +6965,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -7715,6 +7727,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -8459,6 +8497,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -8970,6 +9034,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -8982,6 +9047,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -9768,6 +9834,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -10512,6 +10604,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -10535,7 +10653,7 @@
 					"type": "boolean"
 				},
 				"force_lvl": {
-					"description": "强制使用某个法术等级",
+					"description": "不检查是否学会, 强制使用某个法术等级",
 					"anyOf": [
 						{
 							"type": "object",
@@ -10619,7 +10737,7 @@
 			]
 		},
 		"TargetType": {
-			"description": "技能选择目标类型  \nauto 为 根据施法目标自动选择;  \n\nrandom 为 原版随机 适用于自身buff;  \n\ndirect_hit 为 直接命中交互单位 适用于任何目标技能  \nhook 必须为互动事件  \n\nfilter_random 为根据条件筛选可能的目标 命中第一个通过筛选的目标 条件中u为施法者n为目标 适用于队友buff;  \n\ncontrol_cast 为玩家控制施法 u 为玩家 n 为npc hook字段无效 `${spell.id}_loc` 为玩家选择坐标\n\n默认为auto  \n若允许多个cast_condition 请指定具体type  \n相同的hook与target(包括auto或未指定)将覆盖",
+			"description": "技能选择目标类型  \nauto 为 根据施法目标自动选择;  \n\nrandom 为 原版随机 适用于自身buff;  \n\ndirect_hit 为 直接命中交互单位 适用于任何目标技能  \nhook 必须为互动事件  \n\nfilter_random 为根据条件筛选可能的目标 命中第一个通过筛选的目标 条件中u为施法者n为目标 适用于队友buff;  \n\ncontrol_cast 为玩家控制施法 u 为玩家 n 为npc hook字段无效 全局变量 `${spell.id}_control_cast_loc` 为玩家选择坐标\n\n默认为auto  \n若允许多个cast_condition 请指定具体type  \n相同的hook与target(包括auto或未指定)将覆盖",
 			"enum": [
 				"auto",
 				"control_cast",
@@ -11637,6 +11755,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -12381,6 +12525,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -12901,6 +13071,7 @@
 						"is_by_radio",
 						"npc_can_drop_weapon",
 						"npc_driving",
+						"npc_exists",
 						"npc_female",
 						"npc_has_weapon",
 						"npc_is_alive",
@@ -12913,6 +13084,7 @@
 						"npc_male",
 						"u_can_drop_weapon",
 						"u_driving",
+						"u_exists",
 						"u_female",
 						"u_has_weapon",
 						"u_is_alive",
@@ -15598,6 +15770,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -15610,6 +15783,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -21668,6 +21842,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -21680,6 +21855,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -22442,6 +22618,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -23186,6 +23388,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -23666,6 +23894,7 @@
 						"is_by_radio",
 						"npc_can_drop_weapon",
 						"npc_driving",
+						"npc_exists",
 						"npc_female",
 						"npc_has_weapon",
 						"npc_is_alive",
@@ -23678,6 +23907,7 @@
 						"npc_male",
 						"u_can_drop_weapon",
 						"u_driving",
+						"u_exists",
 						"u_female",
 						"u_has_weapon",
 						"u_is_alive",
@@ -23708,7 +23938,7 @@
 					"description": "cases合集",
 					"type": "array",
 					"items": {
-						"$ref": "#/definitions/{case:number;effect:MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker|(MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker)[];}"
+						"$ref": "#/definitions/{case:number;effect:MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker|MakeSound|(MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker|MakeSound)[];}"
 					}
 				}
 			},
@@ -23791,7 +24021,7 @@
 		"SwitchCase": {
 			"$ref": "#/definitions/__type_37"
 		},
-		"{case:number;effect:MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker|(MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker)[];}": {
+		"{case:number;effect:MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker|MakeSound|(MathAssignExp|RunEoc|QueueEoc|EocSelector|RunInvEocs|MapRunItemEocs|RunEocWith|RunEocUntil|WeightedListEocs|LoseTrait|AddTrait|ConsumeItem|RemoveItem|SpawnItem|SpawnNpc|SoundEffect|CastSpell|Teleport|LocalVar|Message|AddEffect|LoseEffect|SetHP|AddStrVar|SetString|AddTimeVar|AddRandStrVar|\"follow_only\"|\"leave\"|\"drop_weapon\"|\"u_prevent_death\"|\"u_die\"|\"npc_prevent_death\"|\"npc_die\"|AssingMission|RemoveActionMission|FinishMission|SetCond|IfElse|SwitchCase|AssignActivity|SetFlag|UnsetFlag|Foreach|TurnCost|SetTalker|MakeSound)[];}": {
 			"type": "object",
 			"properties": {
 				"case": {
@@ -24526,6 +24756,32 @@
 							]
 						},
 						{
+							"allOf": [
+								{
+									"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+								},
+								{
+									"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+								},
+								{
+									"$ref": "#/definitions/{u_make_sound?:undefined;}"
+								}
+							]
+						},
+						{
+							"allOf": [
+								{
+									"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+								},
+								{
+									"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+								},
+								{
+									"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+								}
+							]
+						},
+						{
 							"type": "array",
 							"items": {
 								"anyOf": [
@@ -25250,6 +25506,32 @@
 											},
 											{
 												"$ref": "#/definitions/{npc_set_talker?:undefined;}"
+											}
+										]
+									},
+									{
+										"allOf": [
+											{
+												"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+											},
+											{
+												"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+											},
+											{
+												"$ref": "#/definitions/{u_make_sound?:undefined;}"
+											}
+										]
+									},
+									{
+										"allOf": [
+											{
+												"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+											},
+											{
+												"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+											},
+											{
+												"$ref": "#/definitions/{npc_make_sound?:undefined;}"
 											}
 										]
 									},
@@ -26236,6 +26518,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -26454,6 +26762,287 @@
 			]
 		},
 		"{npc_set_talker?:undefined;}": {
+			"type": "object"
+		},
+		"Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">": {
+			"type": "object",
+			"properties": {
+				"volume": {
+					"description": "音量",
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"global_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"global_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"u_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"u_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"npc_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"npc_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"context_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"context_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"var_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"var_val"
+							]
+						},
+						{
+							"$ref": "#/definitions/NumMathExp",
+							"description": "Math数字表达式"
+						},
+						{
+							"$ref": "#/definitions/Arithmetic",
+							"description": "算术表达式"
+						},
+						{
+							"type": "number"
+						}
+					]
+				}
+			},
+			"required": [
+				"volume"
+			]
+		},
+		"{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}": {
+			"type": "object",
+			"properties": {
+				"npc_make_sound": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"global_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"global_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"u_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"u_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"npc_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"npc_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"context_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"context_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"var_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"var_val"
+							]
+						},
+						{
+							"$ref": "#/definitions/MutatorsMonFaction",
+							"description": "怪物阵营mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsGameOption",
+							"description": "游戏设置mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsMaTechName",
+							"description": "武术名称mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsMaTechDesc",
+							"description": "武术简介mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsVaildTech",
+							"description": "随机武术mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsLocRelative",
+							"description": "相对坐标mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsTopicItem",
+							"description": "选项物品mutator"
+						},
+						{
+							"type": "string"
+						}
+					]
+				}
+			},
+			"required": [
+				"npc_make_sound"
+			]
+		},
+		"{u_make_sound?:undefined;}": {
+			"type": "object"
+		},
+		"{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}": {
+			"type": "object",
+			"properties": {
+				"u_make_sound": {
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"global_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"global_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"u_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"u_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"npc_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"npc_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"context_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"context_val"
+							]
+						},
+						{
+							"type": "object",
+							"properties": {
+								"var_val": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"var_val"
+							]
+						},
+						{
+							"$ref": "#/definitions/MutatorsMonFaction",
+							"description": "怪物阵营mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsGameOption",
+							"description": "游戏设置mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsMaTechName",
+							"description": "武术名称mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsMaTechDesc",
+							"description": "武术简介mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsVaildTech",
+							"description": "随机武术mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsLocRelative",
+							"description": "相对坐标mutator"
+						},
+						{
+							"$ref": "#/definitions/MutatorsTopicItem",
+							"description": "选项物品mutator"
+						},
+						{
+							"type": "string"
+						}
+					]
+				}
+			},
+			"required": [
+				"u_make_sound"
+			]
+		},
+		"{npc_make_sound?:undefined;}": {
 			"type": "object"
 		},
 		"ForeachTarget": {
@@ -27019,6 +27608,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -27031,6 +27621,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -27506,6 +28097,7 @@
 								"is_by_radio",
 								"npc_can_drop_weapon",
 								"npc_driving",
+								"npc_exists",
 								"npc_female",
 								"npc_has_weapon",
 								"npc_is_alive",
@@ -27518,6 +28110,7 @@
 								"npc_male",
 								"u_can_drop_weapon",
 								"u_driving",
+								"u_exists",
 								"u_female",
 								"u_has_weapon",
 								"u_is_alive",
@@ -28279,6 +28872,32 @@
 								]
 							},
 							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
 								"enum": [
 									"drop_weapon",
 									"follow_only",
@@ -29019,6 +29638,32 @@
 									},
 									{
 										"$ref": "#/definitions/{npc_set_talker?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound?:undefined;}"
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"$ref": "#/definitions/Omit<{make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;volume:number|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|NumMathExp|Arithmetic;},\"make_sound\">"
+									},
+									{
+										"$ref": "#/definitions/{u_make_sound:string|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsLocRelative|MutatorsTopicItem;}"
+									},
+									{
+										"$ref": "#/definitions/{npc_make_sound?:undefined;}"
 									}
 								]
 							},

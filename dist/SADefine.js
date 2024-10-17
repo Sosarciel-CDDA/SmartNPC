@@ -52,6 +52,10 @@ function getSpellByID(id) {
     const spell = spellMap[id];
     if (spell == null)
         throw `未找到法术 ${id}`;
+    if (spell['copy-from'] != undefined) {
+        const base = getSpellByID(spell['copy-from']);
+        return Object.assign({}, base, spell);
+    }
     return spell;
 }
 exports.DATA_PATH = path.join(process.cwd(), 'data');

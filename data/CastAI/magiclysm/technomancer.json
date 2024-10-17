@@ -1,0 +1,7 @@
+{
+    "require_mod": "magiclysm",
+    "table": {
+        "bless":"BattleTargetBuff",
+        "synaptic_stimulation":"BattleSelfBuff"
+    }
+}

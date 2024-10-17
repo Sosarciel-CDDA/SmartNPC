@@ -1,0 +1,13 @@
+{
+    "require_mod": "magiclysm",
+    "table": {
+        "eshaper_shardspray":"TargetDamage",
+        "eshaper_piercing_bolt":"TargetDamage",
+        "eshaper_rockbolt":"TargetDamage",
+        "pertifying_touch":"TargetDamage",
+        "eshaper_impalement":"TargetDamage",
+        "eshaper_melee_damage":"BattleSelfBuff",
+        "eshaper_crystal_wrap":"BattleSelfBuff",
+        "shape_of_dust":"BattleSelfBuff"
+    }
+}
