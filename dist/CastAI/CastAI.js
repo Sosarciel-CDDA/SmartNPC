@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SmartNpcMut = exports.CastAIDataMap = void 0;
+exports.CastAIDataMap = void 0;
 exports.createCastAI = createCastAI;
 const utils_1 = require("@zwa73/utils");
 const SADefine_1 = require("../SADefine");
@@ -72,25 +72,6 @@ tableList.forEach((file) => {
             : { and: ["u_is_npc"] };
     });
 });
-//Npc属性优化
-exports.SmartNpcMut = {
-    type: 'mutation',
-    id: SADefine_1.SADef.genMutationID('SmartNpc'),
-    flags: ['NO_SPELLCASTING'], //关闭自动施法
-    name: "Npc属性优化",
-    description: "Npc属性优化",
-    points: 0,
-    purifiable: false,
-    valid: false,
-    player_display: false,
-    //enchantments:[{
-    //    condition:'ALWAYS',
-    //    ench_effects:[{
-    //        effect:'AVOID_FRIENDRY_FIRE',
-    //        intensity:1.0,
-    //    }]
-    //}]
-};
 /**处理角色技能 */
 async function createCastAI(dm) {
     //集火
@@ -98,12 +79,7 @@ async function createCastAI(dm) {
         { npc_add_effect: DefData_1.ConcentratedAttack.id, duration: 10 }
     ]);
     dm.addInvokeEoc("TryAttack", 0, conattack);
-    //初始化
-    const TurnOffCastEoc = SADefine_1.SADef.genActEoc('Init', [
-        { "u_add_trait": exports.SmartNpcMut.id },
-    ]);
-    dm.addInvokeEoc("Init", 0, TurnOffCastEoc);
-    const out = [DefData_1.ConcentratedAttack, conattack, exports.SmartNpcMut, TurnOffCastEoc];
+    const out = [DefData_1.ConcentratedAttack, conattack];
     //权重排序
     const skills = Object.values(exports.CastAIDataMap);
     //全局冷却事件

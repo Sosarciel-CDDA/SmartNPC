@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CON_SPELL_FLAG = void 0;
+exports.SmartNpcMut = exports.CON_SPELL_FLAG = void 0;
 exports.buildStrengthen = buildStrengthen;
 const SADefine_1 = require("./SADefine");
 /**用于必定成功的控制法术的flags */
@@ -121,6 +121,25 @@ const Courage = {
     desc: ["npc不会逃跑"],
     removes_effects: ["npc_run_away"],
 };
+//Npc属性优化
+exports.SmartNpcMut = {
+    type: 'mutation',
+    id: SADefine_1.SADef.genMutationID('SmartNpc'),
+    flags: ['NO_SPELLCASTING'], //关闭自动施法
+    name: "Npc属性优化",
+    description: "Npc属性优化",
+    points: 0,
+    purifiable: false,
+    valid: false,
+    player_display: false,
+    //enchantments:[{
+    //    condition:'ALWAYS',
+    //    ench_effects:[{
+    //        effect:'AVOID_FRIENDRY_FIRE',
+    //        intensity:1.0,
+    //    }]
+    //}]
+};
 /**构建强化数据，将指定的战术转移和快速回退相关数据添加到数据管理器中。
  * @param dm - 数据管理器实例，用于添加数据。
  * @returns 无返回值，异步操作完成后数据将被添加。
@@ -131,15 +150,22 @@ async function buildStrengthen(dm) {
         //{u_message:"<global_val:tmpstr>"},
         //{u_cast_spell: {id:'fireball',min_level:10}},
     ], { and: ['u_is_npc', { math: ['u_EnableQuickBack', '==', '1'] }] });
-    dm.addInvokeID('Update', 0, autoback.id);
-    const courageInit = SADefine_1.SADef.genActEoc('InitCourage', [
-        { u_add_effect: Courage.id, duration: 'PERMANENT' }
-    ]);
-    dm.addInvokeID('Init', 0, courageInit.id);
+    dm.addInvokeID('BattleUpdate', 0, autoback.id);
+    const initNpcStrength = SADefine_1.SADef.genActEoc('InitSmartNpcStrength', [
+        { u_add_effect: Courage.id, duration: 'PERMANENT' },
+        { u_add_trait: exports.SmartNpcMut.id },
+    ], 'u_is_npc');
+    dm.addInvokeID('Init', 0, initNpcStrength.id);
+    dm.addInvokeID('EnterBattle', 0, initNpcStrength.id);
+    const removeAvatarStrength = SADefine_1.SADef.genActEoc('removeAvatarStrength', [
+        { u_lose_effect: Courage.id },
+        { u_lose_trait: exports.SmartNpcMut.id },
+    ], 'u_is_avatar');
+    dm.addInvokeID('SlowUpdate', 0, removeAvatarStrength.id);
     dm.addData([
         autoback, TacticalTransfer, TacticalTransferEoc,
         QuickBack, QuickBackSub, QuickBackEoc,
         QuickBackEocSubMovemod, QuickBackEocSubPush, QuickBackTalkTopic,
-        courageInit, Courage,
+        initNpcStrength, Courage, exports.SmartNpcMut, removeAvatarStrength
     ], 'strength.json');
 }

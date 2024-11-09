@@ -58,29 +58,6 @@ tableList.forEach((file)=>{
 });
 
 
-
-
-//Npc属性优化
-export const SmartNpcMut:Mutation={
-    type:'mutation',
-    id:SADef.genMutationID('SmartNpc'),
-    flags:['NO_SPELLCASTING'] as any,//关闭自动施法
-    name:"Npc属性优化",
-    description:"Npc属性优化",
-    points:0,
-    purifiable:false,
-    valid:false,
-    player_display:false,
-    //enchantments:[{
-    //    condition:'ALWAYS',
-    //    ench_effects:[{
-    //        effect:'AVOID_FRIENDRY_FIRE',
-    //        intensity:1.0,
-    //    }]
-    //}]
-}
-
-
 /**处理角色技能 */
 export async function createCastAI(dm:DataManager){
     //集火
@@ -89,13 +66,7 @@ export async function createCastAI(dm:DataManager){
     ])
     dm.addInvokeEoc("TryAttack",0,conattack);
 
-    //初始化
-    const TurnOffCastEoc = SADef.genActEoc('Init',[
-        {"u_add_trait":SmartNpcMut.id},
-    ]);
-    dm.addInvokeEoc("Init",0,TurnOffCastEoc);
-
-    const out:JObject[] = [ConcentratedAttack,conattack,SmartNpcMut,TurnOffCastEoc];
+    const out:JObject[] = [ConcentratedAttack,conattack];
 
 
 
