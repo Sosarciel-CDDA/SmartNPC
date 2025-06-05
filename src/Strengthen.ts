@@ -1,5 +1,5 @@
-import { DataManager } from "cdda-event";
-import { Effect, Mutation, Spell, TalkTopic } from "cdda-schema";
+import { DataManager } from "@sosarciel-cdda/cdda-event";
+import { Effect, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/cdda-schema";
 import { SADef } from "./SADefine";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "./UtilSpell";
 
