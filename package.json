@@ -1,14 +1,11 @@
 {
   "dependencies": {
-    "@zwa73/utils": "*",
-    "cdda-event": "file:../CDDA-Event",
-    "cdda-schema": "file:../CDDA-Schema"
+    "@zwa73/utils": "*"
   },
-  "name": "cdda-smartnpc",
+  "name": "@sosarciel-cdda/cdda-smartnpc",
   "description": "CDDA-SmartNPC",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "expand-macro": "powershell scripts/expand-macro",
     "compile": "powershell scripts/compile",
