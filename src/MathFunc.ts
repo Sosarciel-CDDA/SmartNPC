@@ -1,5 +1,5 @@
-import { DataManager } from "@sosarciel-cdda/cdda-event"
-import { MathFunction, MathFunctionID } from "@sosarciel-cdda/cdda-schema"
+import { DataManager } from "@sosarciel-cdda/event"
+import { MathFunction, MathFunctionID } from "@sosarciel-cdda/schema"
 
 
 

@@ -1,2 +1,2 @@
-# CDDA-SmartNPC
-CDDA-SmartNPC
+# SmartNPC
+SmartNPC

@@ -1,4 +1,4 @@
-import { DataManager } from "@sosarciel-cdda/cdda-event";
+import { DataManager } from "@sosarciel-cdda/event";
 import { createCastAI } from "./CastAI";
 import { DATA_PATH, OUT_PATH } from "./SADefine";
 import { createMathFunc } from "./MathFunc";
