@@ -1,8 +1,8 @@
 import { JObject, UtilFT } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@src/SADefine";
-import { SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Mutation} from "@sosarciel-cdda/sclema";
+import { SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Mutation} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
-import { DataManager } from "cdda-event";
+import { DataManager } from "@sosarciel-cdda/event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
 import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./CastAIInterface";
 import { procSpellTarget } from "./ProcFunc";
