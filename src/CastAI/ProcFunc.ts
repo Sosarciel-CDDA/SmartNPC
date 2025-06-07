@@ -1,6 +1,6 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
-import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, EocEffect,} from "cdda-schema";
+import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, EocEffect,} from "@sosarciel-cdda/sclema";
 import { InteractHookList, DataManager } from "cdda-event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";

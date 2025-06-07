@@ -1,4 +1,4 @@
-import { EocID, NoParamTalkerCondList, Spell } from "cdda-schema";
+import { EocID, NoParamTalkerCondList, Spell } from "@sosarciel-cdda/sclema";
 import { JToken } from "@zwa73/utils";
 import { SADef } from "@src/SADefine";
 import { CastAIData, CastCond } from "./CastAIInterface";

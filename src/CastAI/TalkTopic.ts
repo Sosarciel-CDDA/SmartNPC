@@ -1,6 +1,6 @@
 import { DataManager } from "cdda-event";
 import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
-import { BoolObj, DynamicLine, EffectID, Eoc, EocEffect, Resp, TalkTopic, TalkTopicID } from "cdda-schema";
+import { BoolObj, DynamicLine, EffectID, Eoc, EocEffect, Resp, TalkTopic, TalkTopicID } from "@sosarciel-cdda/sclema";
 import { SADef, getSpellByID } from "@src/SADefine";
 import { CastAIDataMap } from "./CastAI";
 import { CastAIData } from "./CastAIInterface";

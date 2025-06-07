@@ -1,4 +1,4 @@
-import { AnyItemID, Effect, Mutation, Spell, SpellID } from "cdda-schema";
+import { AnyItemID, Effect, Mutation, Spell, SpellID } from "@sosarciel-cdda/sclema";
 import { CastAIData } from "./CastAIInterface";
 import { SADef, getSpellByID } from "@src/SADefine";
 

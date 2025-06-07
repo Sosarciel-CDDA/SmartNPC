@@ -1,5 +1,5 @@
 import { CharHook } from "cdda-event";
-import { BoolObj, EocEffect, NumObj, Spell, SpellID } from "cdda-schema";
+import { BoolObj, EocEffect, NumObj, Spell, SpellID } from "@sosarciel-cdda/sclema";
 import { DefCastData } from "./DefData";
 
 /**技能选择目标类型 列表 */
