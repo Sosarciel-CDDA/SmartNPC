@@ -1,4 +1,4 @@
-import { DataManager } from ""@sosarciel-cdda/event"
+import { DataManager } from "@sosarciel-cdda/event"
 import { MathFunction, MathFunctionID } from "@sosarciel-cdda/schema"
 
 
