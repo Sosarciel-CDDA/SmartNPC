@@ -1,4 +1,4 @@
-import { EocID, NoParamTalkerCondList, Spell } from "@sosarciel-cdda/schema";
+import { EocID, Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
 import { SADef } from "@src/SADefine";
 import { CastAIData, CastCond } from "./CastAIInterface";
@@ -17,9 +17,9 @@ export function revTalker<T extends JToken>(obj:T):T{
         .replace(/tmpNtmp_/g     , 'N_'             );
 
     //修正无参条件
-    const npcond = NoParamTalkerCondList.join('|');
-    const regex = new RegExp(`"n_(${npcond})"`,'g');
-    str = str.replace(regex,`"npc_$1"`);
+    //const npcond = NoParamTalkerCondList.join('|');
+    //const regex = new RegExp(``,'g');
+    str = str.replace(/"n_([^()'"]+?)"/g,`"npc_$1"`);
     return JSON.parse(str);
 }
 

@@ -351,15 +351,18 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         effect:[
             //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
             {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
-            {queue_eocs:{
+            {run_eocs:{
                 id:(coneocid+"_queue") as EocID,
                 eoc_type:"ACTIVATION",
-                effect:[{run_eoc_with:{
+                effect:[{run_eocs:{
                     id: (coneocid+"_queue_with") as EocID,
                     eoc_type:"ACTIVATION",
-                    effect:[{
-                        if:{u_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
+                    effect:[
+                        {u_query_tile:"line_of_sight",target_var:{context_val:"qpos"},range:30},
+                        {
+                        if:{math: [ `has_var(_qpos)` ] },
                         then:[
+                            {set_string_var:{context_val:"qpos"},target_var:playerSelectLoc},
                             ...before_effect,{
                             npc_cast_spell:{
                                 id:spell.id,

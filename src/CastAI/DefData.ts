@@ -1,4 +1,4 @@
-import { AnyItemID, Effect, Mutation, Spell, SpellID } from "@sosarciel-cdda/schema";
+import { Effect, ItemID, Mutation, Spell, SpellID } from "@sosarciel-cdda/schema";
 import { CastAIData } from "./CastAIInterface";
 import { SADef, getSpellByID } from "@src/SADefine";
 
@@ -25,7 +25,7 @@ export type ItemCast = {
     /**基于哪种基础类型 */
     base:NoParamDefCastData;
     /**物品ID */
-    item_id:AnyItemID;
+    item_id:ItemID;
     /**消耗的充能 默认1 */
     charge?:number;
     /**消耗物品而非充能 默认false */

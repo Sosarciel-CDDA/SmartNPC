@@ -20,8 +20,8 @@ const spellMap:Partial<Record<SpellID,Spell>> = {};
 files.forEach((file)=>{
     const jarr = UtilFT.loadJSONFileSync(file)as any as AnyCddaJsonList;
     if(!Array.isArray(jarr)) return;
-    jarr.filter((jobj)=>jobj.type=="SPELL")
-        .forEach((spell)=>spellMap[(spell as Spell).id]=spell as Spell)
+    jarr.filter(jobj=>(jobj as any).type=="SPELL")
+        .forEach(spell=>spellMap[(spell as Spell).id]=spell as Spell)
 })
 /**根据id从 ./spell 目录中寻找法术 */
 export function getSpellByID(id?:SpellID){
