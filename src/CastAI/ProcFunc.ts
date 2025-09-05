@@ -333,7 +333,6 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     if(cast_condition.condition) base_cond.push(cast_condition.condition);
 
     //翻转对话者 将u改为n使其适用npc
-    const revCond = [...revTalker(base_cond),revTalker(merge_condition!)];
     const fixedCond = [...base_cond,merge_condition!];
 
     //玩家的选择位置
@@ -361,12 +360,10 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                             eoc_type:"ACTIVATION",
                             effect:[
                                 {u_query_tile:"line_of_sight",target_var:{context_val:"qpos"},range:30},
-                                {
-                                if:{math: [ `has_var(_qpos)` ] },
-                                then:[
+                                {if:{math: [ `has_var(_qpos)` ] },then:[
                                     {set_string_var:{context_val:"qpos"},target_var:playerSelectLoc},
-                                    ...before_effect,{
-                                    u_cast_spell:{
+                                    ...before_effect,
+                                    {u_cast_spell:{
                                         id:spell.id,
                                         min_level
                                     },
@@ -387,11 +384,23 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         ],
     }
 
-    //预先计算能耗
+    //预先计算能耗与翻转条件
     const costVar = `${spell.id}_cost`;
+    const vaildVar = `${spell.id}_vaild`;
     const costStr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
                     `n_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
-    ControlCastSpeakerEffects.push({math:[`_${costVar}`,"=",costStr]});
+    ControlCastSpeakerEffects.push(
+        {math:[`_${costVar}`,"=",costStr]},
+        {run_eocs:{
+            id:(coneocid+"ControlCastSpeakerEffects") as EocID,
+            eoc_type:"ACTIVATION",
+            effect:[{
+                if:{and:[...fixedCond]},
+                then:[{math:[vaildVar,'=','1']}],
+                else:[{math:[vaildVar,'=','0']}],
+            }],
+        },alpha_talker:"npc",beta_talker:"u"}
+    );
 
     //生成展示字符串
     const sourceNameMap = {
@@ -401,15 +410,15 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         "STAMINA"   : "耐力"    ,
     }
     const source = (sourceNameMap as any)[spell.energy_source as any];
-    const costDisplay = source != null && cast_condition.ignore_cost !== true
-                        ? `耗能: <context_val:${costVar}> ${source} `
-                        : "";
+    const costDisplay = (source != null && cast_condition.ignore_cost !== true)
+            ? `耗能: <context_val:${costVar}> ${source} `
+            : "";
 
     //创建施法对话
     const castResp:Resp={
         condition:cast_condition.force_lvl!=null ? undefined : {math:[`n_spell_level('${spell.id}')`,">=","0"]},
         truefalsetext:{
-            condition:{and:[...revCond]},
+            condition:{math:[vaildVar,"==","1"]},
             true:`[可释放] <spell_name:${id}> ${costDisplay}`,
             false:`[不可释放] <spell_name:${id}> ${costDisplay}冷却:<npc_val:${spell.id}_cooldown>`,
         },
