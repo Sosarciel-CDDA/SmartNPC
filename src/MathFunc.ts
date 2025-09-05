@@ -68,6 +68,18 @@ export async function createMathFunc(dm:DataManager){
         num_args: 1,
         return:"((((n_val('intelligence') - 8) / 8) + (_0 / 20) + (n_skill('spellcraft') / 10)) / 5 + 1) * 75 * N_AdjForFocus()"
     }
-    dm.addData([SumHp,AvgHp,MinHp,MaxHp,UAdjForFocus,NAdjForFocus,USpellCastExp,NSpellCastExp],"MathFunc");
+    const ProfBonusCalc:MathFunction= {
+        "type": "jmath_function",
+        "id": "enhancement_proficiency_bonus_calculate",
+        "num_args": 2,
+        "return": "_0 + (((((u_proficiency('prof_magic_enhancement_beginner', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_apprentice', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_master', 'format': 'percent') * 1) / 10))) * _1 )"
+    }
+    const ProfNegCalc:MathFunction= {
+        "type": "jmath_function",
+        "id": "enhancement_proficiency_negate_calculate",
+        "num_args": 2,
+        "return": "_0 - (((((u_proficiency('prof_magic_enhancement_beginner', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_apprentice', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_master', 'format': 'percent') * 1) / 10))) * _1 )"
+    }
+    dm.addData([SumHp,AvgHp,MinHp,MaxHp,UAdjForFocus,NAdjForFocus,USpellCastExp,NSpellCastExp,ProfBonusCalc,ProfNegCalc],"MathFunc");
 }
 
