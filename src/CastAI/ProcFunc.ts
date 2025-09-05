@@ -337,6 +337,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};
+    // 判断是否选中位置
+
 
     const coneocid = genCastEocID(spell,cast_condition);
     //创建选择施法eoc
@@ -345,13 +347,21 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         id:coneocid,
         eoc_type:"ACTIVATION",
         effect:[
+            //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
+            {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
+            {u_location_variable:{global_val:"tmp_control_cast_avatarloc"}},
+
+            //设置一个标准位置用于判断坐标是否变动
+            {u_location_variable:{global_val:"tmp_control_cast_testloc"}},
+            {location_variable_adjust:{global_val:"tmp_control_cast_testloc"},z_adjust:-10},
+            {u_location_variable:playerSelectLoc},
+            {location_variable_adjust:playerSelectLoc,z_adjust:-10},
+
             {run_eocs:{
                 id:`${coneocid}_rev`,
                 eoc_type:"ACTIVATION",
                 effect:[
                     {if:{and:[...fixedCond]}, then:[
-                    //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
-                    {u_location_variable:{global_val:"tmp_control_cast_casterloc"}},
                     {run_eocs:{
                         id:(coneocid+"_queue") as EocID,
                         eoc_type:"ACTIVATION",
@@ -359,9 +369,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                             id: (coneocid+"_queue_with") as EocID,
                             eoc_type:"ACTIVATION",
                             effect:[
-                                {u_query_tile:"line_of_sight",target_var:{context_val:"qpos"},range:30},
-                                {if:{math: [ `has_var(_qpos)` ] },then:[
-                                    {set_string_var:{context_val:"qpos"},target_var:playerSelectLoc},
+                                {npc_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
+                                {if:{math: [ `distance(${playerSelectLoc.global_val}, tmp_control_cast_testloc)`, ">", "0" ] },then:[
                                     ...before_effect,
                                     {u_cast_spell:{
                                         id:spell.id,
@@ -373,10 +382,12 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                                         effect:[...after_effect],
                                         eoc_type:"ACTIVATION",
                                     },
-                                    loc:playerSelectLoc
-                                }]
+                                    loc:playerSelectLoc}
+                                ]
                             }]
-                        },beta_loc:{global_val:"tmp_control_cast_casterloc"}}]
+                        },
+                        alpha_loc:{global_val:"tmp_control_cast_casterloc"},
+                        beta_loc:{global_val:"tmp_control_cast_avatarloc"}}]
                     },time_in_future:0},
                     ]}
                 ]
