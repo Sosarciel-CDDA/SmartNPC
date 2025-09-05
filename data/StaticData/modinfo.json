@@ -7,6 +7,6 @@
         "maintainers": ["zwa73"],
         "description": "SmartNPC",
         "category": "other",
-        "dependencies": ["dda","aftershock","magiclysm"]
+        "dependencies": ["dda","magiclysm"]
     }
 ]

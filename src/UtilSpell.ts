@@ -10,7 +10,7 @@ export const SPELL_CT_MODMOVE_VAR = 'casttime_modmove';
 export const SPELL_CT_MODMOVE = SADef.genSpellID(`CastTimeModMove`);
 /**加速一回合 */
 export const SPELL_M1T = SADef.genSpellID("Mod1Turn");
-export async function utilSpell(dm:DataManager){
+export async function createUtilSpell(dm:DataManager){
     const out:JObject[] = [];
     const spellCT:Spell = {
         id: SPELL_CT_MODMOVE,
