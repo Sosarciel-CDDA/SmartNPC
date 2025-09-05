@@ -1,6 +1,6 @@
 import { JObject, UtilFT } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@src/SADefine";
-import { SpellEnergySource, BoolObj, EocEffect, SpellID, NumObj, Mutation} from "@sosarciel-cdda/schema";
+import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
@@ -152,7 +152,7 @@ export async function createCastAI(dm:DataManager){
                 after_effect.push({math:[fallbackValName,"=","0"]})
 
             //计算基础条件 确保第一个为技能开关, 用于cast_control读取 
-            const base_cond: BoolObj[] = [
+            const base_cond: BoolExpr[] = [
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
                 {math:[gcdValName,"<=","0"]},
             ];
@@ -172,7 +172,7 @@ export async function createCastAI(dm:DataManager){
 
             //计算施法等级
             const maxstr = parseSpellNumObj(spell,'max_level');
-            let min_level:NumObj = {math:[`min(u_spell_level('${spell.id}'), ${maxstr})`] as [string]};
+            let min_level:NumberExpr = {math:[`min(u_spell_level('${spell.id}'), ${maxstr})`] as [string]};
             if(cast_condition.force_lvl!=null)
                 min_level = cast_condition.force_lvl;
             else base_cond.push({math:[`u_spell_level('${spell.id}')`,">=","0"]});

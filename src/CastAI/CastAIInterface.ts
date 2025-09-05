@@ -1,5 +1,5 @@
 import { CharHook } from "@sosarciel-cdda/event";
-import { BoolObj, EocEffect, NumObj, Spell, SpellID } from "@sosarciel-cdda/schema";
+import { BoolExpr, EocEffect, NumberExpr, Spell, SpellID } from "@sosarciel-cdda/schema";
 import { DefCastData } from "./DefData";
 
 /**技能选择目标类型 列表 */
@@ -39,7 +39,7 @@ export type CastAIDataJsonTable = {
     /**需求mod */
     require_mod?:string;
     /**共同条件 */
-    common_condition?:(BoolObj);
+    common_condition?:(BoolExpr);
     /**数据表 技能ID : 施法数据 */
     table:(CastAIDataTable);
 };
@@ -51,9 +51,9 @@ export type CastAIData = {
     /**技能的释放条件 */
     cast_condition   :CastCond|CastCond[];
     /**共同条件 与cast_condition相与 */
-    common_condition?:(BoolObj);
+    common_condition?:(BoolExpr);
     /**合并条件 用于辅助event合并的条件 无需填写 */
-    merge_condition?:(BoolObj);
+    merge_condition?:(BoolExpr);
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?          :number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
@@ -79,7 +79,7 @@ export type CastCond={
     /**唯一id 默认为下标 */
     id?             : string;
     /**释放条件 */
-    condition?      : (BoolObj);
+    condition?      : (BoolExpr);
     /**时机 */
     hook            : CharHook|"None";
     /**瞄准方式  
@@ -106,7 +106,7 @@ export type CastCond={
     /**忽略经验增长 */
     infoge_exp?     : boolean;
     /**不检查是否学会, 强制使用某个法术等级 */
-    force_lvl?      : (NumObj);
+    force_lvl?      : (NumberExpr);
     /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */
     weight?         : number;
     /**在 n 秒没有成功施法后才会启用此条件 */
@@ -120,7 +120,7 @@ export type CastProcData = Readonly<{
     /**技能 */
     skill:CastAIData;
     /**基础释放eoc条件 */
-    base_cond: (BoolObj)[];
+    base_cond: (BoolExpr)[];
     /**基础成功eoc效果 */
     after_effect:EocEffect[];
     /**基础准备释放Eoc */
@@ -128,7 +128,7 @@ export type CastProcData = Readonly<{
     /**释放条件 */
     cast_condition:CastCond;
     /**施法等级 */
-    min_level:NumObj;
+    min_level:NumberExpr;
     /**覆盖的有效目标 */
     force_vaild_target?:Spell['valid_targets'];
 }>

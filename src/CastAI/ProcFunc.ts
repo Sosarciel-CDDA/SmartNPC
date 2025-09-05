@@ -1,6 +1,6 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
-import { Spell, Eoc, EocID, SpellFlag, Resp, BoolObj, EocEffect,} from "@sosarciel-cdda/schema";
+import { Spell, Eoc, EocID, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
@@ -67,9 +67,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
         flags: [...helperflags,'RANDOM_TARGET'],
         max_level,range_increment,min_range,max_range,
         targeted_monster_ids,targeted_monster_species,
-        valid_targets:force_vaild_target!=null
-            ? force_vaild_target
-            : valid_targets.filter(item=>item!="ground"),
+        valid_targets:force_vaild_target ?? valid_targets.filter(item=>item!="ground"),
     }
     const helperSpell:Spell={
         type: "SPELL",
@@ -140,9 +138,6 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     before_effect.push(...cast_condition.before_effect??[]);
     after_effect.push(...cast_condition.after_effect??[]);
 
-    //设置翻转条件
-    const filterCond = cast_condition.condition ? revTalker(cast_condition.condition) : undefined;
-
     //命中id
     const fhitvar = `${spell.id}_hasTarget`;
 
@@ -175,27 +170,31 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         id:SADef.genEOCID(`${spell.id}_RecordLoc_${cast_condition.id}`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
-        effect:[
-            {math:[fhitvar,"=","1"]},
-            {u_location_variable: { global_val: "tmp_loc" }},
-        ],
-        condition:{and:[
-            ... filterCond ? [filterCond] : [],
-            {math:[fhitvar,"!=","1"]},
-        ]}
+        effect:[{run_eocs:{
+            id:SADef.genEOCID(`${spell.id}_RecordLocRev_${cast_condition.id}`),
+            eoc_type:"ACTIVATION",
+            effect:[{if:{and:[
+                ... (cast_condition.condition ? [cast_condition.condition] : []),
+                {math:[fhitvar,"!=","1"]},
+            ]},
+            then:[
+                {math:[fhitvar,"=" ,"1"]},
+                {u_location_variable: { global_val: "tmp_loc" }}
+            ]}],
+        },alpha_talker:"npc",beta_talker:"u"}],
+        condition:{math:[fhitvar,"!=","1"]}
     }
 
     //创建筛选目标的辅助索敌法术
     const flags:SpellFlag[] = [...CON_SPELL_FLAG];
-    if(spell.flags?.includes("IGNORE_WALLS"))
-        flags.push("IGNORE_WALLS")
+    if(spell.flags?.includes("IGNORE_WALLS")) flags.push("IGNORE_WALLS")
     const {min_range,max_range,range_increment,
         max_level,valid_targets,targeted_monster_ids} = spell;
     //console.log(spell.id);
     const filterTargetSpell:Spell = {
         id:SADef.genSpellID(`${spell.id}_FilterTarget_${cast_condition.id}`),
         type:"SPELL",
-        name:spell.id+"_筛选索敌",
+        name:`${spell.id}_筛选索敌`,
         description:`${spell.id}的筛选索敌法术`,
         effect:"effect_on_condition",
         effect_str:locEoc.id,
@@ -334,10 +333,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     if(cast_condition.condition) base_cond.push(cast_condition.condition);
 
     //翻转对话者 将u改为n使其适用npc
-    base_cond   = [...revTalker(base_cond),revTalker(merge_condition!)];
-    after_effect = revTalker(after_effect);
-    before_effect  = revTalker(before_effect);
-    min_level   = revTalker(min_level);
+    const revCond = [...revTalker(base_cond),revTalker(merge_condition!)];
+    const fixedCond = [...base_cond,merge_condition!];
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};
@@ -349,47 +346,52 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         id:coneocid,
         eoc_type:"ACTIVATION",
         effect:[
-            //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
-            {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
             {run_eocs:{
-                id:(coneocid+"_queue") as EocID,
+                id:`${coneocid}_rev`,
                 eoc_type:"ACTIVATION",
-                effect:[{run_eocs:{
-                    id: (coneocid+"_queue_with") as EocID,
-                    eoc_type:"ACTIVATION",
-                    effect:[
-                        {u_query_tile:"line_of_sight",target_var:{context_val:"qpos"},range:30},
-                        {
-                        if:{math: [ `has_var(_qpos)` ] },
-                        then:[
-                            {set_string_var:{context_val:"qpos"},target_var:playerSelectLoc},
-                            ...before_effect,{
-                            npc_cast_spell:{
-                                id:spell.id,
-                                min_level
-                            },
-                            targeted: false,
-                            true_eocs:{
-                                id:genTrueEocID(spell,cast_condition),
-                                effect:[...after_effect],
-                                eoc_type:"ACTIVATION",
-                            },
-                            loc:playerSelectLoc
-                        }]
-                    }]
-                },beta_loc:{global_val:"tmp_control_cast_casterloc"}}]
-            },time_in_future:0},
+                effect:[
+                    {if:{and:[...fixedCond]}, then:[
+                    //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
+                    {u_location_variable:{global_val:"tmp_control_cast_casterloc"}},
+                    {run_eocs:{
+                        id:(coneocid+"_queue") as EocID,
+                        eoc_type:"ACTIVATION",
+                        effect:[{run_eocs:{
+                            id: (coneocid+"_queue_with") as EocID,
+                            eoc_type:"ACTIVATION",
+                            effect:[
+                                {u_query_tile:"line_of_sight",target_var:{context_val:"qpos"},range:30},
+                                {
+                                if:{math: [ `has_var(_qpos)` ] },
+                                then:[
+                                    {set_string_var:{context_val:"qpos"},target_var:playerSelectLoc},
+                                    ...before_effect,{
+                                    u_cast_spell:{
+                                        id:spell.id,
+                                        min_level
+                                    },
+                                    targeted: false,
+                                    true_eocs:{
+                                        id:genTrueEocID(spell,cast_condition),
+                                        effect:[...after_effect],
+                                        eoc_type:"ACTIVATION",
+                                    },
+                                    loc:playerSelectLoc
+                                }]
+                            }]
+                        },beta_loc:{global_val:"tmp_control_cast_casterloc"}}]
+                    },time_in_future:0},
+                    ]}
+                ]
+            },alpha_talker:"npc",beta_talker:"u"}
         ],
-        false_effect:[],
-        condition:{and:[...base_cond]}
     }
 
     //预先计算能耗
     const costVar = `${spell.id}_cost`;
     const costStr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
                     `n_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
-    const speakerEff:EocEffect = {math:["_"+costVar,"=",costStr]}
-    ControlCastSpeakerEffects.push(speakerEff);
+    ControlCastSpeakerEffects.push({math:[`_${costVar}`,"=",costStr]});
 
     //生成展示字符串
     const sourceNameMap = {
@@ -407,7 +409,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     const castResp:Resp={
         condition:cast_condition.force_lvl!=null ? undefined : {math:[`n_spell_level('${spell.id}')`,">=","0"]},
         truefalsetext:{
-            condition:{and:[...base_cond]},
+            condition:{and:[...revCond]},
             true:`[可释放] <spell_name:${id}> ${costDisplay}`,
             false:`[不可释放] <spell_name:${id}> ${costDisplay}冷却:<npc_val:${spell.id}_cooldown>`,
         },
