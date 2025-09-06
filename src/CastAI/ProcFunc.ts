@@ -2,7 +2,7 @@ import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
-import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
+import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 import { SPELL_L1T } from "@src/UtilSpell";
 
@@ -242,12 +242,12 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     const {hook} = cast_condition;
 
     //射程条件
-    const spellRange=`min(${parseSpellNumObj(spell,"min_range")} + ${parseSpellNumObj(spell,"range_increment")} * `+
+    const rangeMathExpr=`min(${parseSpellNumObj(spell,"min_range")} + ${parseSpellNumObj(spell,"range_increment")} * `+
         `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_range",MAX_NUM)})`;
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(base_cond,[cast_condition.condition],[{math:["distance('u', 'npc')","<=",spellRange]}] as const);
+    const fixedCond = concat(base_cond,[cast_condition.condition],[{math:["distance('u', 'npc')","<=",rangeMathExpr]}] as const);
 
     //创建施法EOC
     const castEoc:Eoc={
@@ -383,10 +383,10 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     //预先计算能耗与翻转条件
     const costVar = `tmp_${spell.id}_cost`;
     const vaildVar = `tmp_${spell.id}_vaild`;
-    const costStr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
+    const costMathExpr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
                     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
     ControlCastSpeakerEffects.push(
-        {math:[`u_${costVar}`,"=",costStr]},
+        {math:[`u_${costVar}`,"=",costMathExpr]},
         {
             if:{and:[...fixedCond]},
             then:[{math:[`u_${vaildVar}`,'=','1']}],
