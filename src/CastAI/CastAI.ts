@@ -114,14 +114,14 @@ export async function createCastAI(dm:DataManager){
         const ccs = Array.isArray(cast_condition)
             ?cast_condition
             :[cast_condition] as const;
-        ccs.forEach((cc,i)=>cc.id = cc.id??i+"");
+        ccs.forEach((cc,i)=>cc.id = cc.id??`${i}`);
 
         //遍历释放条件生成施法eoc
         for(const cast_condition of ccs){
             const {target, ignore_cost, fallback_with} = cast_condition;
             const force_vaild_target = cast_condition.force_vaild_target ?? skill.force_vaild_target;
 
-            //计算成功效果
+            //#region 计算成功效果
             const after_effect:EocEffect[]=[];
             //共通冷却
             if(common_cooldown!=0)
@@ -150,8 +150,11 @@ export async function createCastAI(dm:DataManager){
             //清空备用计数器
             if(fallback_with === undefined)
                 after_effect.push({math:[fallbackValName,"=","0"]})
+            //#endregion
 
-            //计算基础条件 确保第一个为技能开关, 用于cast_control读取 
+
+            //#region 计算基础条件
+            //确保第一个为技能开关, 用于cast_control读取 
             const base_cond: BoolExpr[] = [
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
                 {math:[gcdValName,"<=","0"]},
@@ -176,6 +179,7 @@ export async function createCastAI(dm:DataManager){
             if(cast_condition.force_lvl!=null)
                 min_level = cast_condition.force_lvl;
             else base_cond.push({math:[`u_spell_level('${spell.id}')`,">=","0"]});
+            //#endregion
 
 
             //处理并加入输出

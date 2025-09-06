@@ -5,6 +5,7 @@ import { SADef, getSpellByID } from "@src/SADefine";
 import { CastAIDataMap } from "./CastAI";
 import { CastAIData } from "./CastAIInterface";
 import { getDisableSpellVar } from "./CastAIGener";
+import { CombatRuleTopicID } from "@src/Strengthen";
 
 
 
@@ -15,6 +16,9 @@ export async function createCastAITalkTopic(dm:DataManager){
         id:["TALK_FRIEND","TALK_FRIEND_GUARD"],
         insert_before_standard_exits:true,
         responses:[{
+            text : "[战斗]我想给你一些作战指令。",
+            topic: CombatRuleTopicID,
+        },{
             text : "[施法]我想让你释放法术。",
             topic: await createCastControlResp(dm)
         }]
@@ -22,7 +26,7 @@ export async function createCastAITalkTopic(dm:DataManager){
     //战斗对话
     const combatTalkTopic:TalkTopic={
         type:"talk_topic",
-        id:["TALK_COMBAT_COMMANDS"],
+        id:[CombatRuleTopicID],
         insert_before_standard_exits:true,
         responses:[{
             text : "改一下你的施法方式吧……",

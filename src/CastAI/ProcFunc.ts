@@ -4,6 +4,7 @@ import { Spell, Eoc, EocID, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/sc
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
+import { SPELL_G1T, SPELL_L1T, SPELL_L1Tick } from "@src/UtilSpell";
 
 
 /**处理方式表 */
@@ -318,11 +319,12 @@ async function autoProc(dm:DataManager,cpd:CastProcData){
 
 async function control_castProc(dm:DataManager,cpd:CastProcData){
     const {skill,cast_condition} = cpd;
-    let {base_cond,after_effect,before_effect,min_level} = cpd;
+    const {base_cond,after_effect,before_effect,min_level} = cpd;
     const {id,merge_condition} = skill;
     const spell = getSpellByID(id);
 
     //删除开关条件
+    //计算基础条件时 确保第一个为技能开关, 用于此刻读取
     base_cond.shift();
 
     //添加条件效果
@@ -347,7 +349,6 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         id:coneocid,
         eoc_type:"ACTIVATION",
         effect:[
-            //{u_cast_spell:{id:SPELL_M1T, hit_self:true}},
             {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
             {u_location_variable:{global_val:"tmp_control_cast_avatarloc"}},
 
@@ -362,33 +363,35 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                 eoc_type:"ACTIVATION",
                 effect:[
                     {if:{and:[...fixedCond]}, then:[
-                    {run_eocs:{
-                        id:(coneocid+"_queue") as EocID,
-                        eoc_type:"ACTIVATION",
-                        effect:[{run_eocs:{
-                            id: (coneocid+"_queue_with") as EocID,
+                        {run_eocs:{
+                            id:`${coneocid}_queue`,
                             eoc_type:"ACTIVATION",
-                            effect:[
-                                {npc_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
-                                {if:{math: [ `distance(${playerSelectLoc.global_val}, tmp_control_cast_testloc)`, ">", "0" ] },then:[
-                                    ...before_effect,
-                                    {u_cast_spell:{
-                                        id:spell.id,
-                                        min_level
-                                    },
-                                    targeted: false,
-                                    true_eocs:{
-                                        id:genTrueEocID(spell,cast_condition),
-                                        effect:[...after_effect],
-                                        eoc_type:"ACTIVATION",
-                                    },
-                                    loc:playerSelectLoc}
-                                ]
-                            }]
-                        },
-                        alpha_loc:{global_val:"tmp_control_cast_casterloc"},
-                        beta_loc:{global_val:"tmp_control_cast_avatarloc"}}]
-                    },time_in_future:0},
+                            effect:[{run_eocs:{
+                                id: `${coneocid}_queue_with`,
+                                eoc_type:"ACTIVATION",
+                                effect:[
+                                    {npc_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
+                                    {if:{math: [ `distance(${playerSelectLoc.global_val}, tmp_control_cast_testloc)`, ">", "0" ] },then:[
+                                        ...before_effect,
+                                        {u_cast_spell:{
+                                            id:spell.id,
+                                            min_level
+                                        },
+                                        targeted: false,
+                                        true_eocs:{
+                                            id:genTrueEocID(spell,cast_condition),
+                                            effect:[...after_effect],
+                                            eoc_type:"ACTIVATION",
+                                        },
+                                        loc:playerSelectLoc}
+                                    ]
+                                }]
+                            },
+                            alpha_loc:{global_val:"tmp_control_cast_casterloc"},
+                            beta_loc:{global_val:"tmp_control_cast_avatarloc"}}]
+                        },time_in_future:0},
+                        {npc_cast_spell:{id:SPELL_L1Tick, hit_self:true}},
+                        {u_cast_spell:{id:SPELL_L1Tick, hit_self:true}},
                     ]}
                 ]
             },alpha_talker:"npc",beta_talker:"u"}
@@ -403,7 +406,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     ControlCastSpeakerEffects.push(
         {math:[`_${costVar}`,"=",costStr]},
         {run_eocs:{
-            id:(coneocid+"ControlCastSpeakerEffects") as EocID,
+            id:`${coneocid}ControlCastSpeakerEffects`,
             eoc_type:"ACTIVATION",
             effect:[{
                 if:{and:[...fixedCond]},

@@ -1,7 +1,9 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { Effect, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { SADef } from "./SADefine";
-import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "./UtilSpell";
+
+// 战斗规则对话ID
+export const CombatRuleTopicID = SADef.genTalkTopicID(`CombatRule`);
 
 /**用于必定成功的控制法术的flags */
 export const CON_SPELL_FLAG = [
@@ -98,10 +100,11 @@ const QuickBack: Spell = {
     extra_effects:[{id:QuickBackSub.id}]
 }
 //战斗对话
-const QuickBackTalkTopic:TalkTopic={
+const CombatRuleTalkTopic:TalkTopic={
     type:"talk_topic",
-    id:["TALK_COMBAT_COMMANDS"],
+    id:CombatRuleTopicID,
     insert_before_standard_exits:true,
+    dynamic_line:"<mypronoun>应该做些什么？",
     responses:[{
         truefalsetext:{
             condition:{math:['n_EnableQuickBack',"==","1"]},
@@ -115,8 +118,9 @@ const QuickBackTalkTopic:TalkTopic={
             false_effect:[{math:['n_EnableQuickBack',"=","1"]}],
             condition:{math:['n_EnableQuickBack',"==","1"]},
         }},
-        topic:"TALK_COMBAT_COMMANDS",
-    }]
+        topic:CombatRuleTopicID,
+    },
+    { text: "Never mind.", topic: "TALK_DONE" }]
 }
 
 
@@ -177,7 +181,7 @@ export async function buildStrengthen(dm:DataManager){
     dm.addData([
         autoback,TacticalTransfer,TacticalTransferEoc,
         QuickBack,QuickBackSub,QuickBackEoc,
-        QuickBackEocSubMovemod,QuickBackEocSubPush,QuickBackTalkTopic,
+        QuickBackEocSubMovemod,QuickBackEocSubPush,CombatRuleTalkTopic,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength
     ],'strength.json');
 }

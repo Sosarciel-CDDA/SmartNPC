@@ -9,7 +9,11 @@ export const SPELL_CT_MODMOVE_VAR = 'casttime_modmove';
 /**施法后摇法术ID */
 export const SPELL_CT_MODMOVE = SADef.genSpellID(`CastTimeModMove`);
 /**加速一回合 */
-export const SPELL_M1T = SADef.genSpellID("Mod1Turn");
+export const SPELL_G1T = SADef.genSpellID("Gain1Turn");
+/**扣除一回合 */
+export const SPELL_L1T = SADef.genSpellID("Lose1Turn");
+/**扣除一tick */
+export const SPELL_L1Tick = SADef.genSpellID("Lose1Tick");
 export async function createUtilSpell(dm:DataManager){
     const out:JObject[] = [];
     const spellCT:Spell = {
@@ -25,10 +29,10 @@ export async function createUtilSpell(dm:DataManager){
         max_damage: MAX_NUM,
     }
     out.push(spellCT);
-    const mod1Turn:Spell ={
-        id: SPELL_M1T,
+    const gain1Turn:Spell ={
+        id: SPELL_G1T,
         type: "SPELL",
-        name: "加速一回合",
+        name: "获得一回合",
         description: "获得一回合移动调整",
         effect: "mod_moves",
         shape: "blast",
@@ -37,7 +41,33 @@ export async function createUtilSpell(dm:DataManager){
         min_damage:100,
         max_damage:100
     }
-    out.push(mod1Turn);
+    out.push(gain1Turn);
+    const lose1Turn:Spell ={
+        id: SPELL_L1T,
+        type: "SPELL",
+        name: "失去一回合",
+        description: "失去一回合移动调整",
+        effect: "mod_moves",
+        shape: "blast",
+        valid_targets: ["self"],
+        flags: [...CON_SPELL_FLAG],
+        min_damage:-100,
+        max_damage:-100
+    }
+    out.push(lose1Turn);
+    const lose1Tick:Spell ={
+        id: SPELL_L1Tick,
+        type: "SPELL",
+        name: "失去一回合",
+        description: "失去一回合移动调整",
+        effect: "mod_moves",
+        shape: "blast",
+        valid_targets: ["self"],
+        flags: [...CON_SPELL_FLAG],
+        min_damage:-1,
+        max_damage:-1
+    }
+    out.push(lose1Tick);
     dm.addData(out,"UtilSpell");
 }
 
