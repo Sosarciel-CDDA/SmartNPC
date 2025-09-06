@@ -262,12 +262,7 @@ const DefCastDataMap:{
     Inherit(data,spell){
         const baseObj = DefCastDataMap[data.base](undefined,spell);
         const {type,base,...rest} = data;
-        for(const k in rest){
-            const v = (rest as any)[k];
-            if(v!==undefined)
-                (baseObj as any)[k] = v;
-        }
-        return baseObj;
+        return Object.assign({},baseObj,rest);
     }
 }
 /**根据预定义的ID获得预定义施法数据 */
