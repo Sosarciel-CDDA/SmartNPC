@@ -8755,7 +8755,6 @@
 					"enum": [
 						"AlawaySelfBuff",
 						"AlawayTargetBuff",
-						"AreaDamageSelfPossible",
 						"BattleSelfBuff",
 						"BattleTargetBuff",
 						"MeleeTargetDamage",
@@ -8806,7 +8805,6 @@
 			"enum": [
 				"AlawaySelfBuff",
 				"AlawayTargetBuff",
-				"AreaDamageSelfPossible",
 				"BattleSelfBuff",
 				"BattleTargetBuff",
 				"MeleeTargetDamage",
