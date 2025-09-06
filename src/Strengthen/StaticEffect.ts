@@ -90,7 +90,7 @@ export async function buildStaticEffect(dm:DataManager){
         flags:[...CON_SPELL_FLAG],
     }
     const joinBattle = SADef.genActEoc('JoinBattle',[{u_cast_spell:{id:joinBattleSpell.id}}]);
-    dm.addInvokeID("TryAttack",0,joinBattle.id);
+    dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
     dm.addData([
         CombatRuleTalkTopic,
