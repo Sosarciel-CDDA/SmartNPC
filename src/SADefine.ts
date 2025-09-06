@@ -11,9 +11,6 @@ export const SADef = new ModDefine(MOD_PREFIX);
 export const MAX_NUM = 1000000;
 
 
-/**用于必定成功的控制法术的flags */
-export const CON_SPELL_FLAG = ["SILENT", "NO_HANDS", "NO_LEGS", "NO_FAIL","NO_EXPLOSION_SFX"] as const;
-
 //初始化法术数据
 const files = UtilFT.fileSearchGlobSync(process.cwd(),path.join("data","spell","**","*.json"));
 const spellMap:Partial<Record<SpellID,Spell>> = {};
@@ -37,8 +34,19 @@ export function getSpellByID(id?:SpellID){
     return spell;
 }
 
-
 export const DATA_PATH = path.join(process.cwd(),'data');
 export const ENV_PATH = path.join(process.cwd(),'..');
 export const GAME_PATH = (UtilFT.loadJSONFileSync(path.join(ENV_PATH,'build_setting.json'))! as any).game_path as string;
 export const OUT_PATH = path.join(GAME_PATH,'data','mods','SmartNPC');
+
+/**用于必定成功的控制法术的flags */
+export const CON_SPELL_FLAG = [
+    "SILENT",
+    "NO_HANDS",
+    "NO_LEGS",
+    "NO_FAIL",
+    "NO_EXPLOSION_SFX",
+] as const;
+
+// 战斗规则对话ID
+export const CombatRuleTopicID = SADef.genTalkTopicID(`CombatRule`);

@@ -1,10 +1,10 @@
 import { JObject} from "@zwa73/utils";
-import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
+import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@/src/SADefine";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
-import { SPELL_L1T } from "@src/UtilSpell";
+import { SPELL_L1T } from "@/src/UtilSpell";
 
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={

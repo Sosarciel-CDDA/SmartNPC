@@ -1,6 +1,6 @@
 import { EocID, Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
-import { SADef } from "@src/SADefine";
+import { SADef } from "@/src/SADefine";
 import { CastAIData, CastCond } from "./CastAIInterface";
 
 //翻转u与n

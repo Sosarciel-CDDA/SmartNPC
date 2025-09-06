@@ -1,11 +1,10 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
 import { Eoc, Resp, TalkTopic } from "@sosarciel-cdda/schema";
-import { SADef, getSpellByID } from "@src/SADefine";
+import { CombatRuleTopicID, SADef, getSpellByID } from "@/src/SADefine";
 import { CastAIDataMap } from "./CastAI";
 import { CastAIData } from "./CastAIInterface";
 import { getDisableSpellVar } from "./CastAIGener";
-import { CombatRuleTopicID } from "@src/Strengthen";
 
 
 

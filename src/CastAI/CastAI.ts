@@ -1,7 +1,7 @@
 import { JObject, UtilFT } from "@zwa73/utils";
-import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@src/SADefine";
+import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/SADefine";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
-import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@src/UtilSpell";
+import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/UtilSpell";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
 import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./CastAIInterface";
@@ -13,10 +13,10 @@ import { createCastAITalkTopic } from "./TalkTopic";
 
 
 //全局冷却字段名
-const gcdValName = `u_CoCooldown`;
+const gcdValName = `u_cocooldown`;
 
 //falback字段名
-const fallbackValName = "u_CastFallbackCounter";
+const fallbackValName = "u_cast_fallback_counter";
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
