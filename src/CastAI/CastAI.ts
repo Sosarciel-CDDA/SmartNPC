@@ -43,17 +43,11 @@ tableList.forEach((file)=>{
         CastAIDataMap[spellID as SpellID] = castData;
 
         //处理辅助条件
-        if(json.require_mod!==undefined)
-            castData.merge_condition = castData.merge_condition !== undefined
-                ? {and:[castData.merge_condition,{mod_is_loaded:json.require_mod}]}
-                : {mod_is_loaded:json.require_mod}
-        if(json.common_condition!==undefined)
-            castData.merge_condition = castData.merge_condition !== undefined
-                ? {and:[castData.merge_condition,json.common_condition]}
-                : json.common_condition
-        castData.merge_condition = castData.merge_condition
-            ? {and:["u_is_npc",castData.merge_condition]}
-            : {and:["u_is_npc"]}
+        castData.merge_condition = {and:[
+            "u_is_npc",
+            ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
+            ... (json.common_condition!==undefined ? [json.common_condition] : []),
+        ]};
     })
 });
 
