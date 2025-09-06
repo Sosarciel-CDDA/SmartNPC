@@ -1,19 +1,20 @@
-import { Effect, ItemID, Mutation, Spell, SpellID } from "@sosarciel-cdda/schema";
-import { CastAIData } from "./CastAIInterface";
+import { Effect, ItemID, Spell, SpellID } from "@sosarciel-cdda/schema";
+import { CastAIData, CastCond } from "./CastAIInterface";
 import { SADef, getSpellByID } from "@/src/SADefine";
+import { getAoeExpr } from "./CastAIGener";
 
 
 
 
 /**无参预定义的施法数据 列表 */
 export const NoParamDefCastDataList = [
-    "TargetDamage"      ,//目标伤害
-    "MeleeTargetDamage" ,//近战目标伤害
-    "RangeTargetDamage" ,//远程目标伤害
-    "BattleSelfBuff"    ,//战斗自身buff
-    "AlawaySelfBuff"    ,//常态自身buff
-    "BattleTargetBuff"  ,//战斗目标buff
-    "AlawayTargetBuff"  ,//常态目标buff
+    "TargetDamage"           ,//目标伤害
+    "MeleeTargetDamage"      ,//近战目标伤害
+    "RangeTargetDamage"      ,//远程目标伤害
+    "BattleSelfBuff"         ,//战斗自身buff
+    "AlawaySelfBuff"         ,//常态自身buff
+    "BattleTargetBuff"       ,//战斗目标buff
+    "AlawayTargetBuff"       ,//常态目标buff
 ] as const;
 
 /**无参预定义的施法数据 */
@@ -65,10 +66,50 @@ export const ConcentratedAttack:Effect={
     desc:["被集火"],
 }
 
-type b = Extract<DefCastData,"nul">;
-type e = Extract<DefCastData,{type:"Inherit"}>
-type a = b extends string ? 1 : 0;
-type c = e extends never ? 1 : 2;
+//生成2次回退的随机释放条件
+const randomDamageCast = (spell:Spell):CastCond=>{
+    //如果可能伤害自己则计算距离
+    if(spell.min_aoe!=undefined && spell.valid_targets.includes('self')){
+        return {
+            hook:"BattleUpdate",
+            target:"filter_random",
+            condition:{math:[`distance('u', 'npc')`,">",getAoeExpr(spell)]},
+            fallback_with:10,
+            force_vaild_target:['hostile'],
+        }
+    }
+    return {
+        hook:"BattleUpdate",
+        target:"random",
+        fallback_with:10,
+        force_vaild_target:['hostile'],
+    }
+};
+
+//生成1次回退的筛选随机释放条件
+const concentratedDamageCast = (spell:Spell):CastCond=>{
+    //如果可能伤害自己则计算距离
+    if(spell.min_aoe!=undefined && spell.valid_targets.includes('self')){
+        return {
+            hook:"BattleUpdate",
+            target:"filter_random",
+            condition:{and:[
+                {math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
+                {math:[`distance('u', 'npc')`,">",getAoeExpr(spell)]}
+            ]},
+            fallback_with:10,
+            force_vaild_target:['hostile'],
+        }
+    }
+    return {
+        hook:"BattleUpdate",
+        target:"filter_random",
+        condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
+        fallback_with:10,
+        force_vaild_target:['hostile'],
+    }
+};
+
 /**施法数据生成器 表 */
 const DefCastDataMap:{
     [K in DefCastDataType]: Extract<DefCastData,{type:K}> extends never
@@ -79,19 +120,9 @@ const DefCastDataMap:{
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryAttack",
-            },{
-                hook:"BattleUpdate",
-                target:"filter_random",
-                condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
-                force_vaild_target:['hostile'],
-                fallback_with:5,
             },
-            {
-                hook:"BattleUpdate",
-                target:"random",
-                fallback_with:10,
-                force_vaild_target:['hostile'],
-            },
+            randomDamageCast(spell),
+            concentratedDamageCast(spell),
             {
                 hook:"None",
                 target:"control_cast",
@@ -104,19 +135,9 @@ const DefCastDataMap:{
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryMeleeAttack",
-            },{
-                hook:"BattleUpdate",
-                target:"filter_random",
-                condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
-                fallback_with:5,
-                force_vaild_target:['hostile'],
             },
-            {
-                hook:"BattleUpdate",
-                target:"random",
-                fallback_with:10,
-                force_vaild_target:['hostile'],
-            },
+            randomDamageCast(spell),
+            concentratedDamageCast(spell),
             {
                 hook:"None",
                 target:"control_cast",
@@ -129,19 +150,9 @@ const DefCastDataMap:{
         const dat:CastAIData = {
             cast_condition:[{
                 hook:"TryRangeAttack",
-            },{
-                hook:"BattleUpdate",
-                target:"filter_random",
-                condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
-                fallback_with:5,
-                force_vaild_target:['hostile'],
             },
-            {
-                hook:"BattleUpdate",
-                target:"random",
-                fallback_with:10,
-                force_vaild_target:['hostile'],
-            },
+            randomDamageCast(spell),
+            concentratedDamageCast(spell),
             {
                 hook:"None",
                 target:"control_cast",

@@ -1,6 +1,6 @@
 import { EocID, Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
-import { SADef } from "@/src/SADefine";
+import { MAX_NUM, SADef } from "@/src/SADefine";
 import { CastAIData, CastCond } from "./CastAIInterface";
 
 //翻转u与n
@@ -37,9 +37,17 @@ export function parseNumObj(value?:any){
 }
 /**解析法术伤害字符串 */
 export function parseSpellNumObj(spell:Spell,field:keyof Spell,def?:number){
-    if(def != undefined && spell[field]===undefined) return def+"";
+    if(def != undefined && spell[field]===undefined) return `${def}`;
     return parseNumObj(spell[field]);
 }
+//获得法术aoe表达式
+export const getAoeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_aoe")} + ${parseSpellNumObj(spell,"aoe_increment")} * `+
+    `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_aoe",MAX_NUM)})`;
+//获得法术cost表达式
+export const getCostExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
+    `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
+
+
 /**生成施法eocid */
 export function genCastEocID(spell:Spell,cast_condition:CastCond):EocID{
     return SADef.genEOCID(`Cast_${spell.id}_${cast_condition.id}`);

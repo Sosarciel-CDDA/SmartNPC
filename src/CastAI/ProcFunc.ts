@@ -2,7 +2,7 @@ import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@/src/SADefine";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
-import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj } from "./CastAIGener";
+import { genCastEocID, genTrueEocID, getCostExpr, getEventWeight, parseSpellNumObj } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 import { SPELL_L1T } from "@/src/UtilSpell";
 
@@ -382,10 +382,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     //预先计算能耗与翻转条件
     const costVar = `tmp_${spell.id}_cost`;
     const vaildVar = `tmp_${spell.id}_vaild`;
-    const costMathExpr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
-                    `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
     ControlCastSpeakerEffects.push(
-        {math:[`u_${costVar}`,"=",costMathExpr]},
+        {math:[`u_${costVar}`,"=",getCostExpr(spell)]},
         {
             if:{and:[...fixedCond]},
             then:[{math:[`u_${vaildVar}`,'=','1']}],
