@@ -4,7 +4,7 @@ import { Spell, Eoc, EocID, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/sc
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
-import { SPELL_G1T, SPELL_L1T, SPELL_L1Tick } from "@src/UtilSpell";
+import { SPELL_L1T } from "@src/UtilSpell";
 
 
 /**处理方式表 */
@@ -390,8 +390,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                             alpha_loc:{global_val:"tmp_control_cast_casterloc"},
                             beta_loc:{global_val:"tmp_control_cast_avatarloc"}}]
                         },time_in_future:0},
-                        {npc_cast_spell:{id:SPELL_L1Tick, hit_self:true}},
-                        {u_cast_spell:{id:SPELL_L1Tick, hit_self:true}},
+                        {npc_cast_spell:{id:SPELL_L1T, hit_self:true}},
+                        {u_cast_spell:{id:SPELL_L1T, hit_self:true}},
                     ]}
                 ]
             },alpha_talker:"npc",beta_talker:"u"}
