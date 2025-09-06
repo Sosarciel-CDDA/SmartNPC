@@ -47,15 +47,6 @@ export const getAoeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_aoe
 export const getCostExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
 
-
-/**生成施法eocid */
-export function genCastEocID(spell:Spell,cast_condition:CastCond):EocID{
-    return SADef.genEOCID(`Cast_${spell.id}_${cast_condition.id}`);
-}
-/**生成施法true_eoc id */
-export function genTrueEocID(spell:Spell,cast_condition:CastCond):EocID{
-    return SADef.genEOCID(`${spell.id}_TrueEoc_${cast_condition.id}`)
-}
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(talker:"u"|"n",spell:Spell){
     return `${talker}_${spell.id}_switch_disable`;
