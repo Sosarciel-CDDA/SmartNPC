@@ -10,6 +10,11 @@ import { CombatRuleTopicID } from "@src/Strengthen";
 
 
 export async function createCastAITalkTopic(dm:DataManager){
+    //对话EOC
+    const TalkEoc = SADef.genActEoc('CastControlTopicEffect',[
+        ...ControlCastSpeakerEffects,
+        {math:["u_display_mana","=","u_val('mana')"]}
+    ]);
     //主对话
     const mainTalkTopic:TalkTopic={
         type:"talk_topic",
@@ -20,7 +25,8 @@ export async function createCastAITalkTopic(dm:DataManager){
             topic: CombatRuleTopicID,
         },{
             text : "[施法]我想让你释放法术。",
-            topic: await createCastControlResp(dm)
+            topic: await createCastControlResp(dm),
+            effect:{run_eocs:TalkEoc.id}
         }]
     }
     //战斗对话
@@ -33,24 +39,17 @@ export async function createCastAITalkTopic(dm:DataManager){
             topic: await createSkillResp(dm)
         }]
     }
-    dm.addData([mainTalkTopic,combatTalkTopic],"CastAI",'talk_topic');
+    dm.addData([TalkEoc,mainTalkTopic,combatTalkTopic],"CastAI",'talk_topic');
 }
 
 /**创建施法对话 */
 async function createCastControlResp(dm:DataManager){
     //主对话id
     const castControlTalkTopicId = SADef.genTalkTopicID(`CastControl`);
-
     //施法主对话
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
         id:castControlTalkTopicId,
-        speaker_effect:{
-            effect:[
-                ...ControlCastSpeakerEffects,
-                {math:["npc_display_mana","=","n_val('mana')"]}
-            ]
-        },
         dynamic_line:`&当前魔法值: <npc_val:display_mana> 公共冷却: <npc_val:coCooldown>`,
         responses:[...ControlCastResps,{
             text: "Never mind.",

@@ -20,7 +20,7 @@ export async function procSpellTarget(target:TargetType|undefined,dm:DataManager
 }
 
 
-/**控制施法所需的效果 */
+/**控制施法所需的前置效果 */
 export const ControlCastSpeakerEffects:EocEffect[] = [];
 /**控制施法的回复 */
 export const ControlCastResps:Resp[]=[];
