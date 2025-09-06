@@ -335,7 +335,6 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         eoc_type:"ACTIVATION",
         effect:[
             {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
-            {u_location_variable:{global_val:"tmp_control_cast_avatarloc"}},
 
             //设置一个标准位置用于判断坐标是否变动
             {u_location_variable:{global_val:"tmp_control_cast_testloc"}},
@@ -370,10 +369,9 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                                 }]
                             },
                             alpha_loc:{global_val:"tmp_control_cast_casterloc"},
-                            beta_loc:{global_val:"tmp_control_cast_avatarloc"}}]
+                            beta_talker:"avatar"}]
                         },time_in_future:0},
                         {npc_cast_spell:{id:SPELL_L1T, hit_self:true}},
-                        {u_cast_spell:{id:SPELL_L1T, hit_self:true}},
                     ]}
                 ]
             },alpha_talker:"npc",beta_talker:"u"}
