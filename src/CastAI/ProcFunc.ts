@@ -5,8 +5,6 @@ import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 import { SPELL_L1T } from "@src/UtilSpell";
-import { MathCompareExp } from "@sosarciel-cdda/schema/dist/Schema/Eoc/Expression/BoolExpr";
-
 
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={
