@@ -58,6 +58,9 @@ const SmartNpcMut:Mutation={
     //}]
 }
 
+//战斗距离
+const BattleRange = 20;
+
 export async function buildStaticEffect(dm:DataManager){
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
         {u_add_effect:Courage.id,duration:'PERMANENT'},
@@ -72,8 +75,15 @@ export async function buildStaticEffect(dm:DataManager){
     ],'u_is_avatar');
     dm.addInvokeID('SlowUpdate',0,removeAvatarStrength.id);
 
+    const joinBattle = SADef.genActEoc('JoinBattle',[{
+        u_run_npc_eocs:[dm.getHelperEoc('TryJoinBattle').id],
+        npc_range:BattleRange,
+        npc_must_see:true,
+    }],'u_is_avatar');
+    dm.addInvokeID("TryAttack",0,joinBattle.id);
+
     dm.addData([
         CombatRuleTalkTopic,
-        initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength
+        initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,joinBattle
     ],'Strength','StaticEffect.json');
 }
