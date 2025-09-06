@@ -1,3 +1,3 @@
 export * from './CastAI';
-export * from './CastAIInterface';
-export * from './DefData';
+export * from './Interface';
+export * from './DefCastCondition';

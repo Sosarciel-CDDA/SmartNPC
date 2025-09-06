@@ -1,7 +1,7 @@
 import { EocID, Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
 import { MAX_NUM, SADef } from "@/src/SADefine";
-import { CastAIData, CastCond } from "./CastAIInterface";
+import { CastAIData, CastCond } from "./Interface";
 
 //翻转u与n
 export function revTalker<T extends JToken>(obj:T):T{
@@ -66,8 +66,4 @@ export function getEventWeight(skill:CastAIData,cond:CastCond){
     const fixweight = weight/200+0.5;
     if(fixweight > 1 || fixweight < 0) throw `${skill.id} 的 weight: ${weight} 超出施法权重取值范围 -99 ~ 99`;
     return fixweight;
-}
-
-export function getSpellCastExp(spell:Spell){
-    return `u_spell_level('${spell.id}`
 }

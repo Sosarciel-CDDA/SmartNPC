@@ -3,8 +3,8 @@ import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
 import { Eoc, Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SADef, getSpellByID } from "@/src/SADefine";
 import { CastAIDataMap } from "./CastAI";
-import { CastAIData } from "./CastAIInterface";
-import { getDisableSpellVar } from "./CastAIGener";
+import { CastAIData } from "./Interface";
+import { getDisableSpellVar } from "./UtilFunc";
 
 
 

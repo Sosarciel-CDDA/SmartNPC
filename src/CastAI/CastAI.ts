@@ -3,11 +3,11 @@ import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/SADefine";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/UtilSpell";
 import { DataManager } from "@sosarciel-cdda/event";
-import { getDisableSpellVar, parseSpellNumObj } from "./CastAIGener";
-import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./CastAIInterface";
+import { getDisableSpellVar, parseSpellNumObj } from "./UtilFunc";
+import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
-import { ConcentratedAttack, getDefCastData } from "./DefData";
+import { ConcentratedAttack, getDefCastData } from "./DefCastCondition";
 import { createCastAITalkTopic } from "./TalkTopic";
 
 

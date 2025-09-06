@@ -1,6 +1,6 @@
 import { CharHook } from "@sosarciel-cdda/event";
 import { BoolExpr, EocEffect, NumberExpr, Spell, SpellID } from "@sosarciel-cdda/schema";
-import { DefCastData } from "./DefData";
+import { DefCastData } from "./DefCastCondition";
 
 /**技能选择目标类型 列表 */
 export const TargetTypeList = [

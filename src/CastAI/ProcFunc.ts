@@ -2,8 +2,8 @@ import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@/src/SADefine";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
-import { genCastEocID, genTrueEocID, getCostExpr, getEventWeight, parseSpellNumObj } from "./CastAIGener";
-import { CastProcData, TargetType } from "./CastAIInterface";
+import { genCastEocID, genTrueEocID, getCostExpr, getEventWeight, parseSpellNumObj } from "./UtilFunc";
+import { CastProcData, TargetType } from "./Interface";
 import { SPELL_L1T } from "@/src/UtilSpell";
 
 /**处理方式表 */
