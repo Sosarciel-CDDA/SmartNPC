@@ -148,8 +148,7 @@ export async function createCastAI(dm:DataManager){
             if(cast_condition.infoge_exp!=true)
                 after_effect.push({math:[`u_skill_exp('${spell.difficulty??0}')`,"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
             //清空备用计数器
-            if(fallback_with === undefined)
-                after_effect.push({math:[fallbackValName,"=","0"]})
+            after_effect.push({math:[fallbackValName,"=",String(fallback_with ?? 0)]})
             //#endregion
 
 

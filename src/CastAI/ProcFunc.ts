@@ -1,6 +1,6 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
-import { Spell, Eoc, EocID, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
+import { Spell, Eoc, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
@@ -27,7 +27,7 @@ export const ControlCastResps:Resp[]=[];
 
 async function randomProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
-    const {id,one_in_chance,merge_condition} = skill;
+    const {id,merge_condition,one_in_chance} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
@@ -92,7 +92,6 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
             {
                 u_cast_spell:{
                     id:spell.id,
-                    once_in:one_in_chance,
                     min_level,
                 },
                 targeted: false,
@@ -112,11 +111,11 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
         id:SADef.genEOCID(`Cast${helperSpell.id}`),
         eoc_type:"ACTIVATION",
         effect:[
-            {u_cast_spell:{id:helperSpell.id,once_in:one_in_chance,min_level}},
+            {u_cast_spell:{id:helperSpell.id,min_level}},
             {run_eocs:castEoc.id},
             {math:[fhitvar,"=","0"]}
         ],
-        condition:{and:[...base_cond]},
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
     }
 
     //建立便于event合并的if语法
@@ -131,7 +130,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 
 async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
-    const {id,one_in_chance,merge_condition} = skill;
+    const {id,merge_condition,one_in_chance} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
@@ -152,7 +151,6 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
             {
                 u_cast_spell:{
                     id:spell.id,
-                    once_in:one_in_chance,
                     min_level,
                 },
                 true_eocs:{
@@ -217,11 +215,11 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         eoc_type:"ACTIVATION",
         effect:[
             //{set_string_var:`try ${spell.id}`,target_var:{global_val:'tmpstr'}},
-            {u_cast_spell:{id:filterTargetSpell.id,once_in:one_in_chance,min_level}},
+            {u_cast_spell:{id:filterTargetSpell.id,min_level}},
             {run_eocs:castEoc.id},
             {math:[fhitvar,"=","0"]}
         ],
-        condition:{and:[...base_cond]},
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
     }
 
     //建立便于event合并的if语法
@@ -236,7 +234,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
 
 async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,after_effect,cast_condition,before_effect,min_level} = cpd;
-    const {id,one_in_chance,merge_condition} = skill;
+    const {id,merge_condition,one_in_chance} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
@@ -263,7 +261,6 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
             {
                 u_cast_spell:{
                     id:spell.id,
-                    once_in:one_in_chance,
                     min_level,
                 },
                 true_eocs:{
@@ -274,7 +271,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
                 loc:{ context_val: "_target_loc" }
             }
         ],
-        condition:{and:[...base_cond]},
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
     }
 
     //加入触发
