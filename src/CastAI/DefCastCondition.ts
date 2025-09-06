@@ -69,7 +69,7 @@ export const ConcentratedAttack:Effect={
 //生成2次回退的随机释放条件
 const randomDamageCast = (spell:Spell):CastCond=>{
     //如果可能伤害自己则计算距离
-    if(spell.min_aoe!=undefined && spell.valid_targets.includes('self')){
+    if(spell.min_aoe!=undefined && spell.valid_targets.includes('self') && spell.shape=="blast"){
         return {
             hook:"BattleUpdate",
             target:"filter_random",
@@ -89,7 +89,7 @@ const randomDamageCast = (spell:Spell):CastCond=>{
 //生成1次回退的筛选随机释放条件
 const concentratedDamageCast = (spell:Spell):CastCond=>{
     //如果可能伤害自己则计算距离
-    if(spell.min_aoe!=undefined && spell.valid_targets.includes('self')){
+    if(spell.min_aoe!=undefined && spell.valid_targets.includes('self') && spell.shape=="blast"){
         return {
             hook:"BattleUpdate",
             target:"filter_random",
