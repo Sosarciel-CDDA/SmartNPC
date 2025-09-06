@@ -5,6 +5,7 @@ import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
 import { SPELL_L1T } from "@src/UtilSpell";
+import { MathCompareExp } from "@sosarciel-cdda/schema/dist/Schema/Eoc/Expression/BoolExpr";
 
 
 /**处理方式表 */
@@ -247,7 +248,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(base_cond,[cast_condition.condition],[{math:["distance('u', 'npc')","<=",rangeMathExpr]}] as const);
+    const fixedCond = concat(base_cond,[cast_condition.condition],[{math:["distance('u', 'npc')" as const,"<=" as const,rangeMathExpr]}]);
 
     //创建施法EOC
     const castEoc:Eoc={
