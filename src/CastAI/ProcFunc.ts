@@ -399,40 +399,36 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     }
 
     //预先计算能耗与翻转条件
-    const costVar = `${spell.id}_cost`;
-    const vaildVar = `${spell.id}_vaild`;
+    const costVar = `tmp_${spell.id}_cost`;
+    const vaildVar = `tmp_${spell.id}_vaild`;
     const costStr = `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
-                    `n_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
+                    `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
     ControlCastSpeakerEffects.push(
-        {math:[`_${costVar}`,"=",costStr]},
-        {run_eocs:{
-            id:`${coneocid}ControlCastSpeakerEffects`,
-            eoc_type:"ACTIVATION",
-            effect:[{
-                if:{and:[...fixedCond]},
-                then:[{math:[vaildVar,'=','1']}],
-                else:[{math:[vaildVar,'=','0']}],
-            }],
-        },alpha_talker:"npc",beta_talker:"u"}
+        {math:[`u_${costVar}`,"=",costStr]},
+        {
+            if:{and:[...fixedCond]},
+            then:[{math:[`u_${vaildVar}`,'=','1']}],
+            else:[{math:[`u_${vaildVar}`,'=','0']}],
+        }
     );
 
     //生成展示字符串
-    const sourceNameMap = {
+    const sourceNameMap:Record<string,string> = {
         "MANA"      : "魔力"    ,
         "BIONIC"    : "生化能量",
         "HP"        : "生命值"  ,
         "STAMINA"   : "耐力"    ,
-    }
-    const source = (sourceNameMap as any)[spell.energy_source as any];
+    };
+    const source = sourceNameMap[spell.energy_source ?? "MANA"];
     const costDisplay = (source != null && cast_condition.ignore_cost !== true)
-            ? `耗能: <context_val:${costVar}> ${source} `
+            ? `耗能: <npc_val:${costVar}> ${source} `
             : "";
 
     //创建施法对话
     const castResp:Resp={
         condition:cast_condition.force_lvl!=null ? undefined : {math:[`n_spell_level('${spell.id}')`,">=","0"]},
         truefalsetext:{
-            condition:{math:[vaildVar,"==","1"]},
+            condition:{math:[`n_${vaildVar}`,"==","1"]},
             true:`[可释放] <spell_name:${id}> ${costDisplay}`,
             false:`[不可释放] <spell_name:${id}> ${costDisplay}冷却:<npc_val:${spell.id}_cooldown>`,
         },

@@ -12,8 +12,12 @@ import { CombatRuleTopicID } from "@src/Strengthen";
 export async function createCastAITalkTopic(dm:DataManager){
     //对话EOC
     const TalkEoc = SADef.genActEoc('CastControlTopicEffect',[
-        ...ControlCastSpeakerEffects,
-        {math:["u_display_mana","=","u_val('mana')"]}
+        {run_eocs:{
+            id:`CastControlTopicEffect_Rev`,
+            eoc_type:"ACTIVATION",
+            effect:[...ControlCastSpeakerEffects],
+        },alpha_talker:"npc",beta_talker:"u"},
+        {math:["n_display_mana","=","n_val('mana')"]}
     ]);
     //主对话
     const mainTalkTopic:TalkTopic={
