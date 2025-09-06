@@ -1,6 +1,6 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@src/SADefine";
-import { Spell, Eoc, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
+import { Spell, Eoc, SpellFlag, Resp, EocEffect, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { genCastEocID, genTrueEocID, getEventWeight, parseSpellNumObj, revTalker } from "./CastAIGener";
 import { CastProcData, TargetType } from "./CastAIInterface";
@@ -19,6 +19,14 @@ export async function procSpellTarget(target:TargetType|undefined,dm:DataManager
     return ProcMap[target??"auto"](dm,cpd);
 }
 
+const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
+    const out:(T|undefined)[] = [];
+    for(const arg of args){
+        if(arg!=undefined)
+            out.push(...arg);
+    }
+    return out.filter(item=>item!=undefined) as any;
+}
 
 /**控制施法所需的前置效果 */
 export const ControlCastSpeakerEffects:EocEffect[] = [];
@@ -33,18 +41,35 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 
     const {max_level,range_increment,min_range,max_range,valid_targets,targeted_monster_ids,targeted_monster_species} = spell;
 
-    //添加条件效果
-    before_effect.push(...cast_condition.before_effect??[]);
-    after_effect.push(...cast_condition.after_effect??[]);
-
-    //合并基础条件
-    if(cast_condition.condition) base_cond.push(cast_condition.condition);
-
+    const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
+    const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
+    const fixedCond = concat(base_cond,[cast_condition.condition]);
 
     //命中id
     const fhitvar = `${spell.id}_hasTarget`;
-    //创建记录坐标Eoc
-    const locEoc:Eoc={
+    //创建施法EOC 应与filter一样使用标记法术 待修改
+    const castEoc:Eoc={
+        type:"effect_on_condition",
+        id:genCastEocID(spell,cast_condition),
+        eoc_type:"ACTIVATION",
+        effect:[
+            ...fixedBeforeEffect,
+            {
+                u_cast_spell:{ id:spell.id, min_level },
+                targeted: false,
+                true_eocs:{
+                    id:genTrueEocID(spell,cast_condition),
+                    effect:[...fixedAfterEffect],
+                    eoc_type:"ACTIVATION",
+                },
+                loc:{global_val:"tmp_loc"}
+            }
+        ],
+        condition:{math:[fhitvar,"!=","0"]},
+    }
+
+    //辅助法术记录坐标的Eoc
+    const extraHelperEoc:Eoc={
         id:SADef.genEOCID(`${spell.id}_RandomRecordLoc_${cast_condition.id}`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
@@ -57,56 +82,36 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //创建辅助法术
     const helperflags:SpellFlag[] = [...CON_SPELL_FLAG];
     if(spell.flags?.includes("IGNORE_WALLS")) helperflags.push("IGNORE_WALLS");
-    const subHelperSpell:Spell={
+    //随机目标flag只在extra内起效, 所以需要此子法术来索敌
+    const extraHelperSpell:Spell={
         type: "SPELL",
         id: SADef.genSpellID(`${spell.id}_RandomTargetSub_${cast_condition.id}`),
-        name:spell.name+"_子随机索敌",
+        name:`${spell.name}_子随机索敌`,
         description:`${spell.name}的子随机索敌法术`,
         effect: "effect_on_condition",
-        effect_str:locEoc.id,
+        effect_str:extraHelperEoc.id,
         shape: "blast",
         flags: [...helperflags,'RANDOM_TARGET'],
         max_level,range_increment,min_range,max_range,
         targeted_monster_ids,targeted_monster_species,
         valid_targets:force_vaild_target ?? valid_targets.filter(item=>item!="ground"),
     }
+    //用于进行随机索敌的法术
     const helperSpell:Spell={
         type: "SPELL",
         id: SADef.genSpellID(`${spell.id}_RandomTarget_${cast_condition.id}`),
-        name:spell.name+"_主随机索敌",
+        name:`${spell.name}_主随机索敌`,
         description:`${spell.name}的主随机索敌法术`,
         valid_targets: ["self"],
         effect: "attack",
         shape: "blast",
         flags: [...helperflags],
-        extra_effects:[{id:subHelperSpell.id}],
+        extra_effects:[{id:extraHelperSpell.id}],
         max_level,
     }
-    //创建施法EOC 应与filter一样使用标记法术 待修改
-    const castEoc:Eoc={
-        type:"effect_on_condition",
-        id:genCastEocID(spell,cast_condition),
-        eoc_type:"ACTIVATION",
-        effect:[
-            ...before_effect,
-            {
-                u_cast_spell:{
-                    id:spell.id,
-                    min_level,
-                },
-                targeted: false,
-                true_eocs:{
-                    id:genTrueEocID(spell,cast_condition),
-                    effect:[...after_effect],
-                    eoc_type:"ACTIVATION",
-                },
-                loc:{global_val:"tmp_loc"}
-            }
-        ],
-        condition:{math:[fhitvar,"!=","0"]},
-    }
-    //创建释放索敌法术的eoc
-    const castSelEoc:Eoc = {
+
+    //主逻辑eoc
+    const mainEoc:Eoc = {
         type:"effect_on_condition",
         id:SADef.genEOCID(`Cast${helperSpell.id}`),
         eoc_type:"ACTIVATION",
@@ -115,17 +120,18 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
             {run_eocs:castEoc.id},
             {math:[fhitvar,"=","0"]}
         ],
-        condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...fixedCond]},
     }
 
     //建立便于event合并的if语法
     const eff:EocEffect={
         if:merge_condition!,
-        then:[{run_eocs:[castSelEoc.id]}]
+        then:[{run_eocs:[mainEoc.id]}]
     }
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
-    return [castEoc,helperSpell,subHelperSpell,locEoc,castSelEoc];
+    // eff -> mainEoc -> (helperSpell -> extraHelperSpell -> extraHelperEoc) -> castEoc
+    return [castEoc,helperSpell,extraHelperSpell,extraHelperEoc,mainEoc];
 }
 
 async function filter_randomProc(dm:DataManager,cpd:CastProcData){
@@ -135,8 +141,8 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     const {hook} = cast_condition;
 
     //添加条件效果
-    before_effect.push(...cast_condition.before_effect??[]);
-    after_effect.push(...cast_condition.after_effect??[]);
+    const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
+    const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
 
     //命中id
     const fhitvar = `${spell.id}_hasTarget`;
@@ -147,15 +153,12 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         id:genCastEocID(spell,cast_condition),
         eoc_type:"ACTIVATION",
         effect:[
-            ...before_effect,
+            ...fixedBeforeEffect,
             {
-                u_cast_spell:{
-                    id:spell.id,
-                    min_level,
-                },
+                u_cast_spell:{ id:spell.id, min_level },
                 true_eocs:{
                     id:genTrueEocID(spell,cast_condition),
-                    effect:[...after_effect],
+                    effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
                 loc:{global_val:"tmp_loc"}
@@ -164,8 +167,8 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         condition:{math:[fhitvar,"!=","0"]},
     }
 
-    //创建记录坐标Eoc
-    const locEoc:Eoc={
+    //筛选目标的Eoc
+    const filterTargetEoc:Eoc={
         id:SADef.genEOCID(`${spell.id}_RecordLoc_${cast_condition.id}`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
@@ -184,7 +187,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         condition:{math:[fhitvar,"!=","1"]}
     }
 
-    //创建筛选目标的辅助索敌法术
+    //筛选目标的辅助索敌法术
     const flags:SpellFlag[] = [...CON_SPELL_FLAG];
     if(spell.flags?.includes("IGNORE_WALLS")) flags.push("IGNORE_WALLS")
     const {min_range,max_range,range_increment,
@@ -196,20 +199,18 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         name:`${spell.id}_筛选索敌`,
         description:`${spell.id}的筛选索敌法术`,
         effect:"effect_on_condition",
-        effect_str:locEoc.id,
+        effect_str:filterTargetEoc.id,
         flags,
         shape:"blast",
         min_aoe:min_range,
         max_aoe:max_range,
         aoe_increment:range_increment,
         max_level,targeted_monster_ids,
-        valid_targets:force_vaild_target!=null
-            ? force_vaild_target
-            : valid_targets.filter(item=>item!="ground"),
+        valid_targets:force_vaild_target ?? valid_targets.filter(item=>item!="ground"),
     }
 
-    //创建释放索敌法术的eoc
-    const castSelEoc:Eoc = {
+    //主逻辑eoc
+    const mainEoc:Eoc = {
         type:"effect_on_condition",
         id:SADef.genEOCID(`Cast${filterTargetSpell.id}`),
         eoc_type:"ACTIVATION",
@@ -225,11 +226,13 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     //建立便于event合并的if语法
     const eff:EocEffect={
         if:merge_condition!,
-        then:[{run_eocs:[castSelEoc.id]}]
+        then:[{run_eocs:[mainEoc.id]}]
     }
+
+    // eff -> mainEoc -> (filterTargetSpell -> filterTargetEoc) -> castEoc
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
-    return [locEoc,castEoc,castSelEoc,filterTargetSpell];
+    return [filterTargetEoc,castEoc,mainEoc,filterTargetSpell];
 }
 
 async function direct_hitProc(dm:DataManager,cpd:CastProcData){
@@ -238,17 +241,13 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     const spell = getSpellByID(id);
     const {hook} = cast_condition;
 
-    //添加条件效果
-    before_effect.push(...cast_condition.before_effect??[]);
-    after_effect.push(...cast_condition.after_effect??[]);
-
-    //合并基础条件
-    if(cast_condition.condition) base_cond.push(cast_condition.condition);
-
     //射程条件
     const spellRange=`min(${parseSpellNumObj(spell,"min_range")} + ${parseSpellNumObj(spell,"range_increment")} * `+
         `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_range",MAX_NUM)})`;
-    base_cond.push({math:["distance('u', 'npc')","<=",spellRange]});
+
+    const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
+    const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
+    const fixedCond = concat(base_cond,[cast_condition.condition],[{math:["distance('u', 'npc')","<=",spellRange]}] as const);
 
     //创建施法EOC
     const castEoc:Eoc={
@@ -256,22 +255,19 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
         id:genCastEocID(spell,cast_condition),
         eoc_type:"ACTIVATION",
         effect:[
-            ...before_effect,
+            ...fixedBeforeEffect,
             {npc_location_variable: { context_val: "_target_loc" }},
             {
-                u_cast_spell:{
-                    id:spell.id,
-                    min_level,
-                },
+                u_cast_spell:{ id:spell.id, min_level},
                 true_eocs:{
                     id:genTrueEocID(spell,cast_condition),
-                    effect:[...after_effect],
+                    effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
                 loc:{ context_val: "_target_loc" }
             }
         ],
-        condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...fixedCond]},
     }
 
     //加入触发
@@ -322,23 +318,15 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
 
     //删除开关条件
     //计算基础条件时 确保第一个为技能开关, 用于此刻读取
-    base_cond.shift();
+    const [switchCond,...restCond] = base_cond;
 
-    //添加条件效果
-    before_effect.push(...cast_condition.before_effect??[]);
-    after_effect.push(...cast_condition.after_effect??[]);
-
-    //合并基础条件
-    if(cast_condition.condition) base_cond.push(cast_condition.condition);
-
-    //翻转对话者 将u改为n使其适用npc
-    const fixedCond = [...base_cond,merge_condition!];
+    const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
+    const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
+    const fixedCond = concat(restCond,[cast_condition.condition],[merge_condition]);
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};
     // 判断是否选中位置
-
-
     const coneocid = genCastEocID(spell,cast_condition);
     //创建选择施法eoc
     const controlEoc:Eoc={
@@ -369,15 +357,12 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                                 effect:[
                                     {npc_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
                                     {if:{math: [ `distance(${playerSelectLoc.global_val}, tmp_control_cast_testloc)`, ">", "0" ] },then:[
-                                        ...before_effect,
-                                        {u_cast_spell:{
-                                            id:spell.id,
-                                            min_level
-                                        },
+                                        ...fixedBeforeEffect,
+                                        {u_cast_spell:{ id:spell.id, min_level },
                                         targeted: false,
                                         true_eocs:{
                                             id:genTrueEocID(spell,cast_condition),
-                                            effect:[...after_effect],
+                                            effect:[...fixedAfterEffect],
                                             eoc_type:"ACTIVATION",
                                         },
                                         loc:playerSelectLoc}
