@@ -15,7 +15,7 @@ export const MAX_NUM = 1000000;
 export const CON_SPELL_FLAG = ["SILENT", "NO_HANDS", "NO_LEGS", "NO_FAIL","NO_EXPLOSION_SFX"] as const;
 
 //初始化法术数据
-const files = UtilFT.fileSearchGlobSync(process.cwd(),path.join("spell","**","*.json"));
+const files = UtilFT.fileSearchGlobSync(process.cwd(),path.join("data","spell","**","*.json"));
 const spellMap:Partial<Record<SpellID,Spell>> = {};
 files.forEach((file)=>{
     const jarr = UtilFT.loadJSONFileSync(file)as any as AnyCddaJsonList;

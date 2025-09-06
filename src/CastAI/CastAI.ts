@@ -101,7 +101,7 @@ export async function createCastAI(dm:DataManager){
         //法术消耗变量类型
         const costVar = spell.energy_source !== undefined
             ? COST_MAP[spell.energy_source]
-            : undefined;
+            : "MANA";
 
         //生成冷却变量名
         const cdValName = `u_${spell.id}_cooldown`;

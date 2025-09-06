@@ -41,18 +41,15 @@ async function createCastControlResp(dm:DataManager){
     //主对话id
     const castControlTalkTopicId = SADef.genTalkTopicID(`CastControl`);
 
-    //刷新魔法值变量
-    const update = SADef.genActEoc("UpdateDisplayVal",[
-        {math:["u_display_mana","=","u_val('mana')"]}
-    ]);
-    dm.addInvokeEoc("NpcUpdate",0,update);
-
     //施法主对话
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
         id:castControlTalkTopicId,
         speaker_effect:{
-            effect:[...ControlCastSpeakerEffects]
+            effect:[
+                ...ControlCastSpeakerEffects,
+                {math:["npc_display_mana","=","n_val('mana')"]}
+            ]
         },
         dynamic_line:`&当前魔法值: <npc_val:display_mana> 公共冷却: <npc_val:coCooldown>`,
         responses:[...ControlCastResps,{
@@ -60,7 +57,7 @@ async function createCastControlResp(dm:DataManager){
             topic: "TALK_NONE"
         }]
     }
-    dm.addData([castControlTalkTopic,update],"CastAI",'castcontrol_talk_topic');
+    dm.addData([castControlTalkTopic],"CastAI",'castcontrol_talk_topic');
     return castControlTalkTopicId;
 }
 

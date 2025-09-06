@@ -104,7 +104,7 @@ const CombatRuleTalkTopic:TalkTopic={
     type:"talk_topic",
     id:CombatRuleTopicID,
     insert_before_standard_exits:true,
-    dynamic_line:"<mypronoun>应该做些什么？",
+    dynamic_line:"&<mypronoun>应该做些什么？",
     responses:[{
         truefalsetext:{
             condition:{math:['n_EnableQuickBack',"==","1"]},
