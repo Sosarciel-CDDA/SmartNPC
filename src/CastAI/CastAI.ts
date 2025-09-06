@@ -13,10 +13,10 @@ import { createCastAITalkTopic } from "./TalkTopic";
 
 
 //全局冷却字段名
-const gcdValName = `u_coCooldown`;
+const gcdValName = `u_CoCooldown`;
 
 //falback字段名
-const fallbackValName = "u_castFallbackCounter";
+const fallbackValName = "u_CastFallbackCounter";
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
@@ -84,7 +84,7 @@ export async function createCastAI(dm:DataManager){
 
     //遍历技能
     for(const skill of skills){
-        const {id,cast_condition,cooldown,common_cooldown,common_condition} = skill;
+        const {id,cast_condition,cooldown,common_cooldown} = skill;
         //获取法术数据
         const spell = getSpellByID(id);
 
@@ -95,7 +95,7 @@ export async function createCastAI(dm:DataManager){
         //法术消耗变量类型
         const costVar = spell.energy_source !== undefined
             ? COST_MAP[spell.energy_source]
-            : COST_MAP["MANA"];
+            : COST_MAP.MANA;
 
         //生成冷却变量名
         const cdValName = `u_${spell.id}_cooldown`;
@@ -105,13 +105,13 @@ export async function createCastAI(dm:DataManager){
         if(skill.before_effect) before_effect.push(...skill.before_effect)
 
         //遍历释放条件
-        const ccs = Array.isArray(cast_condition)
-            ?cast_condition
-            :[cast_condition] as const;
-        ccs.forEach((cc,i)=>cc.id = cc.id??`${i}`);
+        const ccList = Array.isArray(cast_condition)
+            ? cast_condition
+            : [cast_condition] as const;
+        ccList.forEach((cc,i)=>cc.id = cc.id??`${i}`);
 
         //遍历释放条件生成施法eoc
-        for(const cast_condition of ccs){
+        for(const cast_condition of ccList){
             const {target, ignore_cost, fallback_with} = cast_condition;
             const force_vaild_target = cast_condition.force_vaild_target ?? skill.force_vaild_target;
 
@@ -152,8 +152,6 @@ export async function createCastAI(dm:DataManager){
                 {math:[getDisableSpellVar("u",spell),"!=","1"]},
                 {math:[gcdValName,"<=","0"]},
             ];
-            //共同条件
-            if(common_condition) base_cond.push(common_condition);
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
                 base_cond.push({math:[costVar,">=",spellCost]});

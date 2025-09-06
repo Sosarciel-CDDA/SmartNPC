@@ -321,7 +321,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(restCond,[cast_condition.condition],[merge_condition]);
+    const fixedCond = concat(restCond,[cast_condition.condition],[merge_condition]); // 不经过触发, 需要加上merge_condition
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};

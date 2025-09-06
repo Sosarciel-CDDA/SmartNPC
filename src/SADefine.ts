@@ -33,6 +33,7 @@ export function getSpellByID(id?:SpellID){
         const base = getSpellByID((spell as any)['copy-from']) as Spell;
         return Object.assign({},base,spell);
     }
+    spell.name = (typeof spell.name == 'string' ? spell.name : spell.name.str??spell.name.str_sp??spell.name.str_pl??spell.name.ctxt) as string;
     return spell;
 }
 
