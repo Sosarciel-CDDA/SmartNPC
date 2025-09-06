@@ -79,16 +79,16 @@ async function createSkillResp(dm:DataManager){
         const spell = getSpellByID(id);
         const name = `<spell_name:${id}>`;
 
-        const nstopVar = nv(getDisableSpellVar(spell));
+        const nStopVar = nv(getDisableSpellVar(spell));
 
         //开关切换eoc
         const eoc:Eoc={
             type:"effect_on_condition",
-            id:SADef.genEOCID(`${id}_switch`),
+            id:SADef.genEOCID(`${id}_Switch`),
             eoc_type:"ACTIVATION",
-            effect:[{math:[nstopVar,"=","0"]}],
-            false_effect:[{math:[nstopVar,"=","1"]}],
-            condition:{math:[nstopVar,"==","1"]},
+            effect:[{math:[nStopVar,"=","0"]}],
+            false_effect:[{math:[nStopVar,"=","1"]}],
+            condition:{math:[nStopVar,"==","1"]},
         }
         skillRespEocList.push(eoc)
 
@@ -96,7 +96,7 @@ async function createSkillResp(dm:DataManager){
         const resp:Resp={
             condition:{math:[`n_spell_level('${spell.id}')`,">=","0"]},
             truefalsetext:{
-                condition:{math:[nstopVar,"==","1"]},
+                condition:{math:[nStopVar,"==","1"]},
                 true:`[已停用] ${name}`,
                 false:`[已启用] ${name}`,
             },
