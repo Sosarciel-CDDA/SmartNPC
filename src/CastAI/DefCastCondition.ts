@@ -272,9 +272,9 @@ const DefCastDataMap:{
 }
 /**根据预定义的ID获得预定义施法数据 */
 export function getDefCastData(data:DefCastData|CastAIData,spellid:SpellID):CastAIData{
-    let dtype:DefCastDataType|undefined=undefined;
-    if(typeof data === "object" && "type" in data) dtype = data.type;
-    else if(typeof data === "string") dtype = data;
+    const dtype=
+        (typeof data === "object" && "type" in data) ? data.type :
+        (typeof data === "string") ? data : undefined;
 
     if(dtype==undefined) return data as any;
 

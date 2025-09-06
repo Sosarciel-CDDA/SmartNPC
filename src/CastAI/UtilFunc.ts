@@ -43,6 +43,7 @@ export function parseSpellNumObj(spell:Spell,field:keyof Spell,def?:number){
 //获得法术aoe表达式
 export const getAoeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_aoe")} + ${parseSpellNumObj(spell,"aoe_increment")} * `+
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_aoe",MAX_NUM)})`;
+
 //获得法术cost表达式
 export const getCostExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;

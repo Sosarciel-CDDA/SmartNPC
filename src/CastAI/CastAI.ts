@@ -3,7 +3,7 @@ import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/SADefine";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/UtilSpell";
 import { DataManager } from "@sosarciel-cdda/event";
-import { getDisableSpellVar, parseSpellNumObj } from "./UtilFunc";
+import { getCostExpr, getDisableSpellVar, parseSpellNumObj } from "./UtilFunc";
 import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
@@ -88,10 +88,6 @@ export async function createCastAI(dm:DataManager){
         //获取法术数据
         const spell = getSpellByID(id);
 
-        //法术消耗字符串
-        const spellCost=`min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
-                        `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
-
         //法术消耗变量类型
         const costVar = spell.energy_source !== undefined
             ? COST_MAP[spell.energy_source]
@@ -108,6 +104,7 @@ export async function createCastAI(dm:DataManager){
         const ccList = Array.isArray(cast_condition)
             ? cast_condition
             : [cast_condition] as const;
+        //设置释放条件uid
         ccList.forEach((cc,i)=>cc.id = cc.id??`${i}`);
 
         //遍历释放条件生成施法eoc
@@ -137,7 +134,7 @@ export async function createCastAI(dm:DataManager){
             }
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
-                after_effect.push({math:[costVar,"-=",spellCost]});
+                after_effect.push({math:[costVar,"-=",getCostExpr(spell)]});
             //经验增长
             if(cast_condition.infoge_exp!=true)
                 after_effect.push({math:[`u_skill_exp('${spell.difficulty??0}')`,"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
@@ -154,7 +151,7 @@ export async function createCastAI(dm:DataManager){
             ];
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
-                base_cond.push({math:[costVar,">=",spellCost]});
+                base_cond.push({math:[costVar,">=",getCostExpr(spell)]});
             //物品消耗
             //if(spell.)
             //冷却
