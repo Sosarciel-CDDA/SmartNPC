@@ -82,6 +82,7 @@ const DefCastDataMap:{
                 hook:"BattleUpdate",
                 target:"filter_random",
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
+                force_vaild_target:['hostile'],
                 fallback_with:5,
             },
             {
@@ -107,6 +108,7 @@ const DefCastDataMap:{
                 target:"filter_random",
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
+                force_vaild_target:['hostile'],
             },
             {
                 hook:"BattleUpdate",
@@ -131,6 +133,7 @@ const DefCastDataMap:{
                 target:"filter_random",
                 condition:{math:[`n_effect_intensity('${ConcentratedAttack.id}')`,">","0"]},
                 fallback_with:5,
+                force_vaild_target:['hostile'],
             },
             {
                 hook:"BattleUpdate",

@@ -1,6 +1,6 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Effect, Mutation, TalkTopic } from "@sosarciel-cdda/schema";
-import { SADef } from "@/src/SADefine";
+import { Effect, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { CON_SPELL_FLAG, SADef } from "@/src/SADefine";
 import { CombatRuleTopicID } from "@/src/SADefine";
 
 //战斗对话
@@ -75,15 +75,28 @@ export async function buildStaticEffect(dm:DataManager){
     ],'u_is_avatar');
     dm.addInvokeID('SlowUpdate',0,removeAvatarStrength.id);
 
-    const joinBattle = SADef.genActEoc('JoinBattle',[{
-        u_run_npc_eocs:[dm.getHelperEoc('TryJoinBattle').id],
-        npc_range:BattleRange,
-        npc_must_see:true,
-    }],'u_is_avatar');
+
+    const joinBattleSpell:Spell = {
+        id:SADef.genSpellID('JoinBattleSpell'),
+        name:"加入战斗",
+        description:"使周围友军加入战斗",
+        type:"SPELL",
+        effect:"effect_on_condition",
+        effect_str:dm.getHelperEoc('TryJoinBattle').id,
+        min_aoe:BattleRange, max_aoe:BattleRange,
+        min_range:1,max_range:1,
+        shape:"blast",
+        valid_targets:['ally','self'],
+        flags:[...CON_SPELL_FLAG],
+    }
+    const joinBattle = SADef.genActEoc('JoinBattle',[
+        {u_cast_spell:{id:joinBattleSpell.id}}
+    ],'u_is_avatar');
     dm.addInvokeID("TryAttack",0,joinBattle.id);
 
     dm.addData([
         CombatRuleTalkTopic,
-        initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,joinBattle
+        initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
+        joinBattle,joinBattleSpell
     ],'Strength','StaticEffect.json');
 }

@@ -34,11 +34,11 @@ const QuickBackEocSubMovemod: Spell = {
 }
 /**快速后退施法委托 */
 const QuickBackEoc = SADef.genActEoc('QuickBack',[
-    {npc_location_variable:{context_val:"tmploc"}},
-    {u_cast_spell: {id:QuickBackEocSubPush.id},loc:{context_val:'tmploc'}},
+    {npc_location_variable:{context_val:"tmploc"}}, // 记录施法者的位置
+    {u_cast_spell: {id:QuickBackEocSubPush.id},loc:{context_val:'tmploc'}}, // 委托怪物对施法者释放一次movemod与一次push
     {u_cast_spell: {id:QuickBackEocSubMovemod.id},loc:{context_val:'tmploc'}}
 ],{or:['u_is_character','u_is_monster']});
-/**快速后退 */
+/**快速后退的随机选择怪物法术 */
 const QuickBackSub: Spell = {
     type: "SPELL",
     id: "quick_back_sub",
@@ -46,10 +46,10 @@ const QuickBackSub: Spell = {
     name: "快速后退子法术",
     valid_targets: ["hostile"],
     effect: "effect_on_condition",
+    effect_str:QuickBackEoc.id,
     min_range: QuickBackRange,
     shape: "blast",
     flags: [...CON_SPELL_FLAG,'RANDOM_TARGET'],
-    effect_str:QuickBackEoc.id,
 }
 /**快速后退 */
 const QuickBack: Spell = {
