@@ -60,6 +60,7 @@ type DefCastDataGener<T extends DefCastData|undefined> = (data:T,spell:Spell)=>C
 export const ConcentratedAttack:Effect={
     type:"effect_type",
     id:SADef.genEffectID("ConcentratedAttack"),
+    show_in_info:true,
     name:["被集火"],
     desc:["被集火"],
 }

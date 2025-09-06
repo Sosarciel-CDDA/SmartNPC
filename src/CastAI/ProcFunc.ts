@@ -180,7 +180,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
             ]},
             then:[
                 {math:[fhitvar,"=" ,"1"]},
-                {u_location_variable: { global_val: "tmp_loc" }}
+                {npc_location_variable: { global_val: "tmp_loc" }}
             ]}],
         },alpha_talker:"npc",beta_talker:"u"}],
         condition:{math:[fhitvar,"!=","1"]}
