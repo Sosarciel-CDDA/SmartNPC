@@ -89,9 +89,7 @@ export async function buildStaticEffect(dm:DataManager){
         valid_targets:['ally','self'],
         flags:[...CON_SPELL_FLAG],
     }
-    const joinBattle = SADef.genActEoc('JoinBattle',[
-        {u_cast_spell:{id:joinBattleSpell.id}}
-    ],'u_is_avatar');
+    const joinBattle = SADef.genActEoc('JoinBattle',[{u_cast_spell:{id:joinBattleSpell.id}}]);
     dm.addInvokeID("TryAttack",0,joinBattle.id);
 
     dm.addData([
