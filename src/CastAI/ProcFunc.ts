@@ -334,7 +334,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         id:SADef.genEOCID(uid),
         eoc_type:"ACTIVATION",
         effect:[
-            {npc_location_variable:{global_val:"tmp_control_cast_casterloc"}},
+            {npc_set_talker:{global_val:"tmp_control_cast_npctalker"}},
 
             //设置一个标准位置用于判断坐标是否变动
             {u_location_variable:{global_val:"tmp_control_cast_testloc"}},
@@ -368,10 +368,9 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                                     ]
                                 }]
                             },
-                            alpha_loc:{global_val:"tmp_control_cast_casterloc"},
+                            alpha_talker:{global_val:"tmp_control_cast_npctalker"},
                             beta_talker:"avatar"}]
                         },time_in_future:0},
-                        {npc_cast_spell:{id:SPELL_L1T, hit_self:true}},
                     ]}
                 ]
             },alpha_talker:"npc",beta_talker:"u"}
