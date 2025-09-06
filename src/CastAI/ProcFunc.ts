@@ -1,8 +1,8 @@
 import { JObject} from "@zwa73/utils";
-import { SADef, CON_SPELL_FLAG, getSpellByID, MAX_NUM } from "@/src/SADefine";
-import { Spell, Eoc, SpellFlag, Resp, EocEffect, BoolExpr} from "@sosarciel-cdda/schema";
+import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/SADefine";
+import { Spell, Eoc, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
-import { getCostExpr, getEventWeight, parseSpellNumObj } from "./UtilFunc";
+import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
 import { CastProcData, TargetType } from "./Interface";
 import { SPELL_L1T } from "@/src/UtilSpell";
 
@@ -242,13 +242,12 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     const {hook} = cast_condition;
     const uid = `${spell.id}_DirectHit_${cast_condition.id}`;
 
-    //射程条件
-    const rangeMathExpr=`min(${parseSpellNumObj(spell,"min_range")} + ${parseSpellNumObj(spell,"range_increment")} * `+
-        `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_range",MAX_NUM)})`;
-
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(base_cond,[cast_condition.condition],[{math:["distance('u', 'npc')" as const,"<=" as const,rangeMathExpr]}]);
+    const fixedCond = concat(base_cond,
+        [cast_condition.condition],
+        [{math:["distance('u', 'npc')" as const,"<=" as const,getRangeExpr(spell)]}] //射程条件
+    );
 
     //创建施法EOC
     const castEoc:Eoc={
@@ -388,8 +387,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
         {math:[`u_${costVar}`,"=",getCostExpr(spell)]},
         {
             if:{and:[...fixedCond]},
-            then:[{math:[`u_${vaildVar}`,'=','1']}],
-            else:[{math:[`u_${vaildVar}`,'=','0']}],
+            then:[{math:[uv(vaildVar),'=','1']}],
+            else:[{math:[uv(vaildVar),'=','0']}],
         }
     );
 
@@ -409,9 +408,9 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     const castResp:Resp={
         condition:cast_condition.force_lvl!=null ? undefined : {math:[`n_spell_level('${spell.id}')`,">=","0"]},
         truefalsetext:{
-            condition:{math:[`n_${vaildVar}`,"==","1"]},
+            condition:{math:[nv(vaildVar),"==","1"]},
             true:`[可释放] <spell_name:${id}> ${costDisplay}`,
-            false:`[不可释放] <spell_name:${id}> ${costDisplay}冷却:<npc_val:${spell.id}_cooldown>`,
+            false:`[不可释放] <spell_name:${id}> ${costDisplay}冷却:<npc_val:${getCDName(spell)}>`,
         },
         effect:{run_eocs:controlEoc.id},
         topic:"TALK_DONE",

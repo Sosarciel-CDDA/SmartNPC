@@ -1,6 +1,6 @@
-import { EocID, Spell } from "@sosarciel-cdda/schema";
+import { Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
-import { MAX_NUM, SADef } from "@/src/SADefine";
+import { MAX_NUM } from "@/src/SADefine";
 import { CastAIData, CastCond } from "./Interface";
 
 //翻转u与n
@@ -48,9 +48,12 @@ export const getAoeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_aoe
 export const getCostExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_energy_cost")} + ${parseSpellNumObj(spell,"energy_increment")} * `+
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_energy_cost",MAX_NUM)})`;
 
+export const getRangeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_range")} + ${parseSpellNumObj(spell,"range_increment")} * `+
+    `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_range",MAX_NUM)})`;
+
 /**使某个技能停止使用的变量 */
-export function getDisableSpellVar(talker:"u"|"n",spell:Spell){
-    return `${talker}_${spell.id}_switch_disable`;
+export function getDisableSpellVar(spell:Spell){
+    return `${spell.id}_switch_disable`;
 }
 /**获得施法的event权重 >0 <1 */
 export function getEventWeight(skill:CastAIData,cond:CastCond){
@@ -59,3 +62,10 @@ export function getEventWeight(skill:CastAIData,cond:CastCond){
     if(fixweight > 1 || fixweight < 0) throw `${skill.id} 的 weight: ${weight} 超出施法权重取值范围 -99 ~ 99`;
     return fixweight;
 }
+/**获得法术cdname */
+export const getCDName = (spell:Spell)=>`${spell.id}_cooldown`;
+
+export const uv = (id:string)=>`u_${id}`;
+export const nv = (id:string)=>`n_${id}`;
+export const gv = (id:string)=>id;
+export const cv = (id:string)=>`_${id}`;

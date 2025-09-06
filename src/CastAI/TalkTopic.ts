@@ -2,11 +2,11 @@ import { DataManager } from "@sosarciel-cdda/event";
 import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
 import { Eoc, Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SADef, getSpellByID } from "@/src/SADefine";
-import { CastAIDataMap } from "./CastAI";
+import { CastAIDataMap, gcdValName } from "./CastAI";
 import { CastAIData } from "./Interface";
-import { getDisableSpellVar } from "./UtilFunc";
+import { getDisableSpellVar, nv } from "./UtilFunc";
 
-
+const displayManaName = "display_mana";
 
 export async function createCastAITalkTopic(dm:DataManager){
     //对话EOC
@@ -16,7 +16,7 @@ export async function createCastAITalkTopic(dm:DataManager){
             eoc_type:"ACTIVATION",
             effect:[...ControlCastSpeakerEffects],
         },alpha_talker:"npc",beta_talker:"u"},
-        {math:["n_display_mana","=","n_val('mana')"]}
+        {math:[nv(displayManaName),"=","n_val('mana')"]}
     ]);
     //主对话
     const mainTalkTopic:TalkTopic={
@@ -53,7 +53,7 @@ async function createCastControlResp(dm:DataManager){
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
         id:castControlTalkTopicId,
-        dynamic_line:`&当前魔法值: <npc_val:display_mana> 公共冷却: <npc_val:coCooldown>`,
+        dynamic_line:`&当前魔法值: <npc_val:${displayManaName}> 公共冷却: <npc_val:${gcdValName}>`,
         responses:[...ControlCastResps,{
             text: "Never mind.",
             topic: "TALK_NONE"
@@ -79,8 +79,7 @@ async function createSkillResp(dm:DataManager){
         const spell = getSpellByID(id);
         const name = `<spell_name:${id}>`;
 
-        const nstopVar = getDisableSpellVar("n",spell);
-        const ustopVar = getDisableSpellVar("u",spell);
+        const nstopVar = nv(getDisableSpellVar(spell));
 
         //开关切换eoc
         const eoc:Eoc={

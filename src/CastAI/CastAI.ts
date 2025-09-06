@@ -3,7 +3,7 @@ import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/SADefine";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/UtilSpell";
 import { DataManager } from "@sosarciel-cdda/event";
-import { getCostExpr, getDisableSpellVar, parseSpellNumObj } from "./UtilFunc";
+import { getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
@@ -13,10 +13,10 @@ import { createCastAITalkTopic } from "./TalkTopic";
 
 
 //全局冷却字段名
-const gcdValName = `u_cocooldown`;
+export const gcdValName = `cocooldown`;
 
 //falback字段名
-const fallbackValName = "u_cast_fallback_counter";
+export const fallbackValName = "cast_fallback_counter";
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
@@ -69,16 +69,16 @@ export async function createCastAI(dm:DataManager){
 
     //全局冷却事件
     const GCDEoc = SADef.genActEoc(`CoCooldown`,
-        [{math:[gcdValName,"-=","1"]}],
-        {math:[gcdValName,">","0"]});
+        [{math:[uv(gcdValName),"-=","1"]}],
+        {math:[uv(gcdValName),">","0"]});
     //备用计数器
     const FBEoc = SADef.genActEoc(`Fallback`,
-        [{math:[fallbackValName,"+=","1"]}],
-        {math:[fallbackValName,"<","1000"]});
+        [{math:[uv(fallbackValName),"+=","1"]}],
+        {math:[uv(fallbackValName),"<","1000"]});
     dm.addInvokeEoc("NpcUpdate",0,GCDEoc,FBEoc);
     //初始化全局冷却
     const GCDInit = SADef.genActEoc(`CoCooldown_Init`,
-        [{math:[gcdValName,"=","0"]}]);
+        [{math:[uv(gcdValName),"=","0"]}]);
     dm.addInvokeEoc("Init",0,GCDInit);
     out.push(GCDEoc,FBEoc,GCDInit);
 
@@ -94,7 +94,7 @@ export async function createCastAI(dm:DataManager){
             : COST_MAP.MANA;
 
         //生成冷却变量名
-        const cdValName = `u_${spell.id}_cooldown`;
+        const cdValName = getCDName(spell);
 
         //前置效果
         const before_effect:EocEffect[] = [];
@@ -116,10 +116,10 @@ export async function createCastAI(dm:DataManager){
             const after_effect:EocEffect[]=[];
             //共通冷却
             if(common_cooldown!=0)
-                after_effect.push({math:[gcdValName,"=",`${common_cooldown??1}`]});
+                after_effect.push({math:[uv(gcdValName),"=",`${common_cooldown??1}`]});
             //独立冷却
             if(cooldown)
-                after_effect.push({math:[cdValName,"=",`${cooldown??0}`]});
+                after_effect.push({math:[uv(cdValName),"=",`${cooldown??0}`]});
             //追加效果
             if(skill.after_effect)
                 after_effect.push(...skill.after_effect);
@@ -139,15 +139,15 @@ export async function createCastAI(dm:DataManager){
             if(cast_condition.infoge_exp!=true)
                 after_effect.push({math:[`u_skill_exp('${spell.difficulty??0}')`,"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
             //清空备用计数器
-            after_effect.push({math:[fallbackValName,"=",String(fallback_with ?? 0)]})
+            after_effect.push({math:[uv(fallbackValName),"=",String(fallback_with ?? 0)]})
             //#endregion
 
 
             //#region 计算基础条件
             //确保第一个为技能开关, 用于cast_control读取 
             const base_cond: BoolExpr[] = [
-                {math:[getDisableSpellVar("u",spell),"!=","1"]},
-                {math:[gcdValName,"<=","0"]},
+                {math:[uv(getDisableSpellVar(spell)),"!=","1"]},
+                {math:[uv(gcdValName),"<=","0"]},
             ];
             //能量消耗
             if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
@@ -156,10 +156,10 @@ export async function createCastAI(dm:DataManager){
             //if(spell.)
             //冷却
             if(cooldown)
-                base_cond.push({math:[cdValName,"<=","0"]});
+                base_cond.push({math:[uv(cdValName),"<=","0"]});
             //备用计数器
             if(fallback_with !== undefined)
-                base_cond.push({math:[fallbackValName,">=",`${fallback_with}`]})
+                base_cond.push({math:[uv(fallbackValName),">=",`${fallback_with}`]})
 
             //计算施法等级
             const maxstr = parseSpellNumObj(spell,'max_level');
@@ -183,12 +183,12 @@ export async function createCastAI(dm:DataManager){
         //独立冷却事件
         if(cooldown){
             const CDEoc=SADef.genActEoc(`${spell.id}_cooldown`,
-                [{math:[cdValName,"-=","1"]}],
-                {math:[cdValName,">","0"]})
+                [{math:[uv(cdValName),"-=","1"]}],
+                {math:[uv(cdValName),">","0"]})
             dm.addInvokeEoc("NpcUpdate",0,CDEoc);
             //初始化冷却
             const CDInit = SADef.genActEoc(`${spell.id}_cooldown_Init`,
-                [{math:[cdValName,"=","0"]}]);
+                [{math:[uv(cdValName),"=","0"]}]);
             dm.addInvokeEoc("Init",0,CDInit);
             out.push(CDEoc,CDInit);
         }
