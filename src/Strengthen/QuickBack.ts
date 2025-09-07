@@ -27,8 +27,8 @@ const QuickBackEocSubMovemod: Spell = {
     valid_targets: ["hostile","ally","self"],
     effect: "mod_moves",
     min_range: QuickBackRange,
-    min_damage: 50,
-    max_damage: 50,
+    min_damage: -10,
+    max_damage: -10,
     shape: "blast",
     flags: [...CON_SPELL_FLAG],
 }
