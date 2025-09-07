@@ -5,7 +5,7 @@
   "name": "@sosarciel-cdda/smartnpc",
   "description": "SmartNPC",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "expand-macro": "powershell scripts/expand-macro",
     "compile": "powershell scripts/compile",
