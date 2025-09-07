@@ -55,9 +55,7 @@ tableList.forEach((file)=>{
 /**处理角色技能 */
 export async function createCastAI(dm:DataManager){
     //集火
-    const conattack = SADef.genActEoc("ConcentratedAttack",[
-        {npc_add_effect:ConcentratedAttack.id,duration:10,intensity:1}
-    ])
+    const conattack = SADef.genActEoc("ConcentratedAttack",[{npc_add_effect:ConcentratedAttack.id,duration:10}])
     dm.addInvokeEoc("TryAttack",0,conattack);
 
     const out:JObject[] = [ConcentratedAttack,conattack];
