@@ -1,6 +1,6 @@
 import { UtilFT } from "@zwa73/utils";
-import { AnyCddaJsonList, ModDefine, Spell, SpellID } from "@sosarciel-cdda/schema";
-import * as path from 'path';
+import { AnyCddaJsonList, GAME_PATH, ModDefine, Spell, SpellID } from "@sosarciel-cdda/schema";
+import path from 'pathe';
 
 /**mod物品前缀 */
 export const MOD_PREFIX = "CAI";
@@ -36,7 +36,6 @@ export function getSpellByID(id?:SpellID){
 
 export const DATA_PATH = path.join(process.cwd(),'data');
 export const ENV_PATH = path.join(process.cwd(),'..');
-export const GAME_PATH = (UtilFT.loadJSONFileSync(path.join(ENV_PATH,'build_setting.json'))! as any).game_path as string;
 export const OUT_PATH = path.join(GAME_PATH,'data','mods','SmartNPC');
 
 /**用于必定成功的控制法术的flags */
