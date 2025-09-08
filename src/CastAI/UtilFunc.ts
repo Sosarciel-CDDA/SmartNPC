@@ -1,6 +1,6 @@
 import { Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
-import { MAX_NUM } from "@/src/SADefine";
+import { MAX_NUM } from "@/src/Define";
 import { CastAIData, CastCond } from "./Interface";
 
 //翻转u与n

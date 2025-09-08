@@ -1,5 +1,5 @@
 import { JObject, UtilFT } from "@zwa73/utils";
-import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/SADefine";
+import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/UtilSpell";
 import { DataManager } from "@sosarciel-cdda/event";

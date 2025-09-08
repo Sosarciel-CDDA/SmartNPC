@@ -1,5 +1,5 @@
 import { JObject} from "@zwa73/utils";
-import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/SADefine";
+import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";

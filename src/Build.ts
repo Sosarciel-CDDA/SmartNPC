@@ -1,6 +1,6 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { createCastAI } from "./CastAI";
-import { DATA_PATH, OUT_PATH } from "./SADefine";
+import { DATA_PATH, OUT_PATH } from "./Define";
 import { createMathFunc } from "./MathFunc";
 import { createUtilSpell } from "./UtilSpell";
 import { buildStrengthen } from "./Strengthen";

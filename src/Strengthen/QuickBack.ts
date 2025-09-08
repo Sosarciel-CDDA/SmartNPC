@@ -1,5 +1,5 @@
 import { Spell } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef } from "../SADefine";
+import { CON_SPELL_FLAG, SADef } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 const QuickBackRange = 10;

@@ -1,7 +1,7 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { Effect, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef } from "@/src/SADefine";
-import { CombatRuleTopicID } from "@/src/SADefine";
+import { CON_SPELL_FLAG, SADef } from "@/src/Define";
+import { CombatRuleTopicID } from "@/src/Define";
 
 //战斗对话
 const CombatRuleTalkTopic:TalkTopic={

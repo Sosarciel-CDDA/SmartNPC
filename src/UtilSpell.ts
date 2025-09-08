@@ -1,5 +1,5 @@
 import { Spell } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef, MAX_NUM } from "./SADefine";
+import { CON_SPELL_FLAG, SADef, MAX_NUM } from "./Define";
 import { DataManager } from "@sosarciel-cdda/event";
 import { JObject } from "@zwa73/utils";
 
