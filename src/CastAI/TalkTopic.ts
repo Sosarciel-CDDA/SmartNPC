@@ -84,7 +84,7 @@ async function createSkillResp(dm:DataManager){
         //开关切换eoc
         const eoc:Eoc={
             type:"effect_on_condition",
-            id:SADef.genEOCID(`${id}_Switch`),
+            id:SADef.genEocID(`${id}_Switch`),
             eoc_type:"ACTIVATION",
             effect:[{math:[nStopVar,"=","0"]}],
             false_effect:[{math:[nStopVar,"=","1"]}],

@@ -50,7 +50,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //创建施法EOC 应与filter一样使用标记法术 待修改
     const castEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEOCID(`${uid}_Cast`),
+        id:SADef.genEocID(`${uid}_Cast`),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
@@ -58,7 +58,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
                 u_cast_spell:{ id:spell.id, min_level },
                 targeted: false,
                 true_eocs:{
-                    id:SADef.genEOCID(`${uid}_TrueEoc`),
+                    id:SADef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -70,7 +70,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 
     //辅助法术记录坐标的Eoc
     const randomTargetEoc:Eoc={
-        id:SADef.genEOCID(`${uid}_RandomTarget`),
+        id:SADef.genEocID(`${uid}_RandomTarget`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
         effect:[
@@ -113,7 +113,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //主逻辑eoc
     const mainEoc:Eoc = {
         type:"effect_on_condition",
-        id: SADef.genEOCID(uid),
+        id: SADef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             {u_cast_spell:{id:randomTargetMainSpell.id,min_level}},
@@ -150,14 +150,14 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     //创建施法EOC
     const castEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEOCID(`${uid}_Cast`),
+        id:SADef.genEocID(`${uid}_Cast`),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
             {
                 u_cast_spell:{ id:spell.id, min_level },
                 true_eocs:{
-                    id:SADef.genEOCID(`${uid}_TrueEoc`),
+                    id:SADef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -169,11 +169,11 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
 
     //筛选目标的Eoc
     const filterTargetEoc:Eoc={
-        id:SADef.genEOCID(`${uid}_FilterTarget`),
+        id:SADef.genEocID(`${uid}_FilterTarget`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
         effect:[{run_eocs:{
-            id:SADef.genEOCID(`${uid}_FilterTarget_Rev`),
+            id:SADef.genEocID(`${uid}_FilterTarget_Rev`),
             eoc_type:"ACTIVATION",
             effect:[{if:{and:[
                 ... (cast_condition.condition ? [cast_condition.condition] : []),
@@ -212,7 +212,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     //主逻辑eoc
     const mainEoc:Eoc = {
         type:"effect_on_condition",
-        id:SADef.genEOCID(uid),
+        id:SADef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             //{set_string_var:`try ${spell.id}`,target_var:{global_val:'tmpstr'}},
@@ -252,7 +252,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     //创建施法EOC
     const castEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEOCID(uid),
+        id:SADef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
@@ -260,7 +260,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
             {
                 u_cast_spell:{ id:spell.id, min_level},
                 true_eocs:{
-                    id:SADef.genEOCID(`${uid}_TrueEoc`),
+                    id:SADef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -331,7 +331,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     //创建选择施法eoc
     const controlEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEOCID(uid),
+        id:SADef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             {npc_set_talker:{global_val:"tmp_control_cast_npctalker"}},
@@ -343,15 +343,15 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
             {location_variable_adjust:playerSelectLoc,z_adjust:-10},
 
             {run_eocs:{
-                id:SADef.genEOCID(`${uid}_Rev`),
+                id:SADef.genEocID(`${uid}_Rev`),
                 eoc_type:"ACTIVATION",
                 effect:[
                     {if:{and:[...fixedCond]}, then:[
                         {run_eocs:{
-                            id:SADef.genEOCID(`${uid}_Queue`),
+                            id:SADef.genEocID(`${uid}_Queue`),
                             eoc_type:"ACTIVATION",
                             effect:[{run_eocs:{
-                                id: SADef.genEOCID(`${uid}_Queue_With`),
+                                id: SADef.genEocID(`${uid}_Queue_With`),
                                 eoc_type:"ACTIVATION",
                                 effect:[
                                     {npc_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
@@ -360,7 +360,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                                         {u_cast_spell:{ id:spell.id, min_level },
                                         targeted: false,
                                         true_eocs:{
-                                            id:SADef.genEOCID(`${uid}_TrueEoc`),
+                                            id:SADef.genEocID(`${uid}_TrueEoc`),
                                             effect:[...fixedAfterEffect],
                                             eoc_type:"ACTIVATION",
                                         },

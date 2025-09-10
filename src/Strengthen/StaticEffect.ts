@@ -16,7 +16,7 @@ const CombatRuleTalkTopic:TalkTopic={
             false:`和怪物保持射击距离。`,
         },
         effect:{run_eocs:{
-            id:SADef.genEOCID('QuickBackTopicSwitch'),
+            id:SADef.genEocID('QuickBackTopicSwitch'),
             eoc_type:'ACTIVATION',
             effect:[{math:['n_EnableQuickBack',"=","0"]}],
             false_effect:[{math:['n_EnableQuickBack',"=","1"]}],
