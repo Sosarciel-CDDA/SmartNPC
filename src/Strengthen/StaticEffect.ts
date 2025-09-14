@@ -49,13 +49,10 @@ const SmartNpcMut:Mutation={
     purifiable:false,
     valid:false,
     player_display:false,
-    //enchantments:[{
-    //    condition:'ALWAYS',
-    //    ench_effects:[{
-    //        effect:'AVOID_FRIENDRY_FIRE',
-    //        intensity:1.0,
-    //    }]
-    //}]
+    enchantments:[{
+        condition:'ALWAYS',
+        values:[{ value:'AVOID_FRIENDRY_FIRE', add:1 }]
+    }]
 }
 
 //战斗距离
