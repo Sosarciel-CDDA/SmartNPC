@@ -113,12 +113,6 @@ const npclist = listCtor({
 const talkerPtr  = `${UID}_TalkerPtr`;
 const isVaildPtr = `${UID}_IsVaildPtr`;
 const inListIdx  = `${UID}_InListIdx`;
-/**生成遍历npc的eoc */
-const eachCharEocInput = `${UID}_EachNpcList_InputEocId`;
-const eachCharEoc:Eoc = npclist.genEachVaildEoc('EachTalker',[
-    {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,target_var:{context_val:talkerPtr},parse_tags:true},
-    {run_eocs:{global_val:eachCharEocInput}, alpha_talker:{var_val:talkerPtr}},
-])
 
 //npc保护
 export async function buildProtect(dm:DataManager){
@@ -201,21 +195,15 @@ export async function buildProtect(dm:DataManager){
     }
 
     //#region 召集npc法术
-    const GatheringSubEoc:Eoc = {
-        type:'effect_on_condition',
-        id:SADef.genEocID(`${UID}_Gathering_Sub`),
-        eoc_type:"ACTIVATION",
-        effect:[ {run_eocs:[teleportToSpawn.id]} ]
-    }
-    const GatheringEoc:Eoc = {
-        type:'effect_on_condition',
-        id:SADef.genEocID(`${UID}_Gathering`),
-        eoc_type:"ACTIVATION",
-        effect:[
-            {set_string_var:GatheringSubEoc.id,target_var:{global_val:eachCharEocInput}},
-            {run_eocs:[eachCharEoc.id]},
-        ]
-    }
+    const GatheringEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_Gathering`),[
+        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
+            target_var:{context_val:talkerPtr},parse_tags:true},
+        {run_eocs:{
+            id:SADef.genEocID(`${UID}_Gathering_Sub`),
+            eoc_type:"ACTIVATION",
+            effect:[ {run_eocs:[teleportToSpawn.id]} ]
+        }, alpha_talker:{var_val:talkerPtr}},
+    ]);
     const GatheringSpell:Spell = {
         id:SADef.genSpellID(`${UID}_Gathering`),
         name:"召集",
@@ -269,10 +257,9 @@ export async function buildProtect(dm:DataManager){
 
     dm.addData([
         ProtectMut,
-        eachCharEoc,
         randTeleport,teleportToSpawn,RebirthEoc,
         SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
-        GatheringEoc,GatheringSubEoc,GatheringSpell,
+        GatheringEoc,GatheringSpell,
         init,
     ],'Strength','Protect.json');
 }
