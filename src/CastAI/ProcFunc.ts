@@ -4,7 +4,6 @@ import { Spell, Eoc, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
 import { CastProcData, TargetType } from "./Interface";
-import { SPELL_L1T } from "@/src/UtilSpell";
 
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={

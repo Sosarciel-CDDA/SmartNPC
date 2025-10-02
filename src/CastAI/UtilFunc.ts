@@ -4,7 +4,7 @@ import { MAX_NUM } from "@/src/Define";
 import { CastAIData, CastCond } from "./Interface";
 
 //翻转u与n
-export function revTalker<T extends JToken>(obj:T):T{
+function revTalker<T extends JToken>(obj:T):T{
     let str = JSON.stringify(obj)
         .replace(/"u_(\w+?)":/g  , '"tmpnpctmp_$1":')//缓存 eoc
         .replace(/(?<!\w)u_/g    , 'tmpntmp_'       )//缓存 math内置函数

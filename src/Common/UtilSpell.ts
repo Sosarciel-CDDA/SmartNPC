@@ -1,7 +1,6 @@
 import { Spell } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef, MAX_NUM } from "./Define";
+import { CON_SPELL_FLAG, SADef, MAX_NUM } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
-import { JObject } from "@zwa73/utils";
 
 
 /**施法后摇变量 */
@@ -15,7 +14,6 @@ export const SPELL_L1T = SADef.genSpellID("Lose1Turn");
 /**扣除一tick */
 export const SPELL_L1Tick = SADef.genSpellID("Lose1Tick");
 export async function createUtilSpell(dm:DataManager){
-    const out:JObject[] = [];
     const spellCT:Spell = {
         id: SPELL_CT_MODMOVE,
         type: "SPELL",
@@ -28,7 +26,6 @@ export async function createUtilSpell(dm:DataManager){
         min_damage: {math:[`0-${SPELL_CT_MODMOVE_VAR}`]},
         max_damage: MAX_NUM,
     }
-    out.push(spellCT);
     const gain1Turn:Spell ={
         id: SPELL_G1T,
         type: "SPELL",
@@ -41,7 +38,6 @@ export async function createUtilSpell(dm:DataManager){
         min_damage:100,
         max_damage:100
     }
-    out.push(gain1Turn);
     const lose1Turn:Spell ={
         id: SPELL_L1T,
         type: "SPELL",
@@ -54,7 +50,6 @@ export async function createUtilSpell(dm:DataManager){
         min_damage:-100,
         max_damage:-100
     }
-    out.push(lose1Turn);
     const lose1Tick:Spell ={
         id: SPELL_L1Tick,
         type: "SPELL",
@@ -67,7 +62,8 @@ export async function createUtilSpell(dm:DataManager){
         min_damage:-1,
         max_damage:-1
     }
-    out.push(lose1Tick);
-    dm.addData(out,"UtilSpell");
+    dm.addData([
+        spellCT,gain1Turn,lose1Turn,lose1Tick
+    ],"Common","Spell");
 }
 

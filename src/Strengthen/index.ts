@@ -2,6 +2,7 @@ import { DataManager } from "@sosarciel-cdda/event";
 import { buildQuickBack } from "./QuickBack";
 import { buildTacticalTransfer } from "./TacticalTransfer";
 import { buildStaticEffect } from "./StaticEffect";
+import { buildProtect } from "./Protect";
 
 
 
@@ -13,4 +14,5 @@ export async function buildStrengthen(dm:DataManager){
     buildQuickBack(dm);
     buildTacticalTransfer(dm);
     buildStaticEffect(dm);
+    buildProtect(dm);
 }

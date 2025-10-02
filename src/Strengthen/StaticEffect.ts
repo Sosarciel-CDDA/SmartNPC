@@ -3,29 +3,7 @@ import { Effect, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SADef } from "@/src/Define";
 import { CombatRuleTopicID } from "@/src/Define";
 
-//战斗对话
-const CombatRuleTalkTopic:TalkTopic={
-    type:"talk_topic",
-    id:CombatRuleTopicID,
-    insert_before_standard_exits:true,
-    dynamic_line:"&<mypronoun>应该做些什么？",
-    responses:[{
-        truefalsetext:{
-            condition:{math:['n_EnableQuickBack',"==","1"]},
-            true:`不要再和怪物保持射击距离了。`,
-            false:`和怪物保持射击距离。`,
-        },
-        effect:{run_eocs:{
-            id:SADef.genEocID('QuickBackTopicSwitch'),
-            eoc_type:'ACTIVATION',
-            effect:[{math:['n_EnableQuickBack',"=","0"]}],
-            false_effect:[{math:['n_EnableQuickBack',"=","1"]}],
-            condition:{math:['n_EnableQuickBack',"==","1"]},
-        }},
-        topic:CombatRuleTopicID,
-    },
-    { text: "Never mind.", topic: "TALK_DONE" }]
-}
+
 /**取消逃跑效果 */
 const Courage:Effect={
     type:"effect_type",
@@ -90,7 +68,6 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
     dm.addData([
-        CombatRuleTalkTopic,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
         joinBattle,joinBattleSpell
     ],'Strength','StaticEffect.json');

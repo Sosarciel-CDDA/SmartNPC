@@ -1,7 +1,7 @@
 import { JObject, UtilFT } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
-import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/UtilSpell";
+import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
@@ -53,14 +53,12 @@ tableList.forEach((file)=>{
 
 
 /**处理角色技能 */
-export async function createCastAI(dm:DataManager){
+export async function buildCastAI(dm:DataManager){
     //集火
     const conattack = SADef.genActEoc("ConcentratedAttack",[{npc_add_effect:ConcentratedAttack.id,duration:10}])
     dm.addInvokeEoc("TryAttack",0,conattack);
 
     const out:JObject[] = [ConcentratedAttack,conattack];
-
-
 
     //权重排序
     const skills = (Object.values(CastAIDataMap) as CastAIData[]);

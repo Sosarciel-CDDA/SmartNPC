@@ -1,5 +1,5 @@
-import { Spell } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef } from "../Define";
+import { Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { CombatRuleTopicID, CON_SPELL_FLAG, SADef } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 const QuickBackRange = 10;
@@ -64,15 +64,42 @@ const QuickBack: Spell = {
     extra_effects:[{id:QuickBackSub.id}]
 }
 
+/**快速后退开关变量 */
+const QuickBackSwitchVar = 'EnableQuickBack';
+
+//战斗对话
+const CombatRuleTalkTopic:TalkTopic={
+    type:"talk_topic",
+    id:CombatRuleTopicID,
+    insert_before_standard_exits:true,
+    dynamic_line:"&<mypronoun>应该做些什么？",
+    responses:[{
+        truefalsetext:{
+            condition:{math:[`n_${QuickBackSwitchVar}`,"==","1"]},
+            true:`不要再和怪物保持射击距离了。`,
+            false:`和怪物保持射击距离。`,
+        },
+        effect:{run_eocs:{
+            id:SADef.genEocID('QuickBackTopicSwitch'),
+            eoc_type:'ACTIVATION',
+            effect:[{math:[`n_${QuickBackSwitchVar}`,"=","0"]}],
+            false_effect:[{math:[`n_${QuickBackSwitchVar}`,"=","1"]}],
+            condition:{math:[`n_${QuickBackSwitchVar}`,"==","1"]},
+        }},
+        topic:CombatRuleTopicID,
+    },
+    { text: "Never mind.", topic: "TALK_DONE" }]
+}
+
 export function buildQuickBack(dm: DataManager) {
     const autoback = SADef.genActEoc('AutoQuickBack',[
         {u_cast_spell: {id:QuickBack.id}},
         //{u_message:"<global_val:tmpstr>"},
         //{u_cast_spell: {id:'fireball',min_level:10}},
-    ],{and:['u_is_npc',{math:['u_EnableQuickBack','==','1']}]});
+    ],{and:['u_is_npc',{math:[`u_${QuickBackSwitchVar}`,'==','1']}]});
     dm.addInvokeID('BattleUpdate',0,autoback.id);
     dm.addData([
-        autoback,
+        autoback,CombatRuleTalkTopic,
         QuickBack,QuickBackSub,QuickBackEoc,
         QuickBackEocSubMovemod,QuickBackEocSubPush
     ],'Strength','QuickBack.json');

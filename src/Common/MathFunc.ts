@@ -80,6 +80,11 @@ export async function createMathFunc(dm:DataManager){
         "num_args": 2,
         "return": "_0 - (((((u_proficiency('prof_magic_enhancement_beginner', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_apprentice', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_master', 'format': 'percent') * 1) / 10))) * _1 )"
     }
-    dm.addData([SumHp,AvgHp,MinHp,MaxHp,UAdjForFocus,NAdjForFocus,USpellCastExp,NSpellCastExp,ProfBonusCalc,ProfNegCalc],"MathFunc");
+    dm.addData([
+        SumHp,AvgHp,MinHp,MaxHp,
+        UAdjForFocus,NAdjForFocus,
+        USpellCastExp,NSpellCastExp,
+        ProfBonusCalc,ProfNegCalc
+    ],"Common","MathFunc");
 }
 
