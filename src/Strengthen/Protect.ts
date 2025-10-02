@@ -70,7 +70,9 @@ const listCtor = <
     ]);
 
     const firstUnvaildDone = `${id}_firstUnvaild_Done` as const;
-    /**生成一段在首个失效idx运行的eoc */
+    /**生成一段在首个失效idx运行的eoc
+     * 若均有效则会分配一个超length的idx, 然后使length自增
+     */
     const genFirstUnvaildEoc = (eid:string,effect:EocEffect[])=>({
         type:"effect_on_condition",
         id:`${id}_FirstUnvaild_${eid}`,
@@ -88,6 +90,9 @@ const listCtor = <
                         ...effect,
                         {math:[firstUnvaildDone,'=','1']},
                     ]},
+                    {if:{math:[eachIdx,'==',`${length}+1`]},then:[
+                        {math:[length,'+=','1']}
+                    ]},
                 ],
             },
             iterations: {math:[`${length}+1`]},
@@ -100,17 +105,19 @@ const listCtor = <
     };
 }
 
-const pnpc = listCtor({
+const npclist = listCtor({
     id:`${UID}_NpcList`,
     prop:['Talker'] as const
 });
 
-const charIdPtr = 'CharIdPtr'
+const talkerPtr  = `${UID}_TalkerPtr`;
+const isVaildPtr = `${UID}_IsVaildPtr`;
+const inListIdx  = `${UID}_InListIdx`;
 /**生成遍历npc的eoc */
 const eachCharEocInput = `${UID}_EachNpcList_InputEocId`;
-const eachCharEoc:Eoc = pnpc.genEachVaildEoc('EachTalker',[
-    {set_string_var:pnpc.where(`<global_val:${pnpc.eachIdx}>`).Talker,target_var:{context_val:charIdPtr},parse_tags:true},
-    {run_eocs:{global_val:eachCharEocInput}, alpha_talker:{var_val:charIdPtr}},
+const eachCharEoc:Eoc = npclist.genEachVaildEoc('EachTalker',[
+    {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,target_var:{context_val:talkerPtr},parse_tags:true},
+    {run_eocs:{global_val:eachCharEocInput}, alpha_talker:{var_val:talkerPtr}},
 ])
 
 //npc保护
@@ -169,13 +176,29 @@ export async function buildProtect(dm:DataManager){
     ]);
     dm.addInvokeID('GameStart',0,SetSpawnLocEoc.id);
 
-    //初始化Npc
-    const InitNpcEoc:Eoc = SADef.genActEoc(`${UID}_InitNpc`,[
+    //启用保护
+    const StartProtectEoc:Eoc = npclist.genFirstUnvaildEoc(SADef.genEocID(`${UID}_StartProtect`),[
         {u_add_trait:ProtectMut.id},
-        {math:[pnpc.length,'+=','1'] },
-        {set_string_var:pnpc.where(`<global_val:${pnpc.length}>`).Talker,target_var:{context_val:charIdPtr},parse_tags:true},
-        {u_set_talker: { var_val: charIdPtr } },
+        {math:[`u_${inListIdx}`,'=',npclist.eachIdx]},
+        {set_string_var:npclist.where(`<global_val:${npclist.length}>`).Talker,
+            target_var:{context_val:talkerPtr},parse_tags:true},
+        {u_set_talker: { var_val: talkerPtr } },
+        {set_string_var:npclist.where(`<global_val:${npclist.length}>`).IsVaild,
+            target_var:{context_val:isVaildPtr},parse_tags:true},
+        {math:[`v_${isVaildPtr}`,'=','1']},
     ]);
+    //关闭保护
+    const StopProtectEoc:Eoc = {
+        id:SADef.genEocID(`${UID}_StopProtect`),
+        type:"effect_on_condition",
+        eoc_type:"ACTIVATION",
+        effect:[
+            {u_lose_trait:ProtectMut.id},
+            {set_string_var:npclist.where(`<u_val:${inListIdx}>`).IsVaild,
+                target_var:{context_val:isVaildPtr},parse_tags:true},
+            {math:[`v_${isVaildPtr}`,'=','0']},
+        ]
+    }
 
     //#region 召集npc法术
     const GatheringSubEoc:Eoc = {
@@ -231,11 +254,15 @@ export async function buildProtect(dm:DataManager){
                 false:"[已停用] 切换重生点使用状态",
                 condition:{u_has_trait:ProtectMut.id},
             },
-            effect:{
-                if:{u_has_trait:ProtectMut.id},
-                then:[{u_lose_trait:ProtectMut.id}],
-                else:[{u_add_trait:ProtectMut.id}]
-            },
+            effect:{run_eocs:{
+                id:SADef.genEocID(`${UID}_ToggleProtect`),
+                eoc_type:"ACTIVATION",
+                effect:[{
+                    if:{u_has_trait:ProtectMut.id},
+                    then:[{run_eocs:[StopProtectEoc.id]}],
+                    else:[{run_eocs:[StartProtectEoc.id]}]
+                }]
+            },alpha_talker:'npc'},
             topic:"TALK_LUO_ORDERS",
         }]
     }
@@ -244,7 +271,7 @@ export async function buildProtect(dm:DataManager){
         ProtectMut,
         eachCharEoc,
         randTeleport,teleportToSpawn,RebirthEoc,
-        SetSpawnLocEoc,InitNpcEoc,talkTopic,
+        SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
         GatheringEoc,GatheringSubEoc,GatheringSpell,
         init,
     ],'Strength','Protect.json');
