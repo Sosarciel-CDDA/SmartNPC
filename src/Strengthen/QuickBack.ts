@@ -70,7 +70,7 @@ const QuickBackSwitchVar = 'EnableQuickBack';
 //战斗对话
 const CombatRuleTalkTopic:TalkTopic={
     type:"talk_topic",
-    id:CombatRuleTopicID,
+    id:[CombatRuleTopicID],
     insert_before_standard_exits:true,
     dynamic_line:"&<mypronoun>应该做些什么？",
     responses:[{
@@ -79,13 +79,11 @@ const CombatRuleTalkTopic:TalkTopic={
             true:`不要再和怪物保持射击距离了。`,
             false:`和怪物保持射击距离。`,
         },
-        effect:{run_eocs:{
-            id:SADef.genEocID('QuickBackTopicSwitch'),
-            eoc_type:'ACTIVATION',
-            effect:[{math:[`n_${QuickBackSwitchVar}`,"=","0"]}],
-            false_effect:[{math:[`n_${QuickBackSwitchVar}`,"=","1"]}],
-            condition:{math:[`n_${QuickBackSwitchVar}`,"==","1"]},
-        }},
+        effect:{
+            if:{math:[`n_${QuickBackSwitchVar}`,"==","1"]},
+            then:[{math:[`n_${QuickBackSwitchVar}`,"=","0"]}],
+            else:[{math:[`n_${QuickBackSwitchVar}`,"=","1"]}],
+        },
         topic:CombatRuleTopicID,
     },
     { text: "Never mind.", topic: "TALK_DONE" }]

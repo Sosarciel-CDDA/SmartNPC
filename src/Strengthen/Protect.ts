@@ -1,5 +1,5 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Eoc, Mutation, Spell } from "@sosarciel-cdda/schema";
+import { BoolExpr, Eoc, EocEffect, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SADef } from "../Define";
 import { EOC_FULL_RECIVERY } from "@/src/Common";
 
@@ -22,41 +22,96 @@ const ProtectMut: Mutation = {
     description: "在死亡时将会被传送至重生点",
 };
 
-/**全局 NpcList 注册的数量 */
-const pnpcCount = `${UID}_NpcList_RegCount`;
-/**根据 编号 获得全局 NpcList 的成员变量 */
-const pnpcId = (numstr:string)=>`${UID}_NpcList_Prop_${numstr}`;
-const eachIdx  = `${UID}_NpcList_EachIndex`;
 
-const charIdPtr = 'CharIdPtr'
+const listCtor = <
+    Id extends string,
+    Prop extends readonly string[],
+>(opt:{ id:Id; prop:Prop; })=>{
+    const {prop,id} = opt;
+    const length = `${id}_Length` as const;
+    const eachIdx  = `${id}_EachIndex` as const;
+    const isVaildPtr = `${id}_IsVaildPtr` as const;
 
+    type FixedProp = [...Prop,"IsVaild"];
+    const fixedProp = [...prop,"IsVaild"] as FixedProp;
 
-/**生成遍历npc的eoc */
-const eachCharEocInput = `${UID}_EachNpcList_InputEocId`;
-const eachCharEoc:Eoc = {
-    type:"effect_on_condition",
-    id:SADef.genEocID(`${UID}_EachNpcList`),
-    effect:[
-        {math:[eachIdx,'=','0']},
-        {
-            run_eocs:{
-                id:SADef.genEocID(`${UID}_EachNpcList_Until`),
+    /**获取位于某位置的成员变量名 */
+    const where = (numstr:string)=> fixedProp.reduce((acc,cur)=>
+        ({...acc,[cur]:`${id}_${numstr}_${cur}`}),{}) as {
+            [K in FixedProp[number]]:`${Id}_${number}_${K}`
+        };
+
+    /**生成一个遍历列表的eoc */
+    const genEachEoc = (
+        eid:string,effect:EocEffect[]
+    )=>({
+        type:"effect_on_condition",
+        id:`${id}_Each_${eid}`,
+        eoc_type:"ACTIVATION",
+        effect:[
+            {math:[eachIdx,'=','0']},
+            {run_eocs:{
+                id:`${id}_Each_${eid}_Until`,
                 eoc_type:'ACTIVATION',
                 effect:[
-                    {u_message:`each <global_val:${eachIdx}>`},
                     {math:[eachIdx,'+=','1']},
-                    {set_string_var:pnpcId(`<global_val:${eachIdx}>`),target_var:{context_val:charIdPtr},parse_tags:true},
-                    {run_eocs:{global_val:eachCharEocInput}, alpha_talker:{var_val:charIdPtr}},
+                    ...effect,
+                ],
+            }, iterations: {math:[length]}}
+        ],
+    }) satisfies Eoc;
+
+    /**生成一个遍历列表有效部分的eoc */
+    const genEachVaildEoc = (
+        eid:string,effect:EocEffect[]
+    )=>genEachEoc(eid,[
+        {set_string_var:(where(`<global_val:${eachIdx}>`) as any).IsVaild,target_var:{context_val:isVaildPtr}},
+        {if:{math:[`v_${isVaildPtr}`,'==','1']},then:effect}
+    ]);
+
+    const firstUnvaildDone = `${id}_firstUnvaild_Done` as const;
+    /**生成一段在首个失效idx运行的eoc */
+    const genFirstUnvaildEoc = (eid:string,effect:EocEffect[])=>({
+        type:"effect_on_condition",
+        id:`${id}_FirstUnvaild_${eid}`,
+        eoc_type:"ACTIVATION",
+        effect:[
+            {math:[eachIdx,'=','0']},
+            {math:[firstUnvaildDone,'=','0']},
+            {run_eocs:{
+                id:`${id}_FirstUnvaild_${eid}_Until`,
+                eoc_type:'ACTIVATION',
+                effect:[
+                    {math:[eachIdx,'+=','1']},
+                    {set_string_var:(where(`<global_val:${eachIdx}>`) as any).IsVaild,target_var:{context_val:isVaildPtr}},
+                    {if:{math:[`v_${isVaildPtr}`,'!=','1']},then:[
+                        ...effect,
+                        {math:[firstUnvaildDone,'=','1']},
+                    ]},
                 ],
             },
-            iterations: {math:[pnpcCount]}
-            //condition:{ math:['_eachIndex','<=',UniqueNpcCountVarID] },
-        }
-    ]
+            iterations: {math:[`${length}+1`]},
+            condition:{math:[firstUnvaildDone,'!=','1']}}
+        ],
+    }) satisfies Eoc;
+
+    return {
+        length,eachIdx,where,genEachEoc,genEachVaildEoc,genFirstUnvaildEoc
+    };
 }
 
+const pnpc = listCtor({
+    id:`${UID}_NpcList`,
+    prop:['Talker'] as const
+});
 
-
+const charIdPtr = 'CharIdPtr'
+/**生成遍历npc的eoc */
+const eachCharEocInput = `${UID}_EachNpcList_InputEocId`;
+const eachCharEoc:Eoc = pnpc.genEachVaildEoc('EachTalker',[
+    {set_string_var:pnpc.where(`<global_val:${pnpc.eachIdx}>`).Talker,target_var:{context_val:charIdPtr},parse_tags:true},
+    {run_eocs:{global_val:eachCharEocInput}, alpha_talker:{var_val:charIdPtr}},
+])
 
 //npc保护
 export async function buildProtect(dm:DataManager){
@@ -117,8 +172,8 @@ export async function buildProtect(dm:DataManager){
     //初始化Npc
     const InitNpcEoc:Eoc = SADef.genActEoc(`${UID}_InitNpc`,[
         {u_add_trait:ProtectMut.id},
-        {math:[pnpcCount,'+=','1'] },
-        {set_string_var:pnpcId(`<global_val:${pnpcCount}>`),target_var:{context_val:charIdPtr},parse_tags:true},
+        {math:[pnpc.length,'+=','1'] },
+        {set_string_var:pnpc.where(`<global_val:${pnpc.length}>`).Talker,target_var:{context_val:charIdPtr},parse_tags:true},
         {u_set_talker: { var_val: charIdPtr } },
     ]);
 
@@ -150,12 +205,47 @@ export async function buildProtect(dm:DataManager){
         flags:[...CON_SPELL_FLAG],
     }
     //#endregion
+    //初始化
+    const init:Eoc = {
+        id:SADef.genEocID(`${UID}_Init`),
+        eoc_type:"ACTIVATION",
+        type:"effect_on_condition",
+        effect:[
+            {math:[JM.spellLevel('u',GatheringSpell.id),'=','0']}
+        ]
+    }
+    dm.addInvokeID("GameBegin",0,init.id);
+
+    //战斗对话
+    const talkTopic:TalkTopic={
+        type:"talk_topic",
+        id:["TALK_LUO_ORDERS"],
+        insert_before_standard_exits:true,
+        responses:[{
+            text:`在这里设置重生点 当前:<global_val${SPAWN_LOC_ID}>`,
+            effect:{run_eocs:[SetSpawnLocEoc.id]},
+            topic:"TALK_LUO_ORDERS",
+        },{
+            truefalsetext:{
+                true:"[已启用] 切换重生点使用状态",
+                false:"[已停用] 切换重生点使用状态",
+                condition:{u_has_trait:ProtectMut.id},
+            },
+            effect:{
+                if:{u_has_trait:ProtectMut.id},
+                then:[{u_lose_trait:ProtectMut.id}],
+                else:[{u_add_trait:ProtectMut.id}]
+            },
+            topic:"TALK_LUO_ORDERS",
+        }]
+    }
 
     dm.addData([
         ProtectMut,
         eachCharEoc,
         randTeleport,teleportToSpawn,RebirthEoc,
-        SetSpawnLocEoc,InitNpcEoc,
+        SetSpawnLocEoc,InitNpcEoc,talkTopic,
         GatheringEoc,GatheringSubEoc,GatheringSpell,
+        init,
     ],'Strength','Protect.json');
 }

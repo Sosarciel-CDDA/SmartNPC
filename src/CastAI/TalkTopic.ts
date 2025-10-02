@@ -73,24 +73,12 @@ async function createSkillResp(dm:DataManager){
 
     //遍历技能
     const skillRespList:Resp[] = [];
-    const skillRespEocList:Eoc[] = [];
     for(const skill of skills){
         const {id} = skill;
         const spell = getSpellByID(id);
         const name = `<spell_name:${id}>`;
 
         const nStopVar = nv(getDisableSpellVar(spell));
-
-        //开关切换eoc
-        const eoc:Eoc={
-            type:"effect_on_condition",
-            id:SADef.genEocID(`${id}_Switch`),
-            eoc_type:"ACTIVATION",
-            effect:[{math:[nStopVar,"=","0"]}],
-            false_effect:[{math:[nStopVar,"=","1"]}],
-            condition:{math:[nStopVar,"==","1"]},
-        }
-        skillRespEocList.push(eoc)
 
         //开关对话
         const resp:Resp={
@@ -100,7 +88,11 @@ async function createSkillResp(dm:DataManager){
                 true:`[已停用] ${name}`,
                 false:`[已启用] ${name}`,
             },
-            effect:{run_eocs:eoc.id},
+            effect:{
+                if:{math:[nStopVar,"==","1"]},
+                else:[{math:[nStopVar,"=","0"]}],
+                then:[{math:[nStopVar,"=","1"]}],
+            },
             topic:"TALK_NONE",
         }
         skillRespList.push(resp);
@@ -117,6 +109,6 @@ async function createSkillResp(dm:DataManager){
         }]
     }
 
-    dm.addData([skillTalkTopic,...skillRespEocList],"CastAI",'skillswitch_talk_topic');
+    dm.addData([skillTalkTopic],"CastAI",'skillswitch_talk_topic');
     return skillTalkTopicId;
 }
