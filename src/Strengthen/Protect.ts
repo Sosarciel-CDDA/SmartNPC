@@ -40,7 +40,6 @@ export async function buildProtect(dm:DataManager){
     //#region 召集
     //传送到出生点
     const TeleportDone = `${UID}_TeleportDone`;
-    const TeleportPos = `${UID}_TeleportPos`;
     const teleportToSpawn:Eoc = {
         type:"effect_on_condition",
         eoc_type:'ACTIVATION',
@@ -54,6 +53,18 @@ export async function buildProtect(dm:DataManager){
             {u_teleport:{var_val:'tmplocptr'},force_safe:true},
         ]
     }
+
+    //传送到目标
+    const TeleportPos = `${UID}_TeleportPos`;
+    const teleportToTarget:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_TeleportToPos`),[
+        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
+            target_var:{context_val:talkerPtr},parse_tags:true},
+        {run_eocs:{
+            id:SADef.genEocID(`${UID}_TeleportToPos_Sub`),
+            eoc_type:"ACTIVATION",
+            effect:[ {u_teleport:{global_val:TeleportPos},force_safe:true} ]
+        }, alpha_talker:{var_val:talkerPtr}},
+    ]);
 
     //召集法术
     const GatheringEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_Gathering`),[
@@ -165,7 +176,7 @@ export async function buildProtect(dm:DataManager){
 
     dm.addData([
         ProtectMut,
-        teleportToSpawn,RebirthEoc,
+        teleportToSpawn,teleportToTarget,RebirthEoc,
         SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
         GatheringEoc,GatheringSpell,
         init,
