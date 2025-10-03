@@ -42,7 +42,7 @@ export const listCtor = <
     const genEachVaildEoc = (
         eid:string,effect:EocEffect[]
     )=>genEachEoc(eid,[
-        {set_string_var:(where(`<global_val:${eachIdx}>`) as any).IsVaild,target_var:{context_val:isVaildPtr}},
+        {set_string_var:(where(`<global_val:${eachIdx}>`) as any).IsVaild,target_var:{context_val:isVaildPtr},parse_tags:true},
         {if:{math:[`v_${isVaildPtr}`,'==','1']},then:[...effect]}
     ]);
 
@@ -62,7 +62,7 @@ export const listCtor = <
                 eoc_type:'ACTIVATION',
                 effect:[
                     {math:[eachIdx,'+=','1']},
-                    {set_string_var:(where(`<global_val:${eachIdx}>`) as any).IsVaild,target_var:{context_val:isVaildPtr}},
+                    {set_string_var:(where(`<global_val:${eachIdx}>`) as any).IsVaild,target_var:{context_val:isVaildPtr},parse_tags:true},
                     {if:{math:[`v_${isVaildPtr}`,'!=','1']},then:[
                         ...effect,
                         {math:[firstUnvaildDone,'=','1']},

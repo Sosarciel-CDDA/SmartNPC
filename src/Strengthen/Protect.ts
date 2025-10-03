@@ -4,7 +4,8 @@ import { CON_SPELL_FLAG, SADef } from "../Define";
 import { EOC_FULL_RECIVERY } from "@/src/Common";
 import { listCtor } from "../Utils";
 
-
+const IslandModId = "skyisland";
+const IslandModOrigLocId = 'OM_HQ_origin';
 
 const UID = "ProtectNpc";
 
@@ -64,13 +65,23 @@ export async function buildProtect(dm:DataManager){
         eoc_type:'ACTIVATION',
         id:SADef.genEocID(`${UID}_TeleportToSpawn`),
         effect: [
-            //尝试移走处于出生点的npc
-            {run_eocs:{
-                id:SADef.genEocID(`${UID}_TeleportToSpawn_Sub`),
-                eoc_type:'ACTIVATION',
-                effect:[ {if:'u_is_character',then:[{run_eocs:[randTeleport.id]}]} ],
-            }, alpha_loc:{global_val:SPAWN_LOC_ID} },
-            {u_teleport:{global_val:SPAWN_LOC_ID},force:true},
+            {if:{mod_is_loaded:IslandModId},then:[
+                //尝试移走处于出生点的npc
+                {run_eocs:{
+                    id:SADef.genEocID(`${UID}_TeleportToSpawn_Sub`),
+                    eoc_type:'ACTIVATION',
+                    effect:[ {if:{and:['u_exists','u_is_character']},then:[{run_eocs:[randTeleport.id]}]} ],
+                }, alpha_loc:{global_val:IslandModOrigLocId} },
+                {u_teleport:{global_val:IslandModOrigLocId},force:true},
+            ],else:[
+                //尝试移走处于出生点的npc
+                {run_eocs:{
+                    id:SADef.genEocID(`${UID}_TeleportToSpawn_Sub`),
+                    eoc_type:'ACTIVATION',
+                    effect:[ {if:{and:['u_exists','u_is_character']},then:[{run_eocs:[randTeleport.id]}]} ],
+                }, alpha_loc:{global_val:SPAWN_LOC_ID} },
+                {u_teleport:{global_val:SPAWN_LOC_ID},force:true},
+            ]},
         ]
     }
 
@@ -99,7 +110,7 @@ export async function buildProtect(dm:DataManager){
 
     //死亡保护
     const RebirthEoc:Eoc=SADef.genActEoc(`${UID}_DeathRebirth`,[
-        {run_eocs:[teleportToSpawn.id,EOC_FULL_RECIVERY]},
+        {run_eocs:[EOC_FULL_RECIVERY,teleportToSpawn.id]},
         {if:"u_is_npc",then:[
             {math:[JM.npcTrust('u'),'=','100']},
             "follow",
@@ -161,6 +172,7 @@ export async function buildProtect(dm:DataManager){
             text:`在这里设置重生点 当前:<global_val:${SPAWN_LOC_ID}>`,
             effect:{run_eocs:[SetSpawnLocEoc.id]},
             topic:"TALK_DONE",
+            condition:{not:{mod_is_loaded:IslandModId}}
         },{
             truefalsetext:{
                 true:"[已启用] 切换重生点使用状态",
