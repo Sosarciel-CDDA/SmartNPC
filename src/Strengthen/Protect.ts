@@ -102,6 +102,7 @@ export async function buildProtect(dm:DataManager){
         {run_eocs:[teleportToSpawn.id,EOC_FULL_RECIVERY]},
         {if:"u_is_npc",then:[
             {math:[JM.npcTrust('u'),'=','100']},
+            "follow",
         ]},
     ],{or:[
         {u_has_trait:ProtectMut.id},
@@ -122,7 +123,7 @@ export async function buildProtect(dm:DataManager){
         eoc_type:"ACTIVATION",
         type:"effect_on_condition",
         effect:[
-            {math:[JM.spellLevel('u',GatheringSpell.id),'=','0']}
+            {math:[JM.spellLevel('u',`'${GatheringSpell.id}'`),'=','0']}
         ]
     }
     dm.addInvokeID("GameBegin",0,init.id);
@@ -154,17 +155,17 @@ export async function buildProtect(dm:DataManager){
     //战斗对话
     const talkTopic:TalkTopic={
         type:"talk_topic",
-        id:["TALK_LUO_ORDERS"],
+        id:["TALK_ALLY_ORDERS"],
         insert_before_standard_exits:true,
         responses:[{
-            text:`在这里设置重生点 当前:<global_val${SPAWN_LOC_ID}>`,
+            text:`在这里设置重生点 当前:<global_val:${SPAWN_LOC_ID}>`,
             effect:{run_eocs:[SetSpawnLocEoc.id]},
-            topic:"TALK_LUO_ORDERS",
+            topic:"TALK_DONE",
         },{
             truefalsetext:{
                 true:"[已启用] 切换重生点使用状态",
                 false:"[已停用] 切换重生点使用状态",
-                condition:{u_has_trait:ProtectMut.id},
+                condition:{npc_has_trait:ProtectMut.id},
             },
             effect:{run_eocs:{
                 id:SADef.genEocID(`${UID}_ToggleProtect`),
@@ -175,7 +176,7 @@ export async function buildProtect(dm:DataManager){
                     else:[{run_eocs:[StartProtectEoc.id]}]
                 }]
             },alpha_talker:'npc'},
-            topic:"TALK_LUO_ORDERS",
+            topic:"TALK_DONE",
         }]
     }
     //#endregion
