@@ -30,11 +30,13 @@ const npclist = listCtor({
 
 const talkerPtr  = `${UID}_TalkerPtr`;
 const isVaildPtr = `${UID}_IsVaildPtr`;
+//npc注册的索引
 const inListIdx  = `${UID}_InListIdx`;
 
 //npc保护
 export async function buildProtect(dm:DataManager){
 
+    //#region 召集
     //递归随机传送
     const randTeleportEocID = SADef.genEocID(`${UID}_RandTeleport`);
     const randTeleport:Eoc = {
@@ -72,9 +74,35 @@ export async function buildProtect(dm:DataManager){
         ]
     }
 
+    //召集法术
+    const GatheringEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_Gathering`),[
+        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
+            target_var:{context_val:talkerPtr},parse_tags:true},
+        {run_eocs:{
+            id:SADef.genEocID(`${UID}_Gathering_Sub`),
+            eoc_type:"ACTIVATION",
+            effect:[ {run_eocs:[teleportToSpawn.id]} ]
+        }, alpha_talker:{var_val:talkerPtr}},
+    ]);
+    const GatheringSpell:Spell = {
+        id:SADef.genSpellID(`${UID}_Gathering`),
+        name:"召集",
+        description:"召集所有npc回到出生点",
+        type:'SPELL',
+        effect:'effect_on_condition',
+        effect_str:GatheringEoc.id,
+        valid_targets:['self'],
+        shape:'blast',
+        flags:[...CON_SPELL_FLAG],
+    }
+    //#endregion 传送到出生点
+
     //死亡保护
     const RebirthEoc:Eoc=SADef.genActEoc(`${UID}_DeathRebirth`,[
         {run_eocs:[teleportToSpawn.id,EOC_FULL_RECIVERY]},
+        {if:"u_is_npc",then:[
+            {math:[JM.npcTrust('u'),'=','100']},
+        ]},
     ],{or:[
         {u_has_trait:ProtectMut.id},
         'u_is_avatar',
@@ -88,6 +116,18 @@ export async function buildProtect(dm:DataManager){
     ]);
     dm.addInvokeID('GameStart',0,SetSpawnLocEoc.id);
 
+    //初始化
+    const init:Eoc = {
+        id:SADef.genEocID(`${UID}_Init`),
+        eoc_type:"ACTIVATION",
+        type:"effect_on_condition",
+        effect:[
+            {math:[JM.spellLevel('u',GatheringSpell.id),'=','0']}
+        ]
+    }
+    dm.addInvokeID("GameBegin",0,init.id);
+
+    //#region 开关
     //启用保护
     const StartProtectEoc:Eoc = npclist.genFirstUnvaildEoc(SADef.genEocID(`${UID}_StartProtect`),[
         {u_add_trait:ProtectMut.id},
@@ -111,40 +151,6 @@ export async function buildProtect(dm:DataManager){
             {math:[`v_${isVaildPtr}`,'=','0']},
         ]
     }
-
-    //#region 召集npc法术
-    const GatheringEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_Gathering`),[
-        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
-            target_var:{context_val:talkerPtr},parse_tags:true},
-        {run_eocs:{
-            id:SADef.genEocID(`${UID}_Gathering_Sub`),
-            eoc_type:"ACTIVATION",
-            effect:[ {run_eocs:[teleportToSpawn.id]} ]
-        }, alpha_talker:{var_val:talkerPtr}},
-    ]);
-    const GatheringSpell:Spell = {
-        id:SADef.genSpellID(`${UID}_Gathering`),
-        name:"召集",
-        description:"召集所有npc回到出生点",
-        type:'SPELL',
-        effect:'effect_on_condition',
-        effect_str:GatheringEoc.id,
-        valid_targets:['self'],
-        shape:'blast',
-        flags:[...CON_SPELL_FLAG],
-    }
-    //#endregion
-    //初始化
-    const init:Eoc = {
-        id:SADef.genEocID(`${UID}_Init`),
-        eoc_type:"ACTIVATION",
-        type:"effect_on_condition",
-        effect:[
-            {math:[JM.spellLevel('u',GatheringSpell.id),'=','0']}
-        ]
-    }
-    dm.addInvokeID("GameBegin",0,init.id);
-
     //战斗对话
     const talkTopic:TalkTopic={
         type:"talk_topic",
@@ -172,6 +178,7 @@ export async function buildProtect(dm:DataManager){
             topic:"TALK_LUO_ORDERS",
         }]
     }
+    //#endregion
 
     dm.addData([
         ProtectMut,
