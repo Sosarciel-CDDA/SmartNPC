@@ -38,50 +38,20 @@ const inListIdx  = `${UID}_InListIdx`;
 export async function buildProtect(dm:DataManager){
 
     //#region 召集
-    //递归随机传送
-    const randTeleportEocID = SADef.genEocID(`${UID}_RandTeleport`);
-    const randTeleport:Eoc = {
-        type:"effect_on_condition",
-        eoc_type:'ACTIVATION',
-        id:randTeleportEocID,
-        effect:[
-            {u_location_variable:{context_val:'tmploc'}},
-            {location_variable_adjust:{context_val:'tmploc'},
-                x_adjust: {math:['rand(2)-1']},
-                y_adjust: {math:['rand(2)-1']}
-            },
-            {run_eocs:{
-                id:`RandTeleport_runeocwithinline`,
-                eoc_type:'ACTIVATION',
-                effect:[ {if:'u_is_character',then:[{run_eocs:[randTeleportEocID]}]} ],
-            }, alpha_loc:{context_val:'tmploc'} },
-            {u_teleport:{context_val:'tmploc'},force:true},
-        ],
-    }
-
     //传送到出生点
+    const TeleportDone = `${UID}_TeleportDone`;
+    const TeleportPos = `${UID}_TeleportPos`;
     const teleportToSpawn:Eoc = {
         type:"effect_on_condition",
         eoc_type:'ACTIVATION',
         id:SADef.genEocID(`${UID}_TeleportToSpawn`),
         effect: [
-            {if:{mod_is_loaded:IslandModId},then:[
-                //尝试移走处于出生点的npc
-                {run_eocs:{
-                    id:SADef.genEocID(`${UID}_TeleportToSpawn_Sub`),
-                    eoc_type:'ACTIVATION',
-                    effect:[ {if:{and:['u_exists','u_is_character']},then:[{run_eocs:[randTeleport.id]}]} ],
-                }, alpha_loc:{global_val:IslandModOrigLocId} },
-                {u_teleport:{global_val:IslandModOrigLocId},force:true},
-            ],else:[
-                //尝试移走处于出生点的npc
-                {run_eocs:{
-                    id:SADef.genEocID(`${UID}_TeleportToSpawn_Sub`),
-                    eoc_type:'ACTIVATION',
-                    effect:[ {if:{and:['u_exists','u_is_character']},then:[{run_eocs:[randTeleport.id]}]} ],
-                }, alpha_loc:{global_val:SPAWN_LOC_ID} },
-                {u_teleport:{global_val:SPAWN_LOC_ID},force:true},
-            ]},
+            {math:[TeleportDone,'=','0']},
+            {if:{mod_is_loaded:IslandModId},
+            then:[{set_string_var:IslandModOrigLocId,target_var:{context_val:'tmplocptr'}}],
+            else:[{set_string_var:SPAWN_LOC_ID      ,target_var:{context_val:'tmplocptr'}}]},
+
+            {u_teleport:{var_val:'tmplocptr'},force_safe:true},
         ]
     }
 
@@ -195,7 +165,7 @@ export async function buildProtect(dm:DataManager){
 
     dm.addData([
         ProtectMut,
-        randTeleport,teleportToSpawn,RebirthEoc,
+        teleportToSpawn,RebirthEoc,
         SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
         GatheringEoc,GatheringSpell,
         init,
