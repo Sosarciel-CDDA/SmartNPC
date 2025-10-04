@@ -56,7 +56,7 @@ export async function buildProtect(dm:DataManager){
 
     //传送到目标
     const TeleportPos = `${UID}_TeleportPos`;
-    const teleportToTarget:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_TeleportToPos`),[
+    const teleportToPos:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_TeleportToPos`),[
         {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
             target_var:{context_val:talkerPtr},parse_tags:true},
         {run_eocs:{
@@ -67,22 +67,46 @@ export async function buildProtect(dm:DataManager){
     ]);
 
     //召集法术
-    const GatheringEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_Gathering`),[
+    const GatherNpcEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_GatherNpc`),[
         {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
             target_var:{context_val:talkerPtr},parse_tags:true},
+        {u_location_variable:{global_val:TeleportPos}},
         {run_eocs:{
-            id:SADef.genEocID(`${UID}_Gathering_Sub`),
+            id:SADef.genEocID(`${UID}_GatherNpc_Sub`),
             eoc_type:"ACTIVATION",
-            effect:[ {run_eocs:[teleportToSpawn.id]} ]
+            effect:[ {run_eocs:[teleportToPos.id]} ]
         }, alpha_talker:{var_val:talkerPtr}},
     ]);
-    const GatheringSpell:Spell = {
-        id:SADef.genSpellID(`${UID}_Gathering`),
+    const GatherNpcSpell:Spell = {
+        id:SADef.genSpellID(`${UID}_GatherNpc`),
         name:"召集",
         description:"召集所有npc回到出生点",
         type:'SPELL',
         effect:'effect_on_condition',
-        effect_str:GatheringEoc.id,
+        effect_str:GatherNpcEoc.id,
+        valid_targets:['self'],
+        shape:'blast',
+        flags:[...CON_SPELL_FLAG],
+    }
+
+
+    //召回法术
+    const RecallNpcEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_RecallNpc`),[
+        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
+            target_var:{context_val:talkerPtr},parse_tags:true},
+        {run_eocs:{
+            id:SADef.genEocID(`${UID}_RecallNpc_Sub`),
+            eoc_type:"ACTIVATION",
+            effect:[ {run_eocs:[teleportToSpawn.id]} ]
+        }, alpha_talker:{var_val:talkerPtr}},
+    ]);
+    const RecallNpcSpell:Spell = {
+        id:SADef.genSpellID(`${UID}_RecallNpc`),
+        name:"召集",
+        description:"召集所有npc回到出生点",
+        type:'SPELL',
+        effect:'effect_on_condition',
+        effect_str:RecallNpcEoc.id,
         valid_targets:['self'],
         shape:'blast',
         flags:[...CON_SPELL_FLAG],
@@ -115,7 +139,8 @@ export async function buildProtect(dm:DataManager){
         eoc_type:"ACTIVATION",
         type:"effect_on_condition",
         effect:[
-            {math:[JM.spellLevel('u',`'${GatheringSpell.id}'`),'=','0']}
+            {math:[JM.spellLevel('u',`'${GatherNpcSpell.id}'`),'=','0']},
+            {math:[JM.spellLevel('u',`'${RecallNpcSpell.id}'`),'=','0']},
         ]
     }
     dm.addInvokeID("GameBegin",0,init.id);
@@ -176,9 +201,10 @@ export async function buildProtect(dm:DataManager){
 
     dm.addData([
         ProtectMut,
-        teleportToSpawn,teleportToTarget,RebirthEoc,
+        teleportToSpawn,teleportToPos,RebirthEoc,
         SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
-        GatheringEoc,GatheringSpell,
+        GatherNpcEoc,GatherNpcSpell,
+        RecallNpcEoc,RecallNpcSpell,
         init,
     ],'Strength','Protect.json');
 }
