@@ -74,7 +74,7 @@ export async function buildProtect(dm:DataManager){
     const GatherNpcSpell:Spell = {
         id:SADef.genSpellID(`${UID}_GatherNpc`),
         name:"召集",
-        description:"召集所有npc回到出生点",
+        description:"召集所有npc到你身边",
         type:'SPELL',
         effect:'effect_on_condition',
         effect_str:GatherNpcEoc.id,
@@ -95,8 +95,8 @@ export async function buildProtect(dm:DataManager){
     ]);
     const RecallNpcSpell:Spell = {
         id:SADef.genSpellID(`${UID}_RecallNpc`),
-        name:"召集",
-        description:"召集所有npc回到出生点",
+        name:"召回",
+        description:"召回所有npc到出生点",
         type:'SPELL',
         effect:'effect_on_condition',
         effect_str:RecallNpcEoc.id,
