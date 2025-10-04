@@ -9,6 +9,7 @@ const TacticalTransfer: Spell = {
     description: "传送到视野范围内的另一个位置。",
     name: "战术转移",
     valid_targets: ["ground"],
+    teachable:false,
     effect: "effect_on_condition",
     min_range: 30,
     shape: "blast",

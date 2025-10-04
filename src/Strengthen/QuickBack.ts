@@ -11,6 +11,7 @@ const QuickBackEocSubPush: Spell = {
     description: "快速后退委托击退法术",
     name: "快速后退委托击退法术",
     valid_targets: ["hostile","ally","self"],
+    teachable:false,
     effect: "directed_push",
     min_range: QuickBackRange,
     min_damage: 1,
@@ -25,6 +26,7 @@ const QuickBackEocSubMovemod: Spell = {
     description: "快速后退委托movemod法术",
     name: "快速后退委托movemod法术",
     valid_targets: ["hostile","ally","self"],
+    teachable:false,
     effect: "mod_moves",
     min_range: QuickBackRange,
     min_damage: -10,
@@ -45,6 +47,7 @@ const QuickBackSub: Spell = {
     description: "快速后退子法术",
     name: "快速后退子法术",
     valid_targets: ["hostile"],
+    teachable:false,
     effect: "effect_on_condition",
     effect_str:QuickBackEoc.id,
     min_range: QuickBackRange,
@@ -58,6 +61,7 @@ const QuickBack: Spell = {
     description: "快速后退",
     name: "快速后退",
     valid_targets: ["self"],
+    teachable:false,
     effect: "attack",
     shape: "blast",
     flags: [...CON_SPELL_FLAG],
@@ -85,8 +89,7 @@ const CombatRuleTalkTopic:TalkTopic={
             else:[{math:[`n_${QuickBackSwitchVar}`,"=","1"]}],
         },
         topic:CombatRuleTopicID,
-    },
-    { text: "Never mind.", topic: "TALK_DONE" }]
+    }]
 }
 
 export function buildQuickBack(dm: DataManager) {

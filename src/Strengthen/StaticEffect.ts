@@ -69,6 +69,7 @@ export async function buildStaticEffect(dm:DataManager){
         min_range:1,max_range:1,
         shape:"blast",
         valid_targets:['ally','self'],
+        teachable:false,
         flags:[...CON_SPELL_FLAG],
     }
     const joinBattle = SADef.genActEoc('JoinBattle',[{u_cast_spell:{id:joinBattleSpell.id}}]);

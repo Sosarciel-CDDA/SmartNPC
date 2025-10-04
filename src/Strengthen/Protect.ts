@@ -80,6 +80,7 @@ export async function buildProtect(dm:DataManager){
         effect_str:GatherNpcEoc.id,
         valid_targets:['self'],
         shape:'blast',
+        teachable:false,
         flags:[...CON_SPELL_FLAG],
     }
 
@@ -102,6 +103,7 @@ export async function buildProtect(dm:DataManager){
         effect_str:RecallNpcEoc.id,
         valid_targets:['self'],
         shape:'blast',
+        teachable:false,
         flags:[...CON_SPELL_FLAG],
     }
     //#endregion 传送到出生点
