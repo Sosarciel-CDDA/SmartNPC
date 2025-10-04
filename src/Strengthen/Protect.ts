@@ -68,8 +68,7 @@ export async function buildProtect(dm:DataManager){
 
     //召集法术
     const GatherNpcEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_GatherNpc`),[
-        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
-            target_var:{context_val:talkerPtr},parse_tags:true},
+        npclist.setEachIdxPtr('Talker',{context_val:talkerPtr}),
         {u_location_variable:{global_val:TeleportPos}},
         {run_eocs:{
             id:SADef.genEocID(`${UID}_GatherNpc_Sub`),
@@ -92,8 +91,7 @@ export async function buildProtect(dm:DataManager){
 
     //召回法术
     const RecallNpcEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_RecallNpc`),[
-        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
-            target_var:{context_val:talkerPtr},parse_tags:true},
+        npclist.setEachIdxPtr('Talker',{context_val:talkerPtr}),
         {run_eocs:{
             id:SADef.genEocID(`${UID}_RecallNpc_Sub`),
             eoc_type:"ACTIVATION",
@@ -150,11 +148,9 @@ export async function buildProtect(dm:DataManager){
     const StartProtectEoc:Eoc = npclist.genFirstUnvaildEoc(SADef.genEocID(`${UID}_StartProtect`),[
         {u_add_trait:ProtectMut.id},
         {math:[`u_${inListIdx}`,'=',npclist.eachIdx]},
-        {set_string_var:npclist.where(`<global_val:${npclist.length}>`).Talker,
-            target_var:{context_val:talkerPtr},parse_tags:true},
+        npclist.setEachIdxPtr('Talker',{context_val:talkerPtr}),
         {u_set_talker: { var_val: talkerPtr } },
-        {set_string_var:npclist.where(`<global_val:${npclist.length}>`).IsVaild,
-            target_var:{context_val:isVaildPtr},parse_tags:true},
+        npclist.setEachIdxPtr('IsVaild',{context_val:isVaildPtr}),
         {math:[`v_${isVaildPtr}`,'=','1']},
     ]);
     //关闭保护
