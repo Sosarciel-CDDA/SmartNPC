@@ -57,8 +57,7 @@ export async function buildProtect(dm:DataManager){
     //传送到目标
     const TeleportPos = `${UID}_TeleportPos`;
     const teleportToPos:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_TeleportToPos`),[
-        {set_string_var:npclist.where(`<global_val:${npclist.eachIdx}>`).Talker,
-            target_var:{context_val:talkerPtr},parse_tags:true},
+        npclist.setEachIdxPtr('Talker',{context_val:talkerPtr}),
         {run_eocs:{
             id:SADef.genEocID(`${UID}_TeleportToPos_Sub`),
             eoc_type:"ACTIVATION",
