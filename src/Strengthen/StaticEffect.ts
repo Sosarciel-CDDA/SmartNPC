@@ -44,6 +44,20 @@ const SmartNpcMut:Mutation={
 //战斗距离
 const BattleRange = 20;
 
+//对话
+const talkTopic:TalkTopic={
+    type:"talk_topic",
+    id:["TALK_ALLY_ORDERS"],
+    insert_before_standard_exits:true,
+    responses:[{
+        text:`控制队友`,
+        effect:"take_control",
+        topic:"TALK_DONE"
+    }]
+}
+
+
+
 export async function buildStaticEffect(dm:DataManager){
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
         {u_add_trait:SmartNpcMut.id},
@@ -76,6 +90,7 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
     dm.addData([
+        talkTopic,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
         joinBattle,joinBattleSpell
     ],'Strength','StaticEffect.json');

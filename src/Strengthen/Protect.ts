@@ -162,7 +162,7 @@ export async function buildProtect(dm:DataManager){
             {math:[`v_${isVaildPtr}`,'=','0']},
         ]
     }
-    //战斗对话
+    //对话
     const talkTopic:TalkTopic={
         type:"talk_topic",
         id:["TALK_ALLY_ORDERS"],
