@@ -81,6 +81,9 @@ export async function buildProtect(dm:DataManager){
         valid_targets:['self'],
         shape:'blast',
         teachable:false,
+        energy_source:"STAMINA",
+        base_energy_cost:5000,
+        final_energy_cost:5000,
         flags:[...CON_SPELL_FLAG],
     }
 
