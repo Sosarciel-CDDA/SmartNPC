@@ -111,10 +111,7 @@ export async function buildProtect(dm:DataManager){
     //死亡保护
     const RebirthEoc:Eoc=SADef.genActEoc(`${UID}_DeathRebirth`,[
         {run_eocs:[EOC_FULL_RECIVERY,teleportToSpawn.id]},
-        {if:"u_is_npc",then:[
-            {math:[JM.npcTrust('u'),'=','100']},
-            "follow",
-        ]},
+        {if:"u_is_npc",then:[ {math:[JM.npcTrust('u'),'=','100']} ]},
     ],{or:[
         {u_has_trait:ProtectMut.id},
         'u_is_avatar',
