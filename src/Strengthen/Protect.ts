@@ -68,7 +68,7 @@ export async function buildProtect(dm:DataManager){
         {run_eocs:{
             id:SADef.genEocID(`${UID}_GatherNpc_Sub`),
             eoc_type:"ACTIVATION",
-            effect:[ {run_eocs:[teleportToPos.id]} ]
+            effect:[{if:"u_is_npc",then:[{run_eocs:[teleportToPos.id]}]}]
         }, alpha_talker:{var_val:talkerPtr}},
     ]);
     const GatherNpcSpell:Spell = {
@@ -91,7 +91,7 @@ export async function buildProtect(dm:DataManager){
         {run_eocs:{
             id:SADef.genEocID(`${UID}_RecallNpc_Sub`),
             eoc_type:"ACTIVATION",
-            effect:[ {run_eocs:[teleportToSpawn.id]} ]
+            effect:[{if:"u_is_npc",then:[{run_eocs:[teleportToSpawn.id]}]}]
         }, alpha_talker:{var_val:talkerPtr}},
     ]);
     const RecallNpcSpell:Spell = {
