@@ -29,7 +29,15 @@ const SmartNpcMut:Mutation={
     player_display:false,
     enchantments:[{
         condition:'ALWAYS',
-        values:[{ value:'AVOID_FRIENDRY_FIRE', add:1 }]
+        values:[
+            { value:'AVOID_FRIENDRY_FIRE', add:1 },
+            { value:'PAIN'       , multiply:-1 },
+            { value:'PAIN_REMOVE', multiply:10 },
+        ],
+        ench_effects:[{
+            effect:Courage.id,
+            intensity:1
+        }]
     }]
 }
 
@@ -38,7 +46,6 @@ const BattleRange = 20;
 
 export async function buildStaticEffect(dm:DataManager){
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
-        {u_add_effect:Courage.id,duration:'PERMANENT'},
         {u_add_trait:SmartNpcMut.id},
     ],'u_is_npc');
     dm.addInvokeID('Init',0,initNpcStrength.id);
