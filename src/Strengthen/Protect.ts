@@ -39,13 +39,11 @@ export async function buildProtect(dm:DataManager){
 
     //#region 召集
     //传送到出生点
-    const TeleportDone = `${UID}_TeleportDone`;
     const teleportToSpawn:Eoc = {
         type:"effect_on_condition",
         eoc_type:'ACTIVATION',
         id:SADef.genEocID(`${UID}_TeleportToSpawn`),
         effect: [
-            {math:[TeleportDone,'=','0']},
             {if:{mod_is_loaded:IslandModId},
             then:[{set_string_var:IslandModOrigLocId,target_var:{context_val:'tmplocptr'}}],
             else:[{set_string_var:SPAWN_LOC_ID      ,target_var:{context_val:'tmplocptr'}}]},
@@ -56,14 +54,12 @@ export async function buildProtect(dm:DataManager){
 
     //传送到目标
     const TeleportPos = `${UID}_TeleportPos`;
-    const teleportToPos:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_TeleportToPos`),[
-        npclist.setEachIdxPtr('Talker',{context_val:talkerPtr}),
-        {run_eocs:{
-            id:SADef.genEocID(`${UID}_TeleportToPos_Sub`),
-            eoc_type:"ACTIVATION",
-            effect:[ {u_teleport:{global_val:TeleportPos},force_safe:true} ]
-        }, alpha_talker:{var_val:talkerPtr}},
-    ]);
+    const teleportToPos:Eoc = {
+        type:"effect_on_condition",
+        eoc_type:'ACTIVATION',
+        id:SADef.genEocID(`${UID}_TeleportPos`),
+        effect: [{u_teleport:{global_val:TeleportPos},force_safe:true}]
+    };
 
     //召集法术
     const GatherNpcEoc:Eoc = npclist.genEachVaildEoc(SADef.genEocID(`${UID}_GatherNpc`),[
