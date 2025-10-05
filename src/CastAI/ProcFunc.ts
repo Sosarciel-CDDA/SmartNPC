@@ -1,6 +1,6 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
-import { Spell, Eoc, SpellFlag, Resp, EocEffect} from "@sosarciel-cdda/schema";
+import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
 import { CastProcData, TargetType } from "./Interface";
@@ -128,8 +128,8 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     const randomTargetSpell:Spell={
         type: "SPELL",
         id:SADef.genSpellID(`${uid}_RandomTarget`),
-        name:`${spell.name}_子随机索敌`,
-        description:`${spell.name}的子随机索敌法术`,
+        name:await awt`${zh(spell.name)}_子随机索敌`,
+        description:await awt`${zh(spell.name)}的子随机索敌法术`,
         teachable:false,
         effect: "effect_on_condition",
         effect_str:randomTargetEoc.id,
@@ -143,8 +143,8 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     const randomTargetMainSpell:Spell={
         type: "SPELL",
         id: SADef.genSpellID(`${uid}_RandomTargetMain`),
-        name:`${spell.name}_主随机索敌`,
-        description:`${spell.name}的主随机索敌法术`,
+        name:await awt`${zh(spell.name)}_主随机索敌`,
+        description:await awt`${zh(spell.name)}的主随机索敌法术`,
         teachable:false,
         valid_targets: ["self"],
         effect: "attack",
