@@ -20,7 +20,7 @@ const Courage:Effect={
 const SmartNpcMut:Mutation={
     type:'mutation',
     id:SADef.genMutationID('SmartNpc'),
-    flags:['NO_SPELLCASTING'] as any,//关闭自动施法
+    flags:['NO_SPELLCASTING','NO_PSIONICS'] as any,//关闭自动施法
     name:"Npc属性优化",
     description:"Npc属性优化",
     points:0,
