@@ -23,7 +23,8 @@ const COST_MAP:Record<SpellEnergySource,string|undefined>={
     "BIONIC" : "u_val('power')",
     "HP"     : "u_hp('torso')",
     "MANA"   : "u_val('mana')",
-    "STAMINA": "u_val('stamina')",
+    //"STAMINA": "u_val('stamina')",
+    "STAMINA": "u_val('mana')",
     "NONE"   : undefined,
 }
 
@@ -36,7 +37,7 @@ tableList.forEach((file)=>{
     const json = UtilFT.loadJSONFileSync(file) as CastAIDataJsonTable;
 
     Object.entries(json.table).forEach(([spellID,castData])=>{
-        if(castData==undefined) throw "";
+        if(castData==undefined) return;
         //转换预定义castAiData
         castData = getDefCastData(castData,spellID as SpellID);
         castData!.id = castData!.id??spellID as SpellID;

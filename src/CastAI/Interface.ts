@@ -32,7 +32,7 @@ export type TargetType = typeof TargetTypeList[number];
 */
 export type CastAIDataTable = {
     /**技能ID : 施法数据 */
-    [key:string]:(RawCastAIData)
+    [key:string]:(RawCastAIData|undefined)
 };
 /**json格式  */
 export type CastAIDataJsonTable = {
