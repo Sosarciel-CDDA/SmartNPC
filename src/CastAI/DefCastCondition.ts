@@ -1,4 +1,4 @@
-import { Effect, ItemID, Spell, SpellID } from "@sosarciel-cdda/schema";
+import { BoolExpr, Effect, EffectID, ItemID, Spell, SpellID } from "@sosarciel-cdda/schema";
 import { CastAIData, CastCond } from "./Interface";
 import { SADef, getSpellByID } from "@/src/Define";
 import { getAoeExpr } from "./UtilFunc";
@@ -7,7 +7,7 @@ import { getAoeExpr } from "./UtilFunc";
 
 
 /**无参预定义的施法数据 列表 */
-export const NoParamDefCastDataList = [
+const NoParamDefCastDataList = [
     "TargetDamage"           ,//目标伤害
     "MeleeTargetDamage"      ,//近战目标伤害
     "RangeTargetDamage"      ,//远程目标伤害
@@ -18,10 +18,10 @@ export const NoParamDefCastDataList = [
 ] as const;
 
 /**无参预定义的施法数据 */
-export type NoParamDefCastData = typeof NoParamDefCastDataList[number];
+type NoParamDefCastData = typeof NoParamDefCastDataList[number];
 
 /**物品充能释放 */
-export type ItemCast = {
+type ItemCast = {
     type:"ItemCast";
     /**基于哪种基础类型 */
     base:NoParamDefCastData;
@@ -34,8 +34,16 @@ export type ItemCast = {
     /**强制使用某个法术等级 默认使用已知等级 */
     force_lvl?:number;
 }
+
+/**条件触发的自身buff */
+type AlawaySelfBuffCond = {
+    type:"AlawaySelfBuffCond";
+    /**触发条件 u 为自身 n 不存在 */
+    condition:(BoolExpr);
+}
+
 /**从基础继承 */
-export type Inherit = {
+type Inherit = {
     /**从基础继承 */
     type:"Inherit";
     /**基于哪种基础类型 */
@@ -43,15 +51,16 @@ export type Inherit = {
 }&Partial<CastAIData>;
 
 /**预定义的施法数据 */
-export type ObjDefCastData = [
+type ParamCastData = [
     ItemCast,
+    AlawaySelfBuffCond,
     Inherit
 ][number];
 
 /**预定义的施法数据 */
-export type DefCastData = NoParamDefCastData|ObjDefCastData;
+export type DefCastData = NoParamDefCastData|ParamCastData;
 /**预定义的施法数据类型 */
-export type DefCastDataType = NoParamDefCastData|ObjDefCastData["type"];
+export type DefCastDataType = NoParamDefCastData|ParamCastData["type"];
 
 /**施法数据生成器 */
 type DefCastDataGener<T extends DefCastData|undefined> = (data:T,spell:Spell)=>CastAIData;
@@ -258,6 +267,22 @@ const DefCastDataMap:{
             cond.ignore_cost = true;
         })
         return base;
+    },
+    AlawaySelfBuffCond(data,spell){
+        const {condition} = data;
+        return {
+            cast_condition:[{
+                condition:condition,
+                hook:"BattleUpdate",
+                target:'random',
+                force_vaild_target:['self'],
+            },{
+                condition:condition,
+                hook:"SlowUpdate",
+                target:'random',
+                force_vaild_target:['self'],
+            }]
+        }
     },
     Inherit(data,spell){
         const baseObj = DefCastDataMap[data.base](undefined,spell);
