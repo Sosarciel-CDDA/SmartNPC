@@ -8,8 +8,8 @@ export * from './Other';
 export * from './TryAttack';
 export * from './Update';
 
-/**施法条件定义表 */
-export const CastCondDefineTable = {
+/**施法条件函数表 */
+export const CastCondFuncTable = {
     SelfAoeDamage,
     TargetDamage,
     TargetDebuff,
@@ -27,7 +27,8 @@ export const CastCondDefineTable = {
     ControlCast,
 }
 
-export type CastCondDefineDataTable = {
+/**施法条件数据表 */
+export type CastCondDataTable = {
     SelfAoeDamage        : SelfAoeDamage        ;
     TargetDamage         : TargetDamage         ;
     TargetDebuff         : TargetDebuff         ;

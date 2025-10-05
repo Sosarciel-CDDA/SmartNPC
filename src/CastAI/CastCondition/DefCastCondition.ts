@@ -1,16 +1,16 @@
 import { SpellID } from "@sosarciel-cdda/schema";
 import { CastAIData } from "@/src/CastAI/Interface";
 import { getSpellByID } from "@/src/Define";
-import { CastCondDefineDataTable, CastCondDefineTable } from "./Define";
+import { CastCondDataTable, CastCondFuncTable } from "./Define";
 
 
 
 
 
 /**预定义的施法数据 */
-export type DefCastData = CastCondDefineDataTable[keyof CastCondDefineDataTable];
+export type DefCastData = CastCondDataTable[keyof CastCondDataTable];
 /**预定义的施法数据类型 */
-export type DefCastDataType = keyof CastCondDefineDataTable;
+export type DefCastDataType = keyof CastCondDataTable;
 
 /**根据预定义的ID获得预定义施法数据 */
 export function getDefCastData(data:DefCastData|CastAIData,spellid:SpellID):CastAIData{
@@ -20,6 +20,6 @@ export function getDefCastData(data:DefCastData|CastAIData,spellid:SpellID):Cast
 
     if(dtype==undefined) return data as any;
 
-    const gener = (CastCondDefineTable as any)[dtype as any] as any;
+    const gener = (CastCondFuncTable as any)[dtype as any] as any;
     return gener(data,getSpellByID(spellid));
 }

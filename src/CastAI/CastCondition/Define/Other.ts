@@ -1,10 +1,10 @@
 import { ItemID } from "@sosarciel-cdda/schema";
 import { DefineCastCond, DefineCastCondFunc } from "../Interface";
-import { CastCondDefineDataTable, CastCondDefineTable } from "./index";
+import { CastCondDataTable, CastCondFuncTable } from "./index";
 import { CastAIData, CastCond } from "../../Interface";
 
 
-type InheritAble = Omit<CastCondDefineDataTable,'ItemCast'|'Inherit'>;
+type InheritAble = Omit<CastCondDataTable,'ItemCast'|'Inherit'>;
 
 /**物品充能释放 */
 export type ItemCast = DefineCastCond<"ItemCast",{
@@ -21,7 +21,7 @@ export type ItemCast = DefineCastCond<"ItemCast",{
 }>;
 export const ItemCast:DefineCastCondFunc<ItemCast> = (data,spell)=>{
     const dtype = typeof data.base == "string" ? data.base : data.base.type;
-    const base = (CastCondDefineTable as any)[dtype](data.base,spell);
+    const base = (CastCondFuncTable as any)[dtype](data.base,spell);
     const conds:CastCond[] = Array.isArray(base.cast_condition) ? base.cast_condition : [base.cast_condition];
     conds.forEach((cond)=>{
         data = data as ItemCast;
@@ -60,7 +60,7 @@ export type Inherit = DefineCastCond<"Inherit",{
 }&Partial<CastAIData>>;
 export const Inherit:DefineCastCondFunc<Inherit> = (data,spell)=>{
     const dtype = typeof data.base == "string" ? data.base : data.base.type;
-    const baseObj = (CastCondDefineTable as any)[dtype](data.base,spell);
+    const baseObj = (CastCondFuncTable as any)[dtype](data.base,spell);
     const {type,base,...rest} = data;
     return Object.assign({},baseObj,rest);
 }
