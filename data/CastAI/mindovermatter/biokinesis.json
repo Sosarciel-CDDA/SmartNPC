@@ -3,47 +3,47 @@
     "table": {
         "biokin_physical_enhance":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_physical"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_physical"}}
         },
         "biokin_overcome_pain":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_overcome_pain"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_overcome_pain"}}
         },
         "biokin_breathe_skin":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_breathe_skin"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_breathe_skin"}}
         },
         "biokin_armor_skin":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_armor_skin"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_armor_skin"}}
         },
         "biokin_climate_control":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_climate_control"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_climate_control"}}
         },
         "biokin_enhance_mobility":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_enhance_mobility"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_enhance_mobility"}}
         },
         "biokin_hammerhand":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_hammerhand"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_hammerhand"}}
         },
         "biokin_reflex_enhance":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_reflex"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_reflex"}}
         },
         "biokin_metabolism_enhance":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_metabolism_enhance"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_metabolism_enhance"}}
         },
         "biokin_guided_evolution":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_guided_evolution"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_guided_evolution"}}
         },
         "biokin_combat_dance":{
             "type": "AlawaySelfBuffCond",
-            "condition": {"u_has_effect":"effect_biokin_combat_dance"}
+            "condition": {"not":{"u_has_effect":"effect_biokin_combat_dance"}}
         }
     }
 }

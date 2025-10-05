@@ -8,6 +8,7 @@ import { CastProcData, TargetType } from "./Interface";
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={
     "auto"          : autoProc,
+    "raw"           : rawProc,
     "random"        : randomProc,
     "direct_hit"    : direct_hitProc,
     "filter_random" : filter_randomProc,
@@ -30,6 +31,59 @@ const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
 export const ControlCastSpeakerEffects:EocEffect[] = [];
 /**控制施法的回复 */
 export const ControlCastResps:Resp[]=[];
+
+async function rawProc(dm:DataManager,cpd:CastProcData){
+    const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
+    const {id,merge_condition,one_in_chance} = skill;
+    const spell = getSpellByID(id);
+    const {hook} = cast_condition;
+    const uid = `${spell.id}_Raw_${cast_condition.id}`;
+
+    const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
+    const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
+    const fixedCond = concat(base_cond,[cast_condition.condition]);
+
+    //创建施法EOC 应与filter一样使用标记法术 待修改
+    const castEoc:Eoc={
+        type:"effect_on_condition",
+        id:SADef.genEocID(`${uid}_Cast`),
+        eoc_type:"ACTIVATION",
+        effect:[
+            ...fixedBeforeEffect,
+            {
+                u_cast_spell:{ id:spell.id, min_level },
+                targeted: false,
+                true_eocs:{
+                    id:SADef.genEocID(`${uid}_TrueEoc`),
+                    effect:[...fixedAfterEffect],
+                    eoc_type:"ACTIVATION",
+                },
+                loc:{global_val:"tmp_loc"}
+            }
+        ],
+    }
+
+    //主逻辑eoc
+    const mainEoc:Eoc = {
+        type:"effect_on_condition",
+        id: SADef.genEocID(uid),
+        eoc_type:"ACTIVATION",
+        effect:[
+            {run_eocs:castEoc.id},
+        ],
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...fixedCond]},
+    }
+
+    //建立便于event合并的if语法
+    const eff:EocEffect={
+        if:merge_condition!,
+        then:[{run_eocs:[mainEoc.id]}]
+    }
+    dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
+
+    // eff -> mainEoc -> (randomTargetMainSpell -> randomTargetSpell -> randomTargetEoc) -> castEoc
+    return [castEoc,mainEoc];
+}
 
 async function randomProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
@@ -308,8 +362,8 @@ async function autoProc(dm:DataManager,cpd:CastProcData){
     if((InteractHookList.includes(hook as any)) && isHostileTarget)
         return ProcMap.direct_hit(dm,cpd);
 
-    //其他法术随机
-    return ProcMap.random(dm,cpd);
+    //其他法术直接调用
+    return ProcMap.raw(dm,cpd);
 }
 
 async function control_castProc(dm:DataManager,cpd:CastProcData){

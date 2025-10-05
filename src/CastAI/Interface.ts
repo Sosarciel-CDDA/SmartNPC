@@ -5,15 +5,18 @@ import { DefCastData } from "./DefCastCondition";
 /**技能选择目标类型 列表 */
 export const TargetTypeList = [
     "auto"          ,//自动
-    "random"        ,//原版随机
+    "raw"           ,//直接调用cast_spell
+    "random"        ,//委托一个随机法术利用其子法术随机
     "direct_hit"    ,//直接命中交互单位 u为角色 n为受害者 hook必须为InteractiveCharEvent
     "filter_random" ,//筛选目标随机 u为角色 n为受害者 处理时翻转
     "control_cast"  ,//玩家控制施法
 ]as const;
 /**技能选择目标类型  
  * auto 为 根据施法目标自动选择;  
+ *   
+ * raw 为 直接调用cast_spell 适用于无范围的自身buff  
  *  
- * random 为 原版随机 适用于自身buff 若作为伤害将会击中任何有效目标;  
+ * random 为 随机法术 伤害将会击中任何有效目标  
  *  
  * direct_hit 为 直接命中交互单位 适用于任何目标技能  
  * hook 必须为互动事件  

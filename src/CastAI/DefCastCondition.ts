@@ -188,12 +188,12 @@ const DefCastDataMap:{
             cast_condition:[{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
                 hook:"BattleUpdate",
-                target:'random',
+                target:'raw',
                 force_vaild_target:['self'],
             },{
                 condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
                 hook:"SlowUpdate",
-                target:'random',
+                target:'raw',
                 force_vaild_target:['self'],
             }],
             one_in_chance:2,
@@ -274,12 +274,12 @@ const DefCastDataMap:{
             cast_condition:[{
                 condition:condition,
                 hook:"BattleUpdate",
-                target:'random',
+                target:'raw',
                 force_vaild_target:['self'],
             },{
                 condition:condition,
                 hook:"SlowUpdate",
-                target:'random',
+                target:'raw',
                 force_vaild_target:['self'],
             }]
         }
