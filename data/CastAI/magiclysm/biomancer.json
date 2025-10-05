@@ -40,21 +40,21 @@
         },
         "vicious_tentacle":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"tentacle_whip"}
+            "condition":{"not":{"u_has_item":"tentacle_whip"}}
         },
         "vicious_tentacle_plus":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"tentacle_whip"}
+            "condition":{"not":{"u_has_item":"tentacle_whip"}}
         },
         "bio_grotesque":"BattleSelfBuff",
         "bio_acidicspray":"TargetDamage",
         "bio_bonespear":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"bonespear"}
+            "condition":{"not":{"u_has_item":"bonespear"}}
         },
         "bio_bonespear_plus":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"bonespear"}
+            "condition":{"not":{"u_has_item":"bonespear"}}
         },
         "biomancer_paralytic_dart":"TargetDamage",
         "biomancer_visceral_projection":"SelfAoeDamage",

@@ -1,0 +1,25 @@
+{
+    "require_mod": "magiclysm",
+    "table": {
+        "smite":"TargetDamage",
+        "summon_undead":"ControlCast",
+        "summon_undead_swarm":"ControlCast",
+        "dominate":"ControlCast",
+        "life_detonation":"ControlCast",
+        "disruption_bolt":"TargetDamage",
+        "wrathful_spirits":"ControlCast",
+        "banishment_lesser":"ControlCast",
+        "summon_wisps":"ControlCast",
+        "bleed":"TargetDamage",
+        "animist_summon_decaying_boneclub":{
+            "type":"BattleSelfBuffCond",
+            "condition":{"not":{"u_has_item":"decaying_boneclub"}}
+        },
+        "animist_summon_decaying_boneclub_plus":{
+            "type":"BattleSelfBuffCond",
+            "condition":{"not":{"u_has_item":"decaying_boneclub"}}
+        },
+        "rupture":"TargetDamage",
+        "animist_magic_fissile":"TargetDamage"
+    }
+}

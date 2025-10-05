@@ -3,11 +3,11 @@
     "table": {
         "stonefist":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"stonefist"}
+            "condition":{"not":{"u_has_item":"stonefist"}}
         },
         "stonefist_plus":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"stonefist"}
+            "condition":{"not":{"u_has_item":"stonefist"}}
         },
         "seismic_stomp":"SelfAoeDamage",
         "eshaper_shardspray":"TargetDamage",
@@ -16,11 +16,11 @@
         "eshaper_rockbolt":"TargetDamage",
         "earthshaper_stoneskin":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"aura_stoneskin"}
+            "condition":{"not":{"u_has_item":"aura_stoneskin"}}
         },
         "earthshaper_stoneskin_plus":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"aura_stoneskin"}
+            "condition":{"not":{"u_has_item":"aura_stoneskin"}}
         },
         "pertifying_touch":"TargetDamage",
         "eshaper_impalement":"TargetDamage",

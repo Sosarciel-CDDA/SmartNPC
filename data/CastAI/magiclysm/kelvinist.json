@@ -12,19 +12,19 @@
     "hoary_blast":"TargetDamage",
     "ice_shield":{
         "type":"BattleSelfBuffCond",
-        "condition":{"u_has_item":"shield_ice"}
+        "condition":{"not":{"u_has_item":"shield_ice"}}
     },
     "ice_shield_plus":{
         "type":"BattleSelfBuffCond",
-        "condition":{"u_has_item":"shield_ice"}
+        "condition":{"not":{"u_has_item":"shield_ice"}}
     },
     "frost_armor":{
         "type":"BattleSelfBuffCond",
-        "condition":{"u_has_item":"armor_frost"}
+        "condition":{"not":{"u_has_item":"armor_frost"}}
     },
     "frost_armor_plus":{
         "type":"BattleSelfBuffCond",
-        "condition":{"u_has_item":"armor_frost"}
+        "condition":{"not":{"u_has_item":"armor_frost"}}
     },
     "kelvinist_flamebreath":"TargetDamage",
     "freezing_touch":"TargetDamage"

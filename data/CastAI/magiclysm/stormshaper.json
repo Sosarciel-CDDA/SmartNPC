@@ -12,11 +12,11 @@
         "stormshaper_repelling_arc_plus":"BattleSelfBuff",
         "stormfist":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"stormglove"}
+            "condition":{"not":{"u_has_item":"stormglove"}}
         },
         "stormfist_plus":{
             "type":"BattleSelfBuffCond",
-            "condition":{"u_has_item":"stormglove"}
+            "condition":{"not":{"u_has_item":"stormglove"}}
         },
         "storm_shipwrecker":"TargetDamage",
         "explosive_decompression":"TargetDamage",

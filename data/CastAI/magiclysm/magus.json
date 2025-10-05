@@ -6,8 +6,8 @@
         "magus_mana_blast":"TargetDamage",
         "magus_mana_bolt":"TargetDamage",
         "magus_haste":"BattleSelfBuff",
-        "magus_slow":"BattleTargetBuff",
-        "magus_baleful_polymorph":"BattleTargetBuff",
+        "magus_slow":"TargetDebuff",
+        "magus_baleful_polymorph":"TargetDebuff",
         "magus_mana_beam":"TargetDamage",
         "cats_grace":{
             "cast_condition":{

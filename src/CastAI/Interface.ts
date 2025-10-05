@@ -1,6 +1,6 @@
 import { CharHook } from "@sosarciel-cdda/event";
 import { BoolExpr, EocEffect, NumberExpr, Spell, SpellID } from "@sosarciel-cdda/schema";
-import { DefCastData } from "./DefCastCondition";
+import { DefCastData } from "./CastCondition";
 
 /**技能选择目标类型 列表 */
 export const TargetTypeList = [
@@ -35,7 +35,7 @@ export type TargetType = typeof TargetTypeList[number];
 */
 export type CastAIDataTable = {
     /**技能ID : 施法数据 */
-    [key:string]:(RawCastAIData|undefined)
+    [key:string]:(RawCastAIData|undefined|null)
 };
 /**json格式  */
 export type CastAIDataJsonTable = {
