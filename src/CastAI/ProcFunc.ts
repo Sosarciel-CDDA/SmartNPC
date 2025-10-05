@@ -32,6 +32,11 @@ export const ControlCastSpeakerEffects:EocEffect[] = [];
 /**控制施法的回复 */
 export const ControlCastResps:Resp[]=[];
 
+
+
+//命中id
+const fhitvar = `${SADef.MOD_PREFIX}_HasTarget`;
+
 async function rawProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
     const {id,merge_condition,one_in_chance} = skill;
@@ -85,9 +90,6 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
     const fixedCond = concat(base_cond,[cast_condition.condition]);
-
-    //命中id
-    const fhitvar = `${spell.id}_hasTarget`;
 
     //创建施法EOC 应与filter一样使用标记法术 待修改
     const castEoc:Eoc={
@@ -160,9 +162,9 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
         id: SADef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
+            {math:[fhitvar,"=","0"]},
             {u_cast_spell:{id:randomTargetMainSpell.id,min_level}},
-            {run_eocs:castEoc.id},
-            {math:[fhitvar,"=","0"]}
+            {run_eocs:castEoc.id}
         ],
         condition:{and:[{ one_in_chance:one_in_chance??1 },...fixedCond]},
     }
@@ -189,8 +191,6 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
 
-    //命中id
-    const fhitvar = `${spell.id}_hasTarget`;
     //创建施法EOC
     const castEoc:Eoc={
         type:"effect_on_condition",
@@ -261,9 +261,9 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         eoc_type:"ACTIVATION",
         effect:[
             //{set_string_var:`try ${spell.id}`,target_var:{global_val:'tmpstr'}},
+            {math:[fhitvar,"=","0"]},
             {u_cast_spell:{id:filterTargetSpell.id,min_level}},
             {run_eocs:castEoc.id},
-            {math:[fhitvar,"=","0"]}
         ],
         condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
     }
@@ -301,7 +301,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
-            {npc_location_variable: { context_val: "_target_loc" }},
+            {npc_location_variable: { context_val: "target_loc" }},
             {
                 u_cast_spell:{ id:spell.id, min_level},
                 true_eocs:{
@@ -309,7 +309,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
-                loc:{ context_val: "_target_loc" }
+                loc:{ context_val: "target_loc" }
             }
         ],
         condition:{and:[{ one_in_chance:one_in_chance??1 },...fixedCond]},
@@ -423,8 +423,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     }
 
     //预先计算能耗与翻转条件
-    const costVar = `tmp_${spell.id}_cost`;
-    const vaildVar = `tmp_${spell.id}_vaild`;
+    const costVar  = `${SADef.MOD_PREFIX}_Tmp_${spell.id}_Cost`;
+    const vaildVar = `${SADef.MOD_PREFIX}_Tmp_${spell.id}_Vaild`;
     ControlCastSpeakerEffects.push(
         {math:[`u_${costVar}`,"=",getCostExpr(spell)]},
         {

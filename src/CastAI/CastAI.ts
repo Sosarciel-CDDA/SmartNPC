@@ -1,6 +1,6 @@
 import { JObject, UtilFT } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/Define";
-import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr} from "@sosarciel-cdda/schema";
+import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
@@ -13,10 +13,10 @@ import { createCastAITalkTopic } from "./TalkTopic";
 
 
 //全局冷却字段名
-export const gcdValName = `cocooldown`;
+export const gcdValName = `${SADef.MOD_PREFIX}_CoCooldown`;
 
 //falback字段名
-export const fallbackValName = "cast_fallback_counter";
+export const fallbackValName = `${SADef.MOD_PREFIX}_CastFallbackCounter`;
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
@@ -134,7 +134,7 @@ export async function buildCastAI(dm:DataManager){
                 after_effect.push({math:[costVar,"-=",getCostExpr(spell)]});
             //经验增长
             if(cast_condition.infoge_exp!=true)
-                after_effect.push({math:[`u_skill_exp('${spell.difficulty??0}')`,"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
+                after_effect.push({math:[JM.spellExp('u',`'${spell.id}'`),"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
             //清空备用计数器
             after_effect.push({math:[uv(fallbackValName),"=",String(fallback_with ?? 0)]})
             //#endregion
@@ -191,7 +191,7 @@ export async function buildCastAI(dm:DataManager){
         }
     }
 
-    dm.addData(out,"CastAI","skill");
+    dm.addData(out,"CastAI","Skill");
 
     //创建对话
     await createCastAITalkTopic(dm);

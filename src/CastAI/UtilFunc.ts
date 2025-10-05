@@ -1,6 +1,6 @@
 import { Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
-import { MAX_NUM } from "@/src/Define";
+import { MAX_NUM, SADef } from "@/src/Define";
 import { CastAIData, CastCond } from "./Interface";
 
 //翻转u与n
@@ -53,8 +53,9 @@ export const getRangeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_r
 
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(spell:Spell){
-    return `${spell.id}_switch_disable`;
+    return `${SADef.MOD_PREFIX}_${spell.id}_SwitchDisable`;
 }
+
 /**获得施法的event权重 >0 <1 */
 export function getEventWeight(skill:CastAIData,cond:CastCond){
     const weight = cond.weight??skill.weight??0;
@@ -63,7 +64,7 @@ export function getEventWeight(skill:CastAIData,cond:CastCond){
     return fixweight;
 }
 /**获得法术cdname */
-export const getCDName = (spell:Spell)=>`${spell.id}_cooldown`;
+export const getCDName = (spell:Spell)=>`${SADef.MOD_PREFIX}_${spell.id}_Cooldown`;
 
 export const uv = (id:string)=>`u_${id}`;
 export const nv = (id:string)=>`n_${id}`;

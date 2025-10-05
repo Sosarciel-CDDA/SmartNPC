@@ -1,12 +1,14 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
-import { Eoc, Resp, TalkTopic } from "@sosarciel-cdda/schema";
+import { Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SADef, getSpellByID } from "@/src/Define";
 import { CastAIDataMap, gcdValName } from "./CastAI";
 import { CastAIData } from "./Interface";
 import { getDisableSpellVar, nv } from "./UtilFunc";
 
-const displayManaName = "display_mana";
+
+
+const displayManaName = `${SADef.MOD_PREFIX}_DisplayMana`;
 
 export async function createCastAITalkTopic(dm:DataManager){
     //对话EOC
@@ -42,7 +44,7 @@ export async function createCastAITalkTopic(dm:DataManager){
             topic: await createSkillResp(dm)
         }]
     }
-    dm.addData([TalkEoc,mainTalkTopic,combatTalkTopic],"CastAI",'talk_topic');
+    dm.addData([TalkEoc,mainTalkTopic,combatTalkTopic],"CastAI",'TalkTopic');
 }
 
 /**创建施法对话 */
@@ -59,7 +61,7 @@ async function createCastControlResp(dm:DataManager){
             topic: "TALK_NONE"
         }]
     }
-    dm.addData([castControlTalkTopic],"CastAI",'castcontrol_talk_topic');
+    dm.addData([castControlTalkTopic],"CastAI",'Castcontrol_TalkTopic');
     return castControlTalkTopicId;
 }
 
@@ -109,6 +111,6 @@ async function createSkillResp(dm:DataManager){
         }]
     }
 
-    dm.addData([skillTalkTopic],"CastAI",'skillswitch_talk_topic');
+    dm.addData([skillTalkTopic],"CastAI",'SkillSwitch_TalkTopic');
     return skillTalkTopicId;
 }
