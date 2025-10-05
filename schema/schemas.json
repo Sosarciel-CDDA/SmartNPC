@@ -1183,7 +1183,7 @@
 										"properties": {
 											"condition": {
 												"$ref": "#/definitions/BoolExpr",
-												"description": "触发条件 u 为自身 n 不存在"
+												"description": "触发条件 u 为自身 n 为目标"
 											}
 										},
 										"required": [
@@ -1239,7 +1239,7 @@
 										"properties": {
 											"condition": {
 												"$ref": "#/definitions/BoolExpr",
-												"description": "触发条件 u 为自身 n 为目标"
+												"description": "触发条件 u 为自身 n 不存在"
 											}
 										},
 										"required": [
@@ -1255,6 +1255,34 @@
 										"properties": {
 											"type": {
 												"$ref": "#/definitions/ID_3",
+												"description": "施法条件定义类别"
+											}
+										},
+										"required": [
+											"type"
+										]
+									},
+									{
+										"type": "object",
+										"properties": {
+											"condition": {
+												"$ref": "#/definitions/BoolExpr",
+												"description": "触发条件 u 为自身 n 为目标"
+											}
+										},
+										"required": [
+											"condition"
+										]
+									}
+								]
+							},
+							{
+								"allOf": [
+									{
+										"type": "object",
+										"properties": {
+											"type": {
+												"$ref": "#/definitions/ID_4",
 												"description": "施法条件定义类别"
 											}
 										},
@@ -1287,7 +1315,7 @@
 																"properties": {
 																	"condition": {
 																		"$ref": "#/definitions/BoolExpr",
-																		"description": "触发条件 u 为自身 n 不存在"
+																		"description": "触发条件 u 为自身 n 为目标"
 																	}
 																},
 																"required": [
@@ -1331,6 +1359,34 @@
 																"properties": {
 																	"type": {
 																		"$ref": "#/definitions/ID_2",
+																		"description": "施法条件定义类别"
+																	}
+																},
+																"required": [
+																	"type"
+																]
+															},
+															{
+																"type": "object",
+																"properties": {
+																	"condition": {
+																		"$ref": "#/definitions/BoolExpr",
+																		"description": "触发条件 u 为自身 n 不存在"
+																	}
+																},
+																"required": [
+																	"condition"
+																]
+															}
+														]
+													},
+													{
+														"allOf": [
+															{
+																"type": "object",
+																"properties": {
+																	"type": {
+																		"$ref": "#/definitions/ID_3",
 																		"description": "施法条件定义类别"
 																	}
 																},
@@ -1403,7 +1459,7 @@
 										"type": "object",
 										"properties": {
 											"type": {
-												"$ref": "#/definitions/ID_4",
+												"$ref": "#/definitions/ID_5",
 												"description": "施法条件定义类别"
 											}
 										},
@@ -1441,7 +1497,7 @@
 																"properties": {
 																	"condition": {
 																		"$ref": "#/definitions/BoolExpr",
-																		"description": "触发条件 u 为自身 n 不存在"
+																		"description": "触发条件 u 为自身 n 为目标"
 																	}
 																},
 																"required": [
@@ -1485,6 +1541,34 @@
 																"properties": {
 																	"type": {
 																		"$ref": "#/definitions/ID_2",
+																		"description": "施法条件定义类别"
+																	}
+																},
+																"required": [
+																	"type"
+																]
+															},
+															{
+																"type": "object",
+																"properties": {
+																	"condition": {
+																		"$ref": "#/definitions/BoolExpr",
+																		"description": "触发条件 u 为自身 n 不存在"
+																	}
+																},
+																"required": [
+																	"condition"
+																]
+															}
+														]
+													},
+													{
+														"allOf": [
+															{
+																"type": "object",
+																"properties": {
+																	"type": {
+																		"$ref": "#/definitions/ID_3",
 																		"description": "施法条件定义类别"
 																	}
 																},
@@ -9188,17 +9272,21 @@
 		},
 		"ID": {
 			"type": "string",
-			"const": "AlawaySelfBuffCond"
+			"const": "TargetDebuffCond"
 		},
 		"ID_1": {
 			"type": "string",
-			"const": "BattleSelfBuffCond"
+			"const": "AlawaySelfBuffCond"
 		},
 		"ID_2": {
 			"type": "string",
-			"const": "BattleTargetBuffCond"
+			"const": "BattleSelfBuffCond"
 		},
 		"ID_3": {
+			"type": "string",
+			"const": "BattleTargetBuffCond"
+		},
+		"ID_4": {
 			"type": "string",
 			"const": "ItemCast"
 		},
@@ -76102,7 +76190,7 @@
 		"CastAIData": {
 			"$ref": "#/definitions/__type_27"
 		},
-		"ID_4": {
+		"ID_5": {
 			"type": "string",
 			"const": "Inherit"
 		},

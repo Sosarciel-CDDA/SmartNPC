@@ -2,12 +2,20 @@
     "require_mod": "magiclysm",
     "table": {
         "smite":"TargetDamage",
+        "recover_mana":null,
+        "recover_pain":null,
         "summon_undead":"ControlCast",
         "summon_undead_swarm":"ControlCast",
+        "necrotic_gaze"      :null,
+        "create_rune_animist":null,
         "dominate":"ControlCast",
         "life_detonation":"ControlCast",
+        "life_detonation_explosion" : null,
+        "convert"                   : null,
+        "soulrend"                  : null,
         "disruption_bolt":"TargetDamage",
         "wrathful_spirits":"ControlCast",
+        "spirit_walk": null,
         "banishment_lesser":"ControlCast",
         "summon_wisps":"ControlCast",
         "bleed":"TargetDamage",
@@ -20,6 +28,17 @@
             "condition":{"not":{"u_has_item":"decaying_boneclub"}}
         },
         "rupture":"TargetDamage",
-        "animist_magic_fissile":"TargetDamage"
+        "devour"                         : null,
+        "animist_sense_outsiders"        : null,
+        "animist_summon_watcher"         : null,
+        "animist_mass_hiding_aoe"        : null,
+        "animist_luck_bone"              : null,
+        "animist_spirit_walking"         : null,
+        "animist_add_evasion_spell"      : null,
+        "animist_slow_food_rotting_spell": null,
+        "animist_magic_fissile":"TargetDamage",
+        "animist_cast_spells_when_silent": null,
+        "animist_do_psionic_damage_to_head":"TargetDamage",
+        "animist_detect_wizards": null
     }
 }

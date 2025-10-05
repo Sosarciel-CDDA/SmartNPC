@@ -1,31 +1,49 @@
 {
     "require_mod": "magiclysm",
     "table": {
-        "stonefist":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"stonefist"}}
+        "stonefist": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "stonefist" } }
         },
-        "stonefist_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"stonefist"}}
+        "stonefist_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "stonefist" } }
         },
-        "seismic_stomp":"SelfAoeDamage",
-        "eshaper_shardspray":"TargetDamage",
-        "eshaper_piercing_bolt":"TargetDamage",
-        "eshaper_shardstorm":"SelfAoeDamage",
-        "eshaper_rockbolt":"TargetDamage",
-        "earthshaper_stoneskin":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"aura_stoneskin"}}
+        "seismic_stomp": "SelfAoeDamage",
+        "recover_stamina": null,
+        "eshaper_shardspray": "TargetDamage",
+        "eshaper_piercing_bolt": "TargetDamage",
+        "eshaper_shardstorm": "SelfAoeDamage",
+        "eshaper_rockbolt": "TargetDamage",
+        "move_earth": null,
+        "create_rune_earthshaper": null,
+        "clairvoyance": null,
+        "earthshaper_stoneskin": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "aura_stoneskin" } }
         },
-        "earthshaper_stoneskin_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"aura_stoneskin"}}
+        "earthshaper_stoneskin_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "aura_stoneskin" } }
         },
-        "pertifying_touch":"TargetDamage",
-        "eshaper_impalement":"TargetDamage",
-        "eshaper_melee_damage":"BattleSelfBuff",
-        "eshaper_crystal_wrap":"BattleSelfBuff",
-        "shape_of_dust":"BattleSelfBuff"
+        "earthshaper_pillar": null,
+        "pertifying_touch": "TargetDamage",
+        "reactive_armor": null,
+        "eshaper_impalement": "TargetDamage",
+        "eshaper_spawn_tools": null,
+        "eshaper_melee_damage": "BattleSelfBuff",
+        "eshaper_crystal_wrap": "BattleSelfBuff",
+        "shape_of_dust": "BattleSelfBuff",
+        "summon_eshaper_golem": null,
+        "earthshaper_boulder": null,
+        "earthshaper_reveal_world_map": null,
+        "earthshaper_danger_sense": null,
+        "earthshaper_fortitude_of_stone": null,
+        "earthshaper_turning_of_earth": null,
+        "earthshaper_granite_aegis": null,
+        "earthshaper_harden_earth": null,
+        "earthshaper_sleep_in_earth": null,
+        "earthshaper_repair_metal_stone": null,
+        "earthshaper_diggable_teleport": null
     }
 }

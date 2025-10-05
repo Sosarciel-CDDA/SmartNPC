@@ -1,26 +1,52 @@
 {
     "require_mod": "magiclysm",
     "table": {
-        "bless":"BattleTargetBuff",
-        "holy_blade":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"longsword_holy"}}
+        "bless": "BattleTargetBuff",
+        "invisibility": null,
+        "holy_blade": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "longsword_holy" } }
         },
-        "holy_blade_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"longsword_holy"}}
+        "holy_blade_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "longsword_holy" } }
         },
-        "spirit_armor":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"armor_spirit"}}
+        "spirit_armor": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "armor_spirit" } }
         },
-        "spirit_armor_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"armor_spirit"}}
+        "spirit_armor_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "armor_spirit" } }
         },
-        "taze":"TargetDamage",
-        "synaptic_stimulation":"BattleSelfBuff",
-        "laze":"TargetDamage",
-        "animated_blade":"ControlCast"
+        "create_atomic_lamp": null,
+        "recover_bionic_power": null,
+        "create_rune_technomancer": null,
+        "taze": "TargetDamage",
+        "quantum_tunnel_lesser": null,
+        "synaptic_stimulation": "BattleSelfBuff",
+        "laze": "TargetDamage",
+        "animated_blade": "ControlCast",
+        "mirror_image": null,
+        "holographic_transposition": null,
+        "summon_floating_disk": null,
+        "summon_magic_motorcycle": null,
+        "summon_magic_comcycle": null,
+        "overcharge_eyes": null,
+        "x-ray": null,
+        "knock": null,
+        "improved_knock": null,
+        "technomancer_knifeshot": null,
+        "technomancer_knifeshot_superior": null,
+        "technomancer_robot_shutdown": null,
+        "technomancer_conjure_radio": null,
+        "technomancer_conjure_ups": null,
+        "technomancer_welder": null,
+        "technomancer_recharge_vehicle": null,
+        "technomancer_gain_electronics_computer_spell": null,
+        "technomancer_create_ups_connection": null,
+        "technomancer_far_sight": null,
+        "technomancer_far_sight_plus": null,
+        "technomancer_pain_ignore": null
     }
 }

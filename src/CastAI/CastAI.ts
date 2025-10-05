@@ -7,7 +7,7 @@ import { getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from
 import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
-import { ConcentratedAttack, getDefCastData } from "./DefCastCondition";
+import { ConcentratedAttack, getDefCastData } from "./CastCondition";
 import { createCastAITalkTopic } from "./TalkTopic";
 
 

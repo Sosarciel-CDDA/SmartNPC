@@ -1,30 +1,46 @@
 {
     "require_mod": "magiclysm",
     "table": {
-        "jolt":"TargetDamage",
-        "shocking_lash":"TargetDamage",
-        "lightning_bolt":"TargetDamage",
-        "windstrike":"TargetDamage",
-        "windrun":"BattleSelfBuff",
-        "lightning_blast":"TargetDamage",
-        "stormshaper_ionization":"TargetDamage",
-        "stormshaper_repelling_arc":"BattleSelfBuff",
-        "stormshaper_repelling_arc_plus":"BattleSelfBuff",
-        "stormfist":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"stormglove"}}
+        "jolt": "TargetDamage",
+        "shocking_lash": "TargetDamage",
+        "lightning_bolt": "TargetDamage",
+        "windstrike": "TargetDamage",
+        "windrun": "BattleSelfBuff",
+        "storm_hammer": null,
+        "storm_hammer_plus": null,
+        "create_rune_stormshaper": null,
+        "lightning_blast": "TargetDamage",
+        "lightning_storm": null,
+        "lightning_blast_from_storm": null,
+        "stormshaper_ionization": "TargetDamage",
+        "stormshaper_wall_of_fog": null,
+        "stormshaper_repelling_arc": "BattleSelfBuff",
+        "stormshaper_repelling_arc_plus": "BattleSelfBuff",
+        "stormfist": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "stormglove" } }
         },
-        "stormfist_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"stormglove"}}
+        "stormfist_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "stormglove" } }
         },
-        "storm_shipwrecker":"TargetDamage",
-        "explosive_decompression":"TargetDamage",
-        "vacuum_decompression":"TargetDamage",
-        "storm_superconductor":"SelfAoeDamage",
-        "toxtricity":"TargetDamage",
-        "electric_waves":"BattleSelfBuff",
-        "electric_arts":"BattleSelfBuff",
-        "stormshaper_heart_of_hurricane":"BattleSelfBuff"
+        "create_electric_lighter": null,
+        "storm_shipwrecker": "TargetDamage",
+        "explosive_decompression": "TargetDamage",
+        "vacuum_decompression": "TargetDamage",
+        "air_bubble": null,
+        "storm_superconductor": "SelfAoeDamage",
+        "shocking_dash": null,
+        "shocking_teleport": null,
+        "toxtricity": "TargetDamage",
+        "electric_eye": null,
+        "electric_waves": "BattleSelfBuff",
+        "electric_arts": "BattleSelfBuff",
+        "summon_teravolt": null,
+        "stormshaper_cloak_of_fog": null,
+        "stormshaper_heart_of_hurricane": "BattleSelfBuff",
+        "stormshaper_heart_of_hurricane_throw": null,
+        "stormshaper_cloak_of_frog": null,
+        "stormshaper_loud_voice_spell": null
     }
 }

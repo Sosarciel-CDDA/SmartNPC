@@ -1,65 +1,82 @@
 {
     "require_mod": "magiclysm",
     "table": {
-        "light_healing":{
-            "cast_condition":[{
+        "biomantic_pain_caused_light": null,
+        "light_healing": {
+            "cast_condition": [{
                 "hook": "BattleUpdate",
-                "condition": {"or":[
-                    {"math":["n_hp('torso')","<=","n_hp_max('torso')/3"]},
-                    {"math":["n_hp('head')" ,"<=","n_hp_max('head')/3" ]}
+                "condition": { "or": [
+                    { "math": ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                    { "math": ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
                 ]}
             },{
                 "hook": "SlowUpdate",
-                "condition": {"or":[
-                    {"math":["n_hp('torso')","<=","n_hp_max('torso')/3"]},
-                    {"math":["n_hp('head')" ,"<=","n_hp_max('head')/3" ]}
+                "condition": { "or": [
+                    { "math": ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                    { "math": ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
                 ]}
             }],
             "weight": -1
         },
-        "pain_split":{
-            "cast_condition":[{
+        "pain_split": {
+            "cast_condition": [ {
                 "hook": "BattleUpdate",
-                "condition": {"and":[
-                    {"math":["MaxHp()-MinHp()",">","max(AvgHp()/2, 10)"]},
-                    {"or":[
-                        {"math":["u_hp('torso')","<=","u_hp_max('torso')/3"]},
-                        {"math":["u_hp('head')" ,"<=","u_hp_max('head')/3" ]}
-                    ]}
-                ]}
-            },{
+                "condition": { "and": [
+                    { "math": ["MaxHp()-MinHp()", ">", "max(AvgHp()/2, 10)"] },
+                    { "or": [
+                        { "math": ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                        { "math": ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
+                    ] }
+                ] }
+            }, {
                 "hook": "SlowUpdate",
-                "condition": {"and":[
-                    {"math":["MaxHp()-MinHp()",">","max(AvgHp()/2, 10)"]},
-                    {"or":[
-                        {"math":["u_hp('torso')","<=","u_hp_max('torso')/3"]},
-                        {"math":["u_hp('head')" ,"<=","u_hp_max('head')/3" ]}
-                    ]}
-                ]}
-            }]
+                "condition": { "and": [
+                    { "math": ["MaxHp()-MinHp()", ">", "max(AvgHp()/2, 10)"] },
+                    { "or": [
+                        { "math": ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                        { "math": ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
+                    ] }
+                ] }
+            } ]
         },
-        "vicious_tentacle":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"tentacle_whip"}}
+        "vicious_tentacle": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "tentacle_whip" } }
         },
-        "vicious_tentacle_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"tentacle_whip"}}
+        "vicious_tentacle_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "tentacle_whip" } }
         },
-        "bio_grotesque":"BattleSelfBuff",
-        "bio_acidicspray":"TargetDamage",
-        "bio_bonespear":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"bonespear"}}
+        "bio_grotesque": "BattleSelfBuff",
+        "bio_acidicspray": "TargetDamage",
+        "bio_fleshpouch": null,
+        "bio_bonespear": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "bonespear" } }
         },
-        "bio_bonespear_plus":{
-            "type":"BattleSelfBuffCond",
-            "condition":{"not":{"u_has_item":"bonespear"}}
+        "bio_bonespear_plus": {
+            "type": "BattleSelfBuffCond",
+            "condition": { "not": { "u_has_item": "bonespear" } }
         },
-        "biomancer_paralytic_dart":"TargetDamage",
-        "biomancer_visceral_projection":"SelfAoeDamage",
-        "biomancer_coagulant_weave":"BattleSelfBuff",
-        "biomancer_caustic_aura":"BattleSelfBuff",
-        "biomancer_caustic_aura_plus":"BattleSelfBuff"
+        "create_rune_biomancer": null,
+        "biomancer_paralytic_dart": "TargetDamage",
+        "biomancer_visceral_projection": "SelfAoeDamage",
+        "biomancer_coagulant_weave": "BattleSelfBuff",
+        "biomancer_caustic_aura": "BattleSelfBuff",
+        "biomancer_caustic_aura_plus": "BattleSelfBuff",
+        "biomancer_swim_frog": null,
+        "biomancer_giant_growth": null,
+        "biomancer_remove_instability": null,
+        "biomancer_carrion_feast": null,
+        "biomancer_lashing_tentacles": null,
+        "biomancer_cure_disease_minor": null,
+        "biomancer_cure_disease_minor_actual_effect": null,
+        "biomancer_hyper_regeneration": null,
+        "biomancer_slow_bleeding": null,
+        "biomancer_scalpel_fingers": null,
+        "biomancer_caustic_blood": null,
+        "biomancer_eat_tons_of_food": null,
+        "biomancer_get_more_blood": null,
+        "biomancer_control_mutations": null
     }
 }

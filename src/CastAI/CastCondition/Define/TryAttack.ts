@@ -1,3 +1,4 @@
+import { BoolExpr } from "@sosarciel-cdda/schema";
 import { CastAIData } from "../../Interface";
 import { DefineCastCond, DefineCastCondFunc } from "../Interface";
 import { concentratedDamageCast, genEffectCond, randomDamageCast } from "../Util";
@@ -84,6 +85,29 @@ export const RangeTargetDamage:DefineCastCondFunc<RangeTargetDamage> = (data,spe
         },
         randomDamageCast(spell),
         concentratedDamageCast(spell),
+        {
+            hook:"None",
+            target:"control_cast",
+        }],
+        one_in_chance:2,
+    }
+    return dat;
+}
+
+
+/**条件触发的目标buff */
+export type TargetDebuffCond = DefineCastCond<"TargetDebuffCond",{
+    /**触发条件 u 为自身 n 为目标 */
+    condition:(BoolExpr);
+}>;
+export const TargetDebuffCond:DefineCastCondFunc<TargetDebuffCond> = (data,spell)=>{
+    const {condition} = data;
+    const dat:CastAIData = {
+        cast_condition:[{
+            hook:"TryAttack",
+        },
+        randomDamageCast(spell,condition),
+        concentratedDamageCast(spell,condition),
         {
             hook:"None",
             target:"control_cast",

@@ -1,7 +1,7 @@
 import { Inherit } from '.';
 import { ControlCast } from '.';
 import { ItemCast } from '.';
-import { MeleeTargetDamage, RangeTargetDamage, SelfAoeDamage, TargetDamage, TargetDebuff } from './TryAttack';
+import { MeleeTargetDamage, RangeTargetDamage, SelfAoeDamage, TargetDamage, TargetDebuff, TargetDebuffCond } from './TryAttack';
 import { AlawaySelfBuff, AlawaySelfBuffCond, AlawayTargetBuff, BattleSelfBuff, BattleSelfBuffCond, BattleTargetBuff, BattleTargetBuffCond } from './Update';
 
 export * from './Other';
@@ -25,6 +25,7 @@ export const CastCondFuncTable = {
     ItemCast,
     Inherit,
     ControlCast,
+    TargetDebuffCond,
 }
 
 /**施法条件数据表 */
@@ -44,4 +45,5 @@ export type CastCondDataTable = {
     ItemCast             : ItemCast             ;
     Inherit              : Inherit              ;
     ControlCast          : ControlCast          ;
+    TargetDebuffCond     : TargetDebuffCond     ;
 }
