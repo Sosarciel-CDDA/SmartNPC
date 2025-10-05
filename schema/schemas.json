@@ -1173,6 +1173,10 @@
 								"description": "条件触发的自身buff"
 							},
 							{
+								"$ref": "#/definitions/BattleSelfBuffCond",
+								"description": "条件触发的自身buff"
+							},
+							{
 								"$ref": "#/definitions/CastAIData",
 								"description": "施法数据"
 							},
@@ -1188,6 +1192,7 @@
 									"BattleTargetBuff",
 									"MeleeTargetDamage",
 									"RangeTargetDamage",
+									"SelfAoeDamage",
 									"TargetDamage"
 								],
 								"type": "string"
@@ -8870,6 +8875,7 @@
 				"BattleTargetBuff",
 				"MeleeTargetDamage",
 				"RangeTargetDamage",
+				"SelfAoeDamage",
 				"TargetDamage"
 			],
 			"type": "string"
@@ -8915,6 +8921,27 @@
 			"$ref": "#/definitions/__type_28"
 		},
 		"__type_29": {
+			"description": "条件触发的自身buff",
+			"type": "object",
+			"properties": {
+				"type": {
+					"type": "string",
+					"const": "BattleSelfBuffCond"
+				},
+				"condition": {
+					"$ref": "#/definitions/BoolExpr",
+					"description": "触发条件 u 为自身 n 不存在"
+				}
+			},
+			"required": [
+				"condition",
+				"type"
+			]
+		},
+		"BattleSelfBuffCond": {
+			"$ref": "#/definitions/__type_29"
+		},
+		"__type_30": {
 			"description": "施法数据",
 			"type": "object",
 			"properties": {
@@ -8932,7 +8959,7 @@
 						{
 							"type": "array",
 							"items": {
-								"$ref": "#/definitions/__type_30",
+								"$ref": "#/definitions/__type_31",
 								"description": "技能的释放条件"
 							}
 						}
@@ -15240,7 +15267,7 @@
 				}
 			]
 		},
-		"__type_30": {
+		"__type_31": {
 			"description": "技能的释放条件",
 			"type": "object",
 			"properties": {
@@ -20502,7 +20529,7 @@
 			],
 			"type": "string"
 		},
-		"__type_31": {
+		"__type_32": {
 			"description": "将当前任务判定为成功完成",
 			"type": "object",
 			"properties": {
@@ -20611,9 +20638,9 @@
 			]
 		},
 		"MissionSuccess": {
-			"$ref": "#/definitions/__type_31"
+			"$ref": "#/definitions/__type_32"
 		},
-		"__type_32": {
+		"__type_33": {
 			"description": "将当前任务判定为失败",
 			"type": "object",
 			"properties": {
@@ -20627,9 +20654,9 @@
 			]
 		},
 		"MissionFailure": {
-			"$ref": "#/definitions/__type_32"
+			"$ref": "#/definitions/__type_33"
 		},
-		"__type_33": {
+		"__type_34": {
 			"description": "清除角色已分配的任务",
 			"type": "object",
 			"properties": {
@@ -20643,9 +20670,9 @@
 			]
 		},
 		"ClearMission": {
-			"$ref": "#/definitions/__type_33"
+			"$ref": "#/definitions/__type_34"
 		},
-		"__type_34": {
+		"__type_35": {
 			"description": "发放任务奖励给玩家",
 			"type": "object",
 			"properties": {
@@ -20659,7 +20686,7 @@
 			]
 		},
 		"MissionReward": {
-			"$ref": "#/definitions/__type_34"
+			"$ref": "#/definitions/__type_35"
 		},
 		"Omit<{spawn_item:IDExpr<ItemID>;count?:NumberExpr|undefined;container?:IDExpr<ItemID>|undefined;use_item_group?:boolean|undefined;suppress_message?:boolean|undefined;force_equip?:boolean|undefined;flags?:FlagID[]|undefined;},\"spawn_item\">": {
 			"type": "object",
@@ -21604,7 +21631,7 @@
 		"{npc_spawn_item?:undefined;}": {
 			"type": "object"
 		},
-		"__type_35": {
+		"__type_36": {
 			"description": "NPC 将出售指定物品或数量的副本给你的角色，物品可放入容器中，并从 op_of_u.owed 中扣除 cost。\n如果 op_of_u.owed 小于 cost，将打开交易窗口，玩家需通过交易补足差额，否则 NPC 不会交付物品。",
 			"type": "object",
 			"properties": {
@@ -22203,7 +22230,7 @@
 				"u_buy_item"
 			]
 		},
-		"__type_36": {
+		"__type_37": {
 			"description": "内联EOC",
 			"type": "object",
 			"properties": {
@@ -27343,12 +27370,12 @@
 			]
 		},
 		"BuyItem": {
-			"$ref": "#/definitions/__type_35"
-		},
-		"InlineEoc": {
 			"$ref": "#/definitions/__type_36"
 		},
-		"__type_37": {
+		"InlineEoc": {
+			"$ref": "#/definitions/__type_37"
+		},
+		"__type_38": {
 			"description": "你的角色将物品或数量副本交给 NPC，并将 cost 加入 NPC 的 op_of_u.owed（如果指定）。\n如果未指定 cost，则角色无偿赠送物品。\n若角色没有足够数量的物品，该效果将失败，因此应提前检查。",
 			"type": "object",
 			"properties": {
@@ -27770,9 +27797,9 @@
 			]
 		},
 		"SellItem": {
-			"$ref": "#/definitions/__type_37"
+			"$ref": "#/definitions/__type_38"
 		},
-		"__type_38": {
+		"__type_39": {
 			"description": "从你的角色现金中扣除指定金额。\n负值表示角色获得现金。\n已弃用，NPC 不应再使用电子货币，仅使用个人债务与物品。\n如果成功花费现金，则执行 true_eocs 中的所有 effect_on_conditions，否则执行 false_eocs 中的所有条件。",
 			"type": "object",
 			"properties": {
@@ -28186,9 +28213,9 @@
 			]
 		},
 		"SpendCash": {
-			"$ref": "#/definitions/__type_38"
+			"$ref": "#/definitions/__type_39"
 		},
-		"__type_39": {
+		"__type_40": {
 			"description": "根据 mod_list 增加 NPC 对玩家的债务。例如以下配置将根据 NPC 的利他值和对玩家的评价值增加债务：",
 			"type": "object",
 			"properties": {
@@ -28318,7 +28345,7 @@
 			]
 		},
 		"AddDebt": {
-			"$ref": "#/definitions/__type_39"
+			"$ref": "#/definitions/__type_40"
 		},
 		"Omit<{consume_item:IDExpr<ItemID>;count?:NumberExpr|undefined;charges?:NumberExpr|undefined;popup?:boolean|undefined;},\"consume_item\">": {
 			"type": "object",
@@ -28523,7 +28550,7 @@
 		"{npc_remove_item_with?:undefined;}": {
 			"type": "object"
 		},
-		"__type_40": {
+		"__type_41": {
 			"description": "NPC 将给予你的角色指定数量的怪物作为宠物，并从 op_of_u.owed 中扣除 cost（如果指定）。\n如果 op_of_u.owed 小于 cost，将打开交易窗口，玩家需通过交易补足差额，否则 NPC 不会交付怪物。",
 			"type": "object",
 			"properties": {
@@ -28953,9 +28980,9 @@
 			]
 		},
 		"BuyMonster": {
-			"$ref": "#/definitions/__type_40"
+			"$ref": "#/definitions/__type_41"
 		},
-		"__type_41": {
+		"__type_42": {
 			"description": "NPC 会根据其角色向你提供一组盟友 NPC 的任务列表。",
 			"type": "object",
 			"properties": {
@@ -28969,7 +28996,7 @@
 			]
 		},
 		"CompanionMission": {
-			"$ref": "#/definitions/__type_41"
+			"$ref": "#/definitions/__type_42"
 		},
 		"Omit<{class_change:IDExpr<NpcClassID>;},\"class_change\">": {
 			"type": "object"
@@ -29285,7 +29312,7 @@
 		"{npc_faction_change?:undefined;}": {
 			"type": "object"
 		},
-		"__type_42": {
+		"__type_43": {
 			"description": "提升你在 NPC 当前阵营中的声望，若为负值则降低声望。",
 			"type": "object",
 			"properties": {
@@ -29299,9 +29326,9 @@
 			]
 		},
 		"FactionRep": {
-			"$ref": "#/definitions/__type_42"
+			"$ref": "#/definitions/__type_43"
 		},
-		"__type_43": {
+		"__type_44": {
 			"description": "切换一个布尔型 NPC 追随者 AI 规则的值，例如 \"use_silent\" 或 \"allow_bash\"。",
 			"type": "object",
 			"properties": {
@@ -29315,9 +29342,9 @@
 			]
 		},
 		"ToggleNpcRule": {
-			"$ref": "#/definitions/__type_43"
+			"$ref": "#/definitions/__type_44"
 		},
-		"__type_44": {
+		"__type_45": {
 			"description": "设置一个布尔型 NPC 追随者 AI 规则的值，例如 \"use_silent\" 或 \"allow_bash\"。",
 			"type": "object",
 			"properties": {
@@ -29331,9 +29358,9 @@
 			]
 		},
 		"SetNpcRule": {
-			"$ref": "#/definitions/__type_44"
+			"$ref": "#/definitions/__type_45"
 		},
-		"__type_45": {
+		"__type_46": {
 			"description": "清除一个布尔型 NPC 追随者 AI 规则的值，例如 \"use_silent\" 或 \"allow_bash\"。",
 			"type": "object",
 			"properties": {
@@ -29347,9 +29374,9 @@
 			]
 		},
 		"ClearNpcRule": {
-			"$ref": "#/definitions/__type_45"
+			"$ref": "#/definitions/__type_46"
 		},
-		"__type_46": {
+		"__type_47": {
 			"description": "将 NPC 追随者的交战距离规则设置为指定值。",
 			"type": "object",
 			"properties": {
@@ -29363,9 +29390,9 @@
 			]
 		},
 		"SetNpcEngagementRule": {
-			"$ref": "#/definitions/__type_46"
+			"$ref": "#/definitions/__type_47"
 		},
-		"__type_47": {
+		"__type_48": {
 			"description": "将 NPC 追随者的瞄准速度规则设置为指定值。",
 			"type": "object",
 			"properties": {
@@ -29379,7 +29406,7 @@
 			]
 		},
 		"SetNpcAimRule": {
-			"$ref": "#/definitions/__type_47"
+			"$ref": "#/definitions/__type_48"
 		},
 		"Omit<{set_goal?:AssignMissionTarget|undefined;true_eocs?:ParamsEoc|undefined;false_eocs?:ParamsEoc|undefined;},\"set_goal\">": {
 			"type": "object",
@@ -29795,7 +29822,7 @@
 				}
 			}
 		},
-		"__type_48": {
+		"__type_49": {
 			"description": "寻找大地图目标",
 			"type": "object",
 			"properties": {
@@ -30319,7 +30346,7 @@
 			]
 		},
 		"AssignMissionTarget": {
-			"$ref": "#/definitions/__type_48"
+			"$ref": "#/definitions/__type_49"
 		},
 		"{u_set_goal?:undefined;}": {
 			"type": "object"
@@ -30488,7 +30515,7 @@
 		"{npc_set_guard_pos?:undefined;}": {
 			"type": "object"
 		},
-		"__type_49": {
+		"__type_50": {
 			"description": "math赋值表达式",
 			"type": "object",
 			"properties": {
@@ -30521,9 +30548,9 @@
 			]
 		},
 		"MathAssignExp": {
-			"$ref": "#/definitions/__type_49"
+			"$ref": "#/definitions/__type_50"
 		},
-		"__type_50": {
+		"__type_51": {
 			"description": "播放声音效果\n从声音包中播放一个声音效果\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -30800,9 +30827,9 @@
 			]
 		},
 		"SoundEffect": {
-			"$ref": "#/definitions/__type_50"
+			"$ref": "#/definitions/__type_51"
 		},
-		"__type_51": {
+		"__type_52": {
 			"description": "打开对话\n在参与者之间打开一个对话; 这只应该在effect_on_conditions中使用, 而不是在实际的npc对话中\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -34872,7 +34899,7 @@
 			}
 		},
 		"OpenDialogue": {
-			"$ref": "#/definitions/__type_51"
+			"$ref": "#/definitions/__type_52"
 		},
 		"{take_control:ToFEffect;}": {
 			"type": "object",
@@ -38838,7 +38865,7 @@
 				}
 			}
 		},
-		"__type_52": {
+		"__type_53": {
 			"description": "授予成就\n将指定成就标记为完成\n适用于: Avatar",
 			"type": "object",
 			"properties": {
@@ -38852,9 +38879,9 @@
 			]
 		},
 		"GiveAchievement": {
-			"$ref": "#/definitions/__type_52"
+			"$ref": "#/definitions/__type_53"
 		},
-		"__type_53": {
+		"__type_54": {
 			"description": "分配任务\n将任务分配给玩家\n适用于: Avatar",
 			"type": "object",
 			"properties": {
@@ -39026,9 +39053,9 @@
 			]
 		},
 		"AssignMission": {
-			"$ref": "#/definitions/__type_53"
+			"$ref": "#/definitions/__type_54"
 		},
-		"__type_54": {
+		"__type_55": {
 			"description": "移除活动任务\n从玩家的活动任务列表中移除任务, 但不会导致任务失败\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -39042,9 +39069,9 @@
 			]
 		},
 		"RemoveActiveMission": {
-			"$ref": "#/definitions/__type_54"
+			"$ref": "#/definitions/__type_55"
 		},
-		"__type_55": {
+		"__type_56": {
 			"description": "完成任务\n以某种方式完成玩家拥有的任务\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -39067,9 +39094,9 @@
 			]
 		},
 		"FinishMission": {
-			"$ref": "#/definitions/__type_55"
+			"$ref": "#/definitions/__type_56"
 		},
-		"__type_56": {
+		"__type_57": {
 			"description": "提供任务\n将此任务添加到NPC可提供的任务列表中\n适用于: NPC",
 			"type": "object",
 			"properties": {
@@ -39180,9 +39207,9 @@
 			]
 		},
 		"OfferMission": {
-			"$ref": "#/definitions/__type_56"
+			"$ref": "#/definitions/__type_57"
 		},
-		"__type_57": {
+		"__type_58": {
 			"description": "运行EOCs\n运行另一个EOC. 可以是单独的EOC, 也可以是run_eocs效果内的内联EOC\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -41253,7 +41280,7 @@
 			]
 		},
 		"RunEocs": {
-			"$ref": "#/definitions/__type_57"
+			"$ref": "#/definitions/__type_58"
 		},
 		"Omit<{run_npc_eocs:ParamsEocList;unique_ids?:StringExpr|StringExpr[]|undefined;local?:boolean|undefined;npc_range?:NumberExpr|undefined;npc_must_see?:boolean|undefined;},\"run_npc_eocs\">": {
 			"type": "object",
@@ -45640,7 +45667,7 @@
 		"{npc_map_run_item_eocs?:undefined;}": {
 			"type": "object"
 		},
-		"__type_58": {
+		"__type_59": {
 			"description": "揭示地图\n揭示特定位置变量周围的地图区域\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -45660,9 +45687,9 @@
 			]
 		},
 		"RevealMap": {
-			"$ref": "#/definitions/__type_58"
+			"$ref": "#/definitions/__type_59"
 		},
-		"__type_59": {
+		"__type_60": {
 			"description": "揭示路线\n使用最近的道路揭示两个位置变量之间的路线\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -45753,9 +45780,9 @@
 			]
 		},
 		"RevealRoute": {
-			"$ref": "#/definitions/__type_59"
+			"$ref": "#/definitions/__type_60"
 		},
-		"__type_60": {
+		"__type_61": {
 			"description": "最近城市\n将附近最近城市的坐标存储在变量中\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -45774,9 +45801,9 @@
 			]
 		},
 		"ClosestCity": {
-			"$ref": "#/definitions/__type_60"
+			"$ref": "#/definitions/__type_61"
 		},
-		"__type_61": {
+		"__type_62": {
 			"description": "加权列表EOCs\n根据权重从列表中选择一个EOC激活\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -45830,9 +45857,9 @@
 			]
 		},
 		"WeightedListEocs": {
-			"$ref": "#/definitions/__type_61"
+			"$ref": "#/definitions/__type_62"
 		},
-		"__type_62": {
+		"__type_63": {
 			"description": "运行EOC选择器\n打开一个菜单, 允许选择多个选项之一\n适用于: Avatar",
 			"type": "object",
 			"properties": {
@@ -46018,7 +46045,7 @@
 			]
 		},
 		"RunEocSelector": {
-			"$ref": "#/definitions/__type_62"
+			"$ref": "#/definitions/__type_63"
 		},
 		"Omit<{roll_remainder?:StringExpr|StringExpr[]|undefined;type:IDExpr<\"spell\"|\"mutation\"|\"bionic\"|\"recipe\">;message?:StringExpr|undefined;true_eocs?:ParamsEoc|undefined;false_eocs?:ParamsEoc|undefined;},\"roll_remainder\">": {
 			"type": "object",
@@ -46828,7 +46855,7 @@
 		"{npc_roll_remainder?:undefined;}": {
 			"type": "object"
 		},
-		"__type_63": {
+		"__type_64": {
 			"description": "条件判断\n设置在条件满足和不满足时执行的效果\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -50789,9 +50816,9 @@
 			]
 		},
 		"IfCondition": {
-			"$ref": "#/definitions/__type_63"
+			"$ref": "#/definitions/__type_64"
 		},
-		"__type_64": {
+		"__type_65": {
 			"description": "开关语句\n检查值, 并根据它选择要运行的case\n适用于: Avatar Character NPC",
 			"type": "object",
 			"properties": {
@@ -50813,7 +50840,7 @@
 			]
 		},
 		"SwitchStatement": {
-			"$ref": "#/definitions/__type_64"
+			"$ref": "#/definitions/__type_65"
 		},
 		"{case:number;effect:\"follow\"|\"hostile\"|MissionSuccess|MissionFailure|ClearMission|MissionReward|\"lesser_give_aid\"|\"lesser_give_aid_all\"|\"give_aid\"|\"give_aid_all\"|\"buy_haircut\"|\"buy_shave\"|\"morale_chat\"|\"player_weapon_away\"|\"player_weapon_drop\"|\"start_trade\"|\"give_equipment\"|\"pick_style\"|\"npc_gets_item\"|\"npc_gets_item_to_use\"|SpawnItem|BuyItem|SellItem|BulkTradeAccept|BulkDonate|SpendCash|AddDebt|ConsumeItem|RemoveItemWith|BuyMonster|\"assign_guard\"|\"stop_guard\"|\"start_camp\"|\"distribute_food_auto\"|\"wake_up\"|\"reveal_stats\"|\"end_conversation\"|\"insult_combat\"|\"flee\"|\"leave\"|\"follow_only\"|\"stop_following\"|\"npc_thankful\"|\"drop_weapon\"|\"stranger_neutral\"|\"start_mugging\"|\"lead_to_safety\"|\"start_training\"|\"start_training_npc\"|\"start_training_seminar\"|CompanionMission|\"basecamp_mission\"|\"bionic_install\"|\"bionic_remove\"|ClassChange|FactionChange|FactionRep|ToggleNpcRule|SetNpcRule|ClearNpcRule|SetNpcEngagementRule|SetNpcAimRule|SetGoal|SetGuardPos|MathAssignExp|SoundEffect|OpenDialogue|TakeControl|\"take_control_menu\"|GiveAchievement|AssignMission|RemoveActiveMission|FinishMission|OfferMission|RunEocs|RunNpcEocs|RunMonsterEocs|RunInvEocs|MapRunEocs|MapRunItemEocs|RevealMap|RevealRoute|ClosestCity|WeightedListEocs|RunEocSelector|RollRemainder|IfCondition|SwitchStatement|ForEach|SetTalker|DealDamage|GetMutate|GetMutateCategory|MutateTowards|SetTraitPurifiability|AddEffect|AddBionic|LoseBionic|AddTrait|LoseEffect|LoseTrait|ActivateTrait|DeactivateTrait|LearnMartialArt|ForgetMartialArt|AddVar|LoseVar|CopyVar|SetStringVar|SetCondition|LearnRecipe|ForgetRecipe|AssignActivity|CancelActivity|LocationVariable|LocationVariableAdjust|BarberHair|BarberBeard|NpcFirstTopic|Teleport|AddWet|MakeSound|ModHealthy|AddMorale|LoseMorale|ConsumeItemSum|SetFacRelation|AddFactionTrust|Die|PreventDeath|Attack|CreateExplosion|Knockback|CastSpell|LevelSpellClass|QueryOmt|QueryTile|ChooseAdjacentHighlight|MirrorCoordinates|Message|SetFlag|UnsetFlag|Activate|SetFault|SetRandomFaultOfType|MapSpawnItem|MapgenUpdate|RevertLocation|AlterTimedEvents|\"lightning\"|\"next_weather\"|CustomLightLevel|TransformRadius|TransformLine|PlaceOverride|SpawnMonster|SpawnNpc|SetField|SetEmit|TurnCost|TransformItem|(\"follow\"|\"hostile\"|MissionSuccess|MissionFailure|ClearMission|MissionReward|\"lesser_give_aid\"|\"lesser_give_aid_all\"|\"give_aid\"|\"give_aid_all\"|\"buy_haircut\"|\"buy_shave\"|\"morale_chat\"|\"player_weapon_away\"|\"player_weapon_drop\"|\"start_trade\"|\"give_equipment\"|\"pick_style\"|\"npc_gets_item\"|\"npc_gets_item_to_use\"|SpawnItem|BuyItem|SellItem|BulkTradeAccept|BulkDonate|SpendCash|AddDebt|ConsumeItem|RemoveItemWith|BuyMonster|\"assign_guard\"|\"stop_guard\"|\"start_camp\"|\"distribute_food_auto\"|\"wake_up\"|\"reveal_stats\"|\"end_conversation\"|\"insult_combat\"|\"flee\"|\"leave\"|\"follow_only\"|\"stop_following\"|\"npc_thankful\"|\"drop_weapon\"|\"stranger_neutral\"|\"start_mugging\"|\"lead_to_safety\"|\"start_training\"|\"start_training_npc\"|\"start_training_seminar\"|CompanionMission|\"basecamp_mission\"|\"bionic_install\"|\"bionic_remove\"|ClassChange|FactionChange|FactionRep|ToggleNpcRule|SetNpcRule|ClearNpcRule|SetNpcEngagementRule|SetNpcAimRule|SetGoal|SetGuardPos|MathAssignExp|SoundEffect|OpenDialogue|TakeControl|\"take_control_menu\"|GiveAchievement|AssignMission|RemoveActiveMission|FinishMission|OfferMission|RunEocs|RunNpcEocs|RunMonsterEocs|RunInvEocs|MapRunEocs|MapRunItemEocs|RevealMap|RevealRoute|ClosestCity|WeightedListEocs|RunEocSelector|RollRemainder|IfCondition|SwitchStatement|ForEach|SetTalker|DealDamage|GetMutate|GetMutateCategory|MutateTowards|SetTraitPurifiability|AddEffect|AddBionic|LoseBionic|AddTrait|LoseEffect|LoseTrait|ActivateTrait|DeactivateTrait|LearnMartialArt|ForgetMartialArt|AddVar|LoseVar|CopyVar|SetStringVar|SetCondition|LearnRecipe|ForgetRecipe|AssignActivity|CancelActivity|LocationVariable|LocationVariableAdjust|BarberHair|BarberBeard|NpcFirstTopic|Teleport|AddWet|MakeSound|ModHealthy|AddMorale|LoseMorale|ConsumeItemSum|SetFacRelation|AddFactionTrust|Die|PreventDeath|Attack|CreateExplosion|Knockback|CastSpell|LevelSpellClass|QueryOmt|QueryTile|ChooseAdjacentHighlight|MirrorCoordinates|Message|SetFlag|UnsetFlag|Activate|SetFault|SetRandomFaultOfType|MapSpawnItem|MapgenUpdate|RevertLocation|AlterTimedEvents|\"lightning\"|\"next_weather\"|CustomLightLevel|TransformRadius|TransformLine|PlaceOverride|SpawnMonster|SpawnNpc|SetField|SetEmit|TurnCost|TransformItem)[];}": {
 			"type": "object",
@@ -54770,7 +54797,7 @@
 				"effect"
 			]
 		},
-		"__type_65": {
+		"__type_66": {
 			"description": "遍历列表\n在变量中存储特定列表的值, 并重复执行效果\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -56778,7 +56805,7 @@
 			"type": "string"
 		},
 		"ForEach": {
-			"$ref": "#/definitions/__type_65"
+			"$ref": "#/definitions/__type_66"
 		},
 		"Omit<{set_talker?:TalekrExpr|undefined;},\"set_talker\">": {
 			"type": "object"
@@ -60141,7 +60168,7 @@
 		"{npc_lose_var?:undefined;}": {
 			"type": "object"
 		},
-		"__type_66": {
+		"__type_67": {
 			"description": "复制变量\n读取变量的当前值并将其复制到另一个变量, 无论其类型如何\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -60272,9 +60299,9 @@
 			]
 		},
 		"CopyVar": {
-			"$ref": "#/definitions/__type_66"
+			"$ref": "#/definitions/__type_67"
 		},
-		"__type_67": {
+		"__type_68": {
 			"description": "设置字符串变量\n将set_string_var中的字符串存储在target_var变量对象中\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -60688,9 +60715,9 @@
 			]
 		},
 		"SetStringVar": {
-			"$ref": "#/definitions/__type_67"
+			"$ref": "#/definitions/__type_68"
 		},
-		"__type_68": {
+		"__type_69": {
 			"description": "设置条件\n使用条件创建上下文值, 可以使用get_condition传递给下一个主题或EoC.\n用于需要有数十个EoC但不想每次都复制粘贴其条件的情况 (也更容易维护或编辑一个条件, 而不是两打)\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -60709,7 +60736,7 @@
 			]
 		},
 		"SetCondition": {
-			"$ref": "#/definitions/__type_68"
+			"$ref": "#/definitions/__type_69"
 		},
 		"Omit<{learn_recipe:IDExpr<\"null\"|SchemaString|`RECIPE_${string}`|`ITEM_${string}`>;},\"learn_recipe\">": {
 			"type": "object"
@@ -62836,7 +62863,7 @@
 		"{npc_location_variable?:undefined;}": {
 			"type": "object"
 		},
-		"__type_69": {
+		"__type_70": {
 			"description": "调整位置变量\n允许调整由u_location_variable获得的位置值, 并共享相同的语法和规则\n适用于: Avatar Character NPC Monster Furniture Item Vehicle",
 			"type": "object",
 			"properties": {
@@ -63061,9 +63088,9 @@
 			]
 		},
 		"LocationVariableAdjust": {
-			"$ref": "#/definitions/__type_69"
+			"$ref": "#/definitions/__type_70"
 		},
-		"__type_70": {
+		"__type_71": {
 			"description": "NPC首个话题\n更改NPC在所有未来对话中的初始talk_topic\n适用于: NPC",
 			"type": "object",
 			"properties": {
@@ -63194,7 +63221,7 @@
 			]
 		},
 		"NpcFirstTopic": {
-			"$ref": "#/definitions/__type_70"
+			"$ref": "#/definitions/__type_71"
 		},
 		"Omit<{teleport:LocExpr;success_message?:StringExpr|undefined;fail_message?:StringExpr|undefined;force?:boolean|undefined;force_safe?:boolean|undefined;},\"teleport\">": {
 			"type": "object",
@@ -70253,7 +70280,7 @@
 		"{npc_set_random_fault_of_type?:undefined;}": {
 			"type": "object"
 		},
-		"__type_71": {
+		"__type_72": {
 			"description": "生成物品\n生成并放置物品\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -70628,9 +70655,9 @@
 			]
 		},
 		"MapSpawnItem": {
-			"$ref": "#/definitions/__type_71"
+			"$ref": "#/definitions/__type_72"
 		},
-		"__type_72": {
+		"__type_73": {
 			"description": "地图更新\n使用mapgen_update中描述的更改更新地图\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -71244,9 +71271,9 @@
 			]
 		},
 		"MapgenUpdate": {
-			"$ref": "#/definitions/__type_72"
+			"$ref": "#/definitions/__type_73"
 		},
-		"__type_73": {
+		"__type_74": {
 			"description": "恢复位置\n保存选定位置, 然后将其恢复到此状态\n通常用作带有\"time_in_future\": \"infinity\"的revert_location, 以保存位置的模型和某个键.\n然后使用mapgen_update来改变位置. 最后, 调用带有键的alter_timed_events来实际恢复位置.\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -71356,9 +71383,9 @@
 			]
 		},
 		"RevertLocation": {
-			"$ref": "#/definitions/__type_73"
+			"$ref": "#/definitions/__type_74"
 		},
-		"__type_74": {
+		"__type_75": {
 			"description": "改变定时事件\n所有具有此事件作为键的效果, 如果尚未触发, 将被触发\n通常与带有\"time_in_future\": \"infinite\"的mapgen_update或revert_location一起使用\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -71530,9 +71557,9 @@
 			]
 		},
 		"AlterTimedEvents": {
-			"$ref": "#/definitions/__type_74"
+			"$ref": "#/definitions/__type_75"
 		},
-		"__type_75": {
+		"__type_76": {
 			"description": "自定义光照级别\n设置世界的环境光一段时间, 忽略时间或太阳/月亮光\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -71642,7 +71669,7 @@
 			]
 		},
 		"CustomLightLevel": {
-			"$ref": "#/definitions/__type_75"
+			"$ref": "#/definitions/__type_76"
 		},
 		"Omit<{transform_radius:NumberExpr;ter_furn_transform:IDExpr<FurnitureID>;target_var?:LocExpr|undefined;time_in_future?:TimeExpr|undefined;key?:StringExpr|undefined;},\"transform_radius\">": {
 			"type": "object",
@@ -71997,7 +72024,7 @@
 		"{npc_transform_radius?:undefined;}": {
 			"type": "object"
 		},
-		"__type_76": {
+		"__type_77": {
 			"description": "转换线\n在两个坐标之间的线上转换地形, 家具, 场地或陷阱\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -72021,9 +72048,9 @@
 			]
 		},
 		"TransformLine": {
-			"$ref": "#/definitions/__type_76"
+			"$ref": "#/definitions/__type_77"
 		},
-		"__type_77": {
+		"__type_78": {
 			"description": "位置覆盖\n覆盖当前玩家位置一段时间或直到事件被调用\n适用于: 不需要talker",
 			"type": "object",
 			"properties": {
@@ -72133,7 +72160,7 @@
 			]
 		},
 		"PlaceOverride": {
-			"$ref": "#/definitions/__type_77"
+			"$ref": "#/definitions/__type_78"
 		},
 		"Omit<{spawn_monster:SchemaString|`MON_${string}`|`MONG_${string}`|MutatorsLocRelative|{global_val:string;}|{u_val:string;}|{npc_val:string;}|{context_val:string;}|{var_val:string;}|MutatorsMonFaction|MutatorsGameOption|MutatorsMaTechName|MutatorsMaTechDesc|MutatorsVaildTech|MutatorsTopicItem;real_count?:NumberExpr|undefined;hallucination_count?:NumberExpr|undefined;group?:boolean|undefined;single_target?:boolean|undefined;min_radius?:NumberExpr|undefined;max_radius?:NumberExpr|undefined;outdoor_only?:boolean|undefined;indoor_only?:boolean|undefined;open_air_allowed?:boolean|undefined;target_range?:NumberExpr|undefined;lifespan?:TimeExpr|undefined;target_var?:LocExpr|undefined;temporary_drop_items?:boolean|undefined;mon_variables?:{[k:string]:string|number|boolean;}|undefined;summoner_is_alpha?:boolean|undefined;summoner_is_beta?:boolean|undefined;spawn_message?:StringExpr|undefined;spawn_message_plural?:StringExpr|undefined;true_eocs?:ParamsEoc|undefined;false_eocs?:ParamsEoc|undefined;},\"spawn_monster\">": {
 			"type": "object",
@@ -75728,7 +75755,7 @@
 		"{npc_turn_cost?:undefined;}": {
 			"type": "object"
 		},
-		"__type_78": {
+		"__type_79": {
 			"description": "转换物品\n将beta talker (必须是物品) 转换为不同的物品, 可选择激活它.\n类似于\"transform\" use_action的工作方式.\n适用于: Avatar Character",
 			"type": "object",
 			"properties": {
@@ -75746,7 +75773,7 @@
 			]
 		},
 		"TransformItem": {
-			"$ref": "#/definitions/__type_78"
+			"$ref": "#/definitions/__type_79"
 		},
 		"ForeachTarget": {
 			"description": "遍历目标\n根据遍历类型变化",
@@ -75793,10 +75820,10 @@
 			]
 		},
 		"CastCond": {
-			"$ref": "#/definitions/__type_30"
+			"$ref": "#/definitions/__type_31"
 		},
 		"CastAIData": {
-			"$ref": "#/definitions/__type_29"
+			"$ref": "#/definitions/__type_30"
 		},
 		"Inherit": {
 			"description": "从基础继承",

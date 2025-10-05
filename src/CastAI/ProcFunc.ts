@@ -43,10 +43,10 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
     const fixedCond = concat(base_cond,[cast_condition.condition]);
 
-    //创建施法EOC 应与filter一样使用标记法术 待修改
-    const castEoc:Eoc={
+    //主逻辑eoc
+    const mainEoc:Eoc = {
         type:"effect_on_condition",
-        id:SADef.genEocID(`${uid}_Cast`),
+        id: SADef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
@@ -58,18 +58,7 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
-                loc:{global_val:"tmp_loc"}
             }
-        ],
-    }
-
-    //主逻辑eoc
-    const mainEoc:Eoc = {
-        type:"effect_on_condition",
-        id: SADef.genEocID(uid),
-        eoc_type:"ACTIVATION",
-        effect:[
-            {run_eocs:castEoc.id},
         ],
         condition:{and:[{ one_in_chance:one_in_chance??1 },...fixedCond]},
     }
@@ -82,7 +71,7 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
 
     // eff -> mainEoc -> (randomTargetMainSpell -> randomTargetSpell -> randomTargetEoc) -> castEoc
-    return [castEoc,mainEoc];
+    return [mainEoc];
 }
 
 async function randomProc(dm:DataManager,cpd:CastProcData){

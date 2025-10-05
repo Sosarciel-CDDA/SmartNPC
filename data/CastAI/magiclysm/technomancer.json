@@ -2,6 +2,30 @@
     "require_mod": "magiclysm",
     "table": {
         "bless":"BattleTargetBuff",
-        "synaptic_stimulation":"BattleSelfBuff"
+        "holy_blade":{
+            "type":"BattleSelfBuffCond",
+            "condition":{"u_has_item":"longsword_holy"}
+        },
+        "holy_blade_plus":{
+            "type":"BattleSelfBuffCond",
+            "condition":{"u_has_item":"longsword_holy"}
+        },
+        "spirit_armor":{
+            "type":"BattleSelfBuffCond",
+            "condition":{"u_has_item":"armor_spirit"}
+        },
+        "spirit_armor_plus":{
+            "type":"BattleSelfBuffCond",
+            "condition":{"u_has_item":"armor_spirit"}
+        },
+        "taze":"TargetDamage",
+        "synaptic_stimulation":"BattleSelfBuff",
+        "laze":"TargetDamage",
+        "animated_blade":{
+            "cast_condition":{
+                "target": "control_cast",
+                "hook": "None"
+            }
+        }
     }
 }

@@ -1,6 +1,14 @@
 {
     "require_mod": "magiclysm",
     "table": {
+        "magic_missile":"TargetDamage",
+        "gravity_well":"TargetDamage",
+        "magus_mana_blast":"TargetDamage",
+        "magus_mana_bolt":"TargetDamage",
+        "magus_haste":"BattleSelfBuff",
+        "magus_slow":"BattleTargetBuff",
+        "magus_baleful_polymorph":"BattleTargetBuff",
+        "magus_mana_beam":"TargetDamage",
         "cats_grace":{
             "cast_condition":{
                 "hook": "BattleUpdate",
@@ -45,14 +53,7 @@
                 ]}
             }
         },
-        "obfuscated_body":"BattleSelfBuff",
-        "obfuscated_body_plus":"BattleSelfBuff",
-        "magus_haste":"BattleSelfBuff",
-        "magic_missile":"TargetDamage",
-        "gravity_well":"TargetDamage",
-        "magus_mana_blast":"TargetDamage",
-        "magus_mana_bolt":"TargetDamage",
-        "magus_mana_beam":"TargetDamage",
-        "focused_bolt":"TargetDamage"
+        "focused_bolt":"TargetDamage",
+        "magus_ranged_increase":"TargetDamage"
     }
 }

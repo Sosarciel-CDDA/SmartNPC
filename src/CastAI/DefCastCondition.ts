@@ -15,6 +15,7 @@ const NoParamDefCastDataList = [
     "AlawaySelfBuff"         ,//常态自身buff
     "BattleTargetBuff"       ,//战斗目标buff
     "AlawayTargetBuff"       ,//常态目标buff
+    "SelfAoeDamage"          ,//自身半径AOE伤害
 ] as const;
 
 /**无参预定义的施法数据 */
@@ -42,6 +43,13 @@ type AlawaySelfBuffCond = {
     condition:(BoolExpr);
 }
 
+/**条件触发的自身buff */
+type BattleSelfBuffCond = {
+    type:"BattleSelfBuffCond";
+    /**触发条件 u 为自身 n 不存在 */
+    condition:(BoolExpr);
+}
+
 /**从基础继承 */
 type Inherit = {
     /**从基础继承 */
@@ -54,6 +62,7 @@ type Inherit = {
 type ParamCastData = [
     ItemCast,
     AlawaySelfBuffCond,
+    BattleSelfBuffCond,
     Inherit
 ][number];
 
@@ -125,6 +134,20 @@ const DefCastDataMap:{
             ? DefCastDataGener<undefined>
             : DefCastDataGener<Extract<DefCastData,{type:K}>>
 } = {
+    SelfAoeDamage(data,spell){
+        const dat:CastAIData = {
+            cast_condition:[{
+                hook:"TryMeleeAttack",
+                target:"raw",
+            },
+            {
+                hook:"None",
+                target:"control_cast",
+            }],
+            one_in_chance:2,
+        }
+        return dat;
+    },
     TargetDamage(data,spell){
         const dat:CastAIData = {
             cast_condition:[{
@@ -282,6 +305,19 @@ const DefCastDataMap:{
                 target:'raw',
                 force_vaild_target:['self'],
             }]
+        }
+    },
+    BattleSelfBuffCond(data,spell){
+        const {condition} = data;
+        return {
+            cast_condition:[{
+                condition:condition,
+                hook:"BattleUpdate",
+                target:'raw',
+                force_vaild_target:['self'],
+            }],
+            one_in_chance:2,
+            weight:1,
         }
     },
     Inherit(data,spell){
