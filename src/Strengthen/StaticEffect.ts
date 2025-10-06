@@ -9,10 +9,11 @@ const Courage:Effect={
     type:"effect_type",
     id:SADef.genEffectID("Courage"),
     name:["勇气"],
-    desc:["npc不会逃跑"],
+    desc:["NPC不会逃跑, 不会陷入攫抓状态"],
     removes_effects:[
         "npc_run_away",
-        "npc_flee_player"
+        "npc_flee_player",
+        "grabbed"
     ],
 }
 

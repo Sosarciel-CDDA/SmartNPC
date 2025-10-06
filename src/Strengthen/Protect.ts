@@ -1,5 +1,5 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { Effect, Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SADef } from "../Define";
 import { EOC_FULL_RECIVERY } from "@/src/Common";
 import { listCtor } from "../Utils";
@@ -23,6 +23,25 @@ const ProtectMut: Mutation = {
     type: "mutation",
     description: "在死亡时将会被传送至重生点",
 };
+
+
+/**复活虚弱 */
+const Weak:Effect={
+    type:"effect_type",
+    id:SADef.genEffectID(`${UID}_DeathRebirth_Weak`),
+    name:["复活虚弱"],
+    desc:["刚刚经历复活, 处于虚弱状态 四维属性与速度 -50%, 且无法被召集"],
+    enchantments:[{
+        condition:'ALWAYS',
+        values:[
+            { value:'STRENGTH'    , multiply:-0.5 },
+            { value:'DEXTERITY'   , multiply:-0.5 },
+            { value:'PERCEPTION'  , multiply:-0.5 },
+            { value:'INTELLIGENCE', multiply:-0.5 },
+            { value:'SPEED'       , multiply:-0.5 },
+        ],
+    }]
+}
 
 const npclist = listCtor({
     id:`${UID}_NpcList`,
@@ -68,7 +87,11 @@ export async function buildProtect(dm:DataManager){
         {run_eocs:{
             id:SADef.genEocID(`${UID}_GatherNpc_Sub`),
             eoc_type:"ACTIVATION",
-            effect:[{if:"u_is_npc",then:[{run_eocs:[teleportToPos.id]}]}]
+            effect:[{if:{and:[
+                "u_is_npc",{not:{u_has_effect:Weak.id}}
+            ]},then:[
+                {run_eocs:[teleportToPos.id]}
+            ]}]
         }, alpha_talker:{var_val:talkerPtr}},
     ]);
     const GatherNpcSpell:Spell = {
@@ -81,9 +104,6 @@ export async function buildProtect(dm:DataManager){
         valid_targets:['self'],
         shape:'blast',
         teachable:false,
-        energy_source:"STAMINA",
-        base_energy_cost:5000,
-        final_energy_cost:5000,
         flags:[...CON_SPELL_FLAG],
     }
 
@@ -113,6 +133,7 @@ export async function buildProtect(dm:DataManager){
 
     //死亡保护
     const RebirthEoc:Eoc=SADef.genActEoc(`${UID}_DeathRebirth`,[
+        {u_add_effect:Weak.id,duration:'4 h'},
         {run_eocs:[EOC_FULL_RECIVERY,teleportToSpawn.id]},
         {if:"u_is_npc",then:[ {math:[JM.npcTrust('u'),'=','100']} ]},
     ],{or:[
