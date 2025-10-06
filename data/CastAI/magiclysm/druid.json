@@ -16,8 +16,8 @@
             "condition": { "not": { "u_has_item": "druid_recurve" } }
         },
         "recover_sleepiness": null,
-        "summon_cats": "ControlCast",
-        "summon_bear": "ControlCast",
+        "summon_cats": "BattleSummonMonster",
+        "summon_bear": "BattleSummonMonster",
         "create_rune_druid": null,
         "purify_seed": null,
         "druidic_regrowth": null,
@@ -31,7 +31,7 @@
             "type": "BattleSelfBuffCond",
             "condition": { "not": { "u_has_item": "aura_feral" } }
         },
-        "summon_wolf_druid": "ControlCast",
+        "summon_wolf_druid": "BattleSummonMonster",
         "druid_natures_commune": null,
         "druid_growth": null,
         "cause_rot": null,
@@ -41,7 +41,7 @@
         "druid_bandage_heal": null,
         "druid_whisper_leaves": null,
         "druid_harvest_hunter": null,
-        "druid_summon_tanglevine": "ControlCast",
+        "druid_summon_tanglevine": "BattleSummonMonster",
         "druid_beguile_savage_beast": null,
         "druid_bramble_spear": {
             "type": "BattleSelfBuffCond",

@@ -1412,12 +1412,13 @@
 														"enum": [
 															"AlawaySelfBuff",
 															"AlawayTargetBuff",
+															"BattleSelfAoeDamage",
 															"BattleSelfBuff",
+															"BattleSummonMonster",
 															"BattleTargetBuff",
 															"ControlCast",
 															"MeleeTargetDamage",
 															"RangeTargetDamage",
-															"SelfAoeDamage",
 															"TargetDamage",
 															"TargetDebuff"
 														],
@@ -1594,12 +1595,13 @@
 														"enum": [
 															"AlawaySelfBuff",
 															"AlawayTargetBuff",
+															"BattleSelfAoeDamage",
 															"BattleSelfBuff",
+															"BattleSummonMonster",
 															"BattleTargetBuff",
 															"ControlCast",
 															"MeleeTargetDamage",
 															"RangeTargetDamage",
-															"SelfAoeDamage",
 															"TargetDamage",
 															"TargetDebuff"
 														],
@@ -1622,12 +1624,13 @@
 								"enum": [
 									"AlawaySelfBuff",
 									"AlawayTargetBuff",
+									"BattleSelfAoeDamage",
 									"BattleSelfBuff",
+									"BattleSummonMonster",
 									"BattleTargetBuff",
 									"ControlCast",
 									"MeleeTargetDamage",
 									"RangeTargetDamage",
-									"SelfAoeDamage",
 									"TargetDamage",
 									"TargetDebuff"
 								],

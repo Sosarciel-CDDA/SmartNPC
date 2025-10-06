@@ -1,8 +1,8 @@
 import { Inherit } from '.';
 import { ControlCast } from '.';
 import { ItemCast } from '.';
-import { MeleeTargetDamage, RangeTargetDamage, SelfAoeDamage, TargetDamage, TargetDebuff, TargetDebuffCond } from './TryAttack';
-import { AlawaySelfBuff, AlawaySelfBuffCond, AlawayTargetBuff, BattleSelfBuff, BattleSelfBuffCond, BattleTargetBuff, BattleTargetBuffCond } from './Update';
+import { MeleeTargetDamage, RangeTargetDamage, TargetDamage, TargetDebuff, TargetDebuffCond } from './TryAttack';
+import { AlawaySelfBuff, AlawaySelfBuffCond, AlawayTargetBuff, BattleSelfAoeDamage, BattleSelfBuff, BattleSelfBuffCond, BattleSummonMonster, BattleTargetBuff, BattleTargetBuffCond } from './Update';
 
 export * from './Other';
 export * from './TryAttack';
@@ -10,38 +10,44 @@ export * from './Update';
 
 /**施法条件函数表 */
 export const CastCondFuncTable = {
-    SelfAoeDamage,
-    TargetDamage,
-    TargetDebuff,
-    MeleeTargetDamage,
-    RangeTargetDamage,
-    BattleSelfBuff,
-    AlawaySelfBuff,
-    BattleTargetBuff,
-    AlawayTargetBuff,
-    AlawaySelfBuffCond,
-    BattleSelfBuffCond,
-    BattleTargetBuffCond,
-    ItemCast,
-    Inherit,
-    ControlCast,
-    TargetDebuffCond,
+    TargetDamage         ,
+    TargetDebuff         ,
+    MeleeTargetDamage    ,
+    RangeTargetDamage    ,
+    AlawaySelfBuff       ,
+
+    BattleSelfBuff       ,
+    AlawaySelfBuffCond   ,
+    BattleSelfBuffCond   ,
+    AlawayTargetBuff     ,
+    BattleTargetBuff     ,
+    BattleTargetBuffCond ,
+    BattleSelfAoeDamage  ,
+    BattleSummonMonster  ,
+
+    ItemCast             ,
+    Inherit              ,
+    ControlCast          ,
+    TargetDebuffCond     ,
 }
 
 /**施法条件数据表 */
 export type CastCondDataTable = {
-    SelfAoeDamage        : SelfAoeDamage        ;
     TargetDamage         : TargetDamage         ;
     TargetDebuff         : TargetDebuff         ;
     MeleeTargetDamage    : MeleeTargetDamage    ;
     RangeTargetDamage    : RangeTargetDamage    ;
-    BattleSelfBuff       : BattleSelfBuff       ;
+
     AlawaySelfBuff       : AlawaySelfBuff       ;
-    BattleTargetBuff     : BattleTargetBuff     ;
-    AlawayTargetBuff     : AlawayTargetBuff     ;
+    BattleSelfBuff       : BattleSelfBuff       ;
     AlawaySelfBuffCond   : AlawaySelfBuffCond   ;
     BattleSelfBuffCond   : BattleSelfBuffCond   ;
+    AlawayTargetBuff     : AlawayTargetBuff     ;
+    BattleTargetBuff     : BattleTargetBuff     ;
     BattleTargetBuffCond : BattleTargetBuffCond ;
+    BattleSelfAoeDamage  : BattleSelfAoeDamage  ;
+    BattleSummonMonster  : BattleSummonMonster  ;
+
     ItemCast             : ItemCast             ;
     Inherit              : Inherit              ;
     ControlCast          : ControlCast          ;

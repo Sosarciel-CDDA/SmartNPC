@@ -16,35 +16,35 @@
         "create_dream_dross"             : null,
         "banish_nether_monsters"         : null,
         "banish_dark_monsters"           : null,
-        "spell_summon_twin"              : null,
-        "spell_summon_twin_flood"        : null,
+        "spell_summon_twin"              : "BattleSummonMonster",
+        "spell_summon_twin_flood"        : "BattleSummonMonster",
         "spell_dreamer_clairvoyance"     : null,
         "spell_dreamer_clairvoyance_eff" : null,
-        "summon_shifter"                 : "ControlCast",
-        "summon_sapient_light"           : "ControlCast",
+        "summon_shifter"                 : "BattleSummonMonster",
+        "summon_sapient_light"           : "BattleSummonMonster",
         "make_constructed_hammer"        : null,
-        "summon_duplicator"              : "ControlCast",
+        "summon_duplicator"              : "BattleSummonMonster",
         "xedra_dreamer_time_bubble"      : null,
         "teleport_coin"                  : null,
-        "summon_ophanim"                 : "ControlCast",
+        "summon_ophanim"                 : "BattleSummonMonster",
         "summon_winch"                   : null,
         "summon_winch_item"              : null,
         "dreamer_artifact"               : null,
         "xedra_dreamer_generate_accelerated_time" : null,
         "spell_ethereal_wings"         :{
-            "type":"BattleSelfBuffCond",
+            "type":"AlawaySelfBuffCond",
             "condition":{"not":{"u_has_trait":"ethereal_wings"}}
         },
         "spell_karma_arms"             :{
-            "type":"BattleSelfBuffCond",
+            "type":"AlawaySelfBuffCond",
             "condition":{"not":{"u_has_trait":"karma_arms"}}
         },
         "spell_stalker_eyes"           :{
-            "type":"BattleSelfBuffCond",
+            "type":"AlawaySelfBuffCond",
             "condition":{"not":{"u_has_trait":"karstalker_eyesma_arms"}}
         },
         "spell_devil_tail"             :{
-            "type":"BattleSelfBuffCond",
+            "type":"AlawaySelfBuffCond",
             "condition":{"not":{"u_has_trait":"devil_tail"}}
         },
         "dreamer_lucid_dreams"         : null

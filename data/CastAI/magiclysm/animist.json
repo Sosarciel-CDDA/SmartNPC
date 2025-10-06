@@ -17,7 +17,7 @@
         "wrathful_spirits":"ControlCast",
         "spirit_walk": null,
         "banishment_lesser":"ControlCast",
-        "summon_wisps":"ControlCast",
+        "summon_wisps":"BattleSummonMonster",
         "bleed":"TargetDamage",
         "animist_summon_decaying_boneclub":{
             "type":"BattleSelfBuffCond",

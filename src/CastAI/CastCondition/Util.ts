@@ -62,9 +62,9 @@ export const concentratedDamageCast = (spell:Spell,cond?:BoolExpr):CastCond=>{
 };
 
 //生成buff条件
-export const genEffectCond = (spell:Spell)=>{
+export const genEffectCond = (talker:'u'|'n',spell:Spell)=>{
     const affbps = spell.affected_body_parts;
     return (affbps==undefined
-        ? {math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]}
-        : {or:affbps.map(bp=>({math:[`n_effect_intensity('${spell.effect_str}', 'bodypart': '${bp}')`,"<","1"]}))}) satisfies BoolExpr;
+        ? {math:[`${talker}_effect_intensity('${spell.effect_str}')`,"<","1"]}
+        : {or:affbps.map(bp=>({math:[`${talker}_effect_intensity('${spell.effect_str}', 'bodypart': '${bp}')`,"<","1"]}))}) satisfies BoolExpr;
 }

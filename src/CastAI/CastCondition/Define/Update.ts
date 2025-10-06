@@ -1,17 +1,19 @@
-import { BoolExpr } from "@sosarciel-cdda/schema";
+import { BoolExpr, JM } from "@sosarciel-cdda/schema";
 import { CastAIData } from "../../Interface";
 import { DefineCastCond, DefineCastCondFunc } from "../Interface";
 import { concentratedDamageCast, genEffectCond, randomDamageCast } from "../Util";
+import { getAoeExpr } from "../../UtilFunc";
 
+//#region 自身buff
 
 /**战斗自身buff */
 export type BattleSelfBuff = DefineCastCond<"BattleSelfBuff">;
 export const BattleSelfBuff:DefineCastCondFunc<BattleSelfBuff> = (data,spell)=>{
     const dat:CastAIData = {
         cast_condition:{
-            condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
+            condition:genEffectCond('u',spell),
             hook:"BattleUpdate",
-            target:'random',
+            target:'raw',
             force_vaild_target:['self'],
         },
         one_in_chance:2,
@@ -25,12 +27,12 @@ export type AlawaySelfBuff = DefineCastCond<"AlawaySelfBuff">;
 export const AlawaySelfBuff:DefineCastCondFunc<AlawaySelfBuff> = (data,spell)=>{
     const dat:CastAIData = {
         cast_condition:[{
-            condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
+            condition:genEffectCond('u',spell),
             hook:"BattleUpdate",
             target:'raw',
             force_vaild_target:['self'],
         },{
-            condition:{math:[`u_effect_intensity('${spell.effect_str}')`,"<","1"]},
+            condition:genEffectCond('u',spell),
             hook:"SlowUpdate",
             target:'raw',
             force_vaild_target:['self'],
@@ -41,12 +43,60 @@ export const AlawaySelfBuff:DefineCastCondFunc<AlawaySelfBuff> = (data,spell)=>{
     return dat;
 }
 
+/**条件触发的常态自身buff */
+export type AlawaySelfBuffCond = DefineCastCond<"AlawaySelfBuffCond",{
+    /**触发条件 u 为自身 n 不存在 */
+    condition:(BoolExpr)
+}>;
+export const AlawaySelfBuffCond:DefineCastCondFunc<AlawaySelfBuffCond> = (data,spell)=>{
+    const {condition} = data;
+    return {
+        cast_condition:[{
+            condition:condition,
+            hook:"BattleUpdate",
+            target:'raw',
+            force_vaild_target:['self'],
+        },{
+            condition:condition,
+            hook:"SlowUpdate",
+            target:'raw',
+            force_vaild_target:['self'],
+        }],
+        one_in_chance:2,
+        weight:1,
+    }
+}
+
+/**条件触发的战斗自身buff */
+export type BattleSelfBuffCond = DefineCastCond<"BattleSelfBuffCond",{
+    /**触发条件 u 为自身 n 不存在 */
+    condition:(BoolExpr)
+}>;
+export const BattleSelfBuffCond:DefineCastCondFunc<BattleSelfBuffCond> = (data,spell)=>{
+    const {condition} = data;
+    return {
+        cast_condition:[{
+            condition:condition,
+            hook:"BattleUpdate",
+            target:'raw',
+            force_vaild_target:['self'],
+        }],
+        one_in_chance:2,
+        weight:1,
+    }
+}
+
+//#endregion
+
+
+//#region 目标buff
+
 /**战斗目标buff */
 export type BattleTargetBuff = DefineCastCond<"BattleTargetBuff">;
 export const BattleTargetBuff:DefineCastCondFunc<BattleTargetBuff> = (data,spell)=>{
     const dat:CastAIData = {
         cast_condition:[{
-            condition:genEffectCond(spell),
+            condition:genEffectCond('n',spell),
             hook:"BattleUpdate",
             target:"filter_random"
         },{
@@ -64,11 +114,11 @@ export type AlawayTargetBuff = DefineCastCond<"AlawayTargetBuff">;
 export const AlawayTargetBuff:DefineCastCondFunc<AlawayTargetBuff> = (data,spell)=>{
     const dat:CastAIData = {
         cast_condition:[{
-            condition:{math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]},
+            condition:genEffectCond('n',spell),
             hook:"BattleUpdate",
             target:"filter_random"
         },{
-            condition:{math:[`n_effect_intensity('${spell.effect_str}')`,"<","1"]},
+            condition:genEffectCond('n',spell),
             hook:"SlowUpdate",
             target:"filter_random"
         },{
@@ -81,49 +131,7 @@ export const AlawayTargetBuff:DefineCastCondFunc<AlawayTargetBuff> = (data,spell
     return dat;
 }
 
-/**条件触发的自身buff */
-export type AlawaySelfBuffCond = DefineCastCond<"AlawaySelfBuffCond",{
-    /**触发条件 u 为自身 n 不存在 */
-    condition:BoolExpr
-}>;
-export const AlawaySelfBuffCond:DefineCastCondFunc<AlawaySelfBuffCond> = (data,spell)=>{
-    const {condition} = data;
-    return {
-        cast_condition:[{
-            condition:condition,
-            hook:"BattleUpdate",
-            target:'raw',
-            force_vaild_target:['self'],
-        },{
-            condition:condition,
-            hook:"SlowUpdate",
-            target:'raw',
-            force_vaild_target:['self'],
-        }]
-    }
-}
-
-
-/**条件触发的自身buff */
-export type BattleSelfBuffCond = DefineCastCond<"BattleSelfBuffCond",{
-    /**触发条件 u 为自身 n 不存在 */
-    condition:BoolExpr
-}>;
-export const BattleSelfBuffCond:DefineCastCondFunc<BattleSelfBuffCond> = (data,spell)=>{
-    const {condition} = data;
-    return {
-        cast_condition:[{
-            condition:condition,
-            hook:"BattleUpdate",
-            target:'raw',
-            force_vaild_target:['self'],
-        }],
-        one_in_chance:2,
-        weight:1,
-    }
-}
-
-/**条件触发的目标buff */
+/**条件触发的战斗目标buff */
 export type BattleTargetBuffCond = DefineCastCond<"BattleTargetBuffCond",{
     /**触发条件 u 为自身 n 为目标 */
     condition:BoolExpr
@@ -143,4 +151,52 @@ export const BattleTargetBuffCond:DefineCastCondFunc<BattleTargetBuffCond> = (da
         weight:1,
     }
     return dat;
+}
+
+//#endregion
+
+
+/**自身半径AOE伤害 */
+export type BattleSelfAoeDamage = DefineCastCond<"BattleSelfAoeDamage">;
+export const BattleSelfAoeDamage:DefineCastCondFunc<BattleSelfAoeDamage> = (data,spell)=>{
+    const aoeexpr = getAoeExpr(spell);
+    const dat:CastAIData = {
+        cast_condition:[{
+            hook:"BattleUpdate",
+            target:"raw",
+            condition:{math:[
+                JM.monstersNearby('u',[],{radius:`(${aoeexpr}) / 2`,attitude:'hostile'}),'>=','1'
+            ]}
+        },
+        {
+            hook:"None",
+            target:"control_cast",
+        }],
+        one_in_chance:2,
+    }
+    return dat;
+}
+
+//战斗距离
+const BattleRange = 20;
+/**召唤怪物 */
+export type BattleSummonMonster = DefineCastCond<"BattleSummonMonster">;
+export const BattleSummonMonster:DefineCastCondFunc<BattleSummonMonster> = (data,spell)=>{
+    const {effect,effect_str} = spell;
+    if(effect!='summon')
+        throw `${spell.name} 不是召唤效果, 不能使用BattleSummonMonster, 考虑BattleSummonMonsterCond`;
+    return {
+        cast_condition:[{
+            hook:"None",
+            target:"control_cast",
+        },{
+            hook:"BattleUpdate",
+            target:"raw",
+            condition:{math:[
+                JM.monstersNearby('u',[`'${effect_str}'`],{radius:`${BattleRange}`,attitude:'friendly'}),'<=','0'
+            ]},
+        }],
+        one_in_chance:2,
+    }
+
 }
