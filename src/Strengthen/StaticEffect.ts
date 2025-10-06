@@ -11,9 +11,9 @@ const Courage:Effect={
     name:["勇气"],
     desc:["NPC不会逃跑, 不会陷入攫抓状态"],
     removes_effects:[
-        "npc_run_away",
+        "npc_run_away"   ,//移除逃跑
         "npc_flee_player",
-        "grabbed"
+        "grabbed"        ,//移除攫抓
     ],
 }
 
@@ -31,11 +31,11 @@ const SmartNpcMut:Mutation={
     enchantments:[{
         condition:'ALWAYS',
         values:[
-            { value:'AVOID_FRIENDRY_FIRE', add:1 },
-            { value:'PAIN'        , multiply:-1  },//移除疼痛
-            { value:'PAIN_REMOVE' , multiply:10  },
-            { value:'MAX_MANA'    , add:10000    },//模拟耐力
-            { value:'REGEN_MANA'  , multiply:0.5 },
+            { value:'AVOID_FRIENDRY_FIRE', add:1  },
+            { value:'PAIN'        , multiply:-1   },//移除疼痛
+            { value:'PAIN_REMOVE' , multiply:10   },
+            { value:'MAX_MANA'    , add:5000      },//模拟耐力补正
+            { value:'REGEN_MANA'  , multiply:0.25 },
         ],
         ench_effects:[{
             effect:Courage.id,
