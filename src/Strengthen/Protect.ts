@@ -214,7 +214,7 @@ export async function buildProtect(dm:DataManager){
     //#endregion
 
     dm.addData([
-        ProtectMut,
+        ProtectMut,Weak,
         teleportToSpawn,teleportToPos,RebirthEoc,
         SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
         GatherNpcEoc,GatherNpcSpell,

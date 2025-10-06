@@ -92,10 +92,10 @@ async function createSkillResp(dm:DataManager){
             },
             effect:{
                 if:{math:[nStopVar,"==","1"]},
-                else:[{math:[nStopVar,"=","0"]}],
-                then:[{math:[nStopVar,"=","1"]}],
+                then:[{math:[nStopVar,"=","0"]}],
+                else:[{math:[nStopVar,"=","1"]}],
             },
-            topic:"TALK_NONE",
+            topic:skillTalkTopicId,
         }
         skillRespList.push(resp);
     }
@@ -104,10 +104,10 @@ async function createSkillResp(dm:DataManager){
     const skillTalkTopic:TalkTopic={
         type:"talk_topic",
         id:skillTalkTopicId,
-        dynamic_line:"&",
+        dynamic_line:"&<mypronoun>应该做些什么？",
         responses:[...skillRespList,{
             text: "Never mind.",
-            topic: "TALK_NONE"
+            topic: "TALK_DONE"
         }]
     }
 
