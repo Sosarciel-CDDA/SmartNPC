@@ -21,8 +21,8 @@ const SmartNpcMut:Mutation={
     type:'mutation',
     id:SADef.genMutationID('SmartNpc'),
     flags:['NO_SPELLCASTING','NO_PSIONICS'] as any,//关闭自动施法
-    name:"Npc属性优化",
-    description:"Npc属性优化",
+    name:"NPC属性优化",
+    description:"NPC属性优化",
     points:0,
     purifiable:false,
     valid:false,
@@ -63,9 +63,10 @@ const talkTopic:TalkTopic={
 export async function buildStaticEffect(dm:DataManager){
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
         {u_add_trait:SmartNpcMut.id},
-    ],'u_is_npc');
+    ],{and:["u_is_npc",{not:{u_has_trait:SmartNpcMut.id}}]});
     dm.addInvokeID('Init',0,initNpcStrength.id);
     dm.addInvokeID('EnterBattle',0,initNpcStrength.id);
+    dm.addInvokeID('SlowUpdate' ,0 ,initNpcStrength.id);
 
     const removeAvatarStrength = SADef.genActEoc('removeAvatarStrength',[
         {u_lose_effect:Courage.id},
