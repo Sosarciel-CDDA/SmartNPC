@@ -165,7 +165,7 @@ export const BattleSelfAoeDamage:DefineCastCondFunc<BattleSelfAoeDamage> = (data
             hook:"BattleUpdate",
             target:"raw",
             condition:{math:[
-                JM.monstersNearby('u',[],{radius:`(${aoeexpr}) / 2`,attitude:'hostile'}),'>=','1'
+                JM.monstersNearby('u',[],{radius:`(${aoeexpr}) / 2`,attitude:"'hostile'"}),'>=','1'
             ]}
         },
         {
