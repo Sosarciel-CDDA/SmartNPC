@@ -12,6 +12,7 @@
             },{
                 "hook": "SlowUpdate",
                 "condition": { "or": [
+                    { "math": ["N_SumMaxHp()-N_SumHp()", ">", "10"] },
                     { "math": ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
                     { "math": ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
                 ]}
@@ -22,7 +23,7 @@
             "cast_condition": [ {
                 "hook": "BattleUpdate",
                 "condition": { "and": [
-                    { "math": ["MaxHp()-MinHp()", ">", "max(AvgHp()/2, 10)"] },
+                    { "math": ["U_MaxHp()-U_MinHp()", ">", "max(U_AvgHp()/2, 10)"] },
                     { "or": [
                         { "math": ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
                         { "math": ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
@@ -31,7 +32,7 @@
             }, {
                 "hook": "SlowUpdate",
                 "condition": { "and": [
-                    { "math": ["MaxHp()-MinHp()", ">", "max(AvgHp()/2, 10)"] },
+                    { "math": ["U_MaxHp()-U_MinHp()", ">", "max(U_AvgHp()/2, 10)"] },
                     { "or": [
                         { "math": ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
                         { "math": ["u_hp('head')", "<=", "u_hp_max('head')/3"] }

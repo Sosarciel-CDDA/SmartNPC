@@ -1,45 +1,123 @@
 import { DataManager } from "@sosarciel-cdda/event"
-import { MathFunction, MathFunctionID } from "@sosarciel-cdda/schema"
+import { JM, MathFunction, MathFunctionID } from "@sosarciel-cdda/schema"
 
 
+
+const replaceFron = (arg:{
+    id:string,
+    from:MathFunction,
+    source:RegExp,
+    traget:string,
+})=>{
+    const {from,id,source,traget} = arg;
+    return {
+        ...from, id,
+        return:from.return.replace(source,traget)
+    }
+}
+
+const ReplaceUHP = {
+    source:/u_hp/,
+    traget:'n_hp',
+}
+
+const ReplaceUHPMax = {
+    source:/u_hp_max/,
+    traget:'n_hp_max',
+}
 
 export async function createMathFunc(dm:DataManager){
     /**血量总和  
      * function()  
      */
-    const SumHp:MathFunction={
+    const USumHp:MathFunction={
         type:"jmath_function",
-        id:"SumHp" as MathFunctionID,
+        id:"U_SumHp" as MathFunctionID,
         num_args: 0,
         return:"u_hp('torso') + u_hp('head') + u_hp('leg_l') + u_hp('leg_r') + u_hp('arm_l') + u_hp('arm_r')"
     }
+    /**血量总和  
+     * function()  
+     */
+    const NSumHp=replaceFron({
+        id:"N_SumHp",
+        from:USumHp,
+        ...ReplaceUHP,
+    })
+
+    /**最大血量总和  
+     * function()  
+     */
+    const USumMaxHp:MathFunction={
+        type:"jmath_function",
+        id:"U_SumMaxHp" as MathFunctionID,
+        num_args: 0,
+        return:"u_hp_max('torso') + u_hp_max('head') + u_hp_max('leg_l') + u_hp_max('leg_r') + u_hp_max('arm_l') + u_hp_max('arm_r')"
+    }
+    /**最大血量总和  
+     * function()  
+     */
+    const NSumMaxHp=replaceFron({
+        id:"N_SumMaxHp",
+        from:USumMaxHp,
+        ...ReplaceUHPMax,
+    });
+
+
     /**平均血量  
      * function()  
      */
-    const AvgHp:MathFunction={
+    const UAvgHp:MathFunction={
         type:"jmath_function",
-        id:"AvgHp" as MathFunctionID,
+        id:"U_AvgHp" as MathFunctionID,
         num_args: 0,
-        return:"SumHp()/6"
+        return:`${USumHp.id}()/6`
+    }
+    const NAvgHp:MathFunction={
+        type:"jmath_function",
+        id:"N_AvgHp" as MathFunctionID,
+        num_args: 0,
+        return:`${NSumHp.id}()/6`
+    }
+
+
+    /**最低血量  
+     * function()  
+     */
+    const UMinHp:MathFunction={
+        type:"jmath_function",
+        id:"U_MinHp" as MathFunctionID,
+        num_args: 0,
+        return:"min(u_hp('torso') , u_hp('head') , u_hp('leg_l') , u_hp('leg_r') , u_hp('arm_l') , u_hp('arm_r'))"
     }
     /**最低血量  
      * function()  
      */
-    const MinHp:MathFunction={
+    const NMinHp=replaceFron({
+        id:"N_MinHp",
+        from:UMinHp,
+        ...ReplaceUHP,
+    });
+
+
+    /**最高血量  
+     * function()  
+     */
+    const UMaxHp:MathFunction={
         type:"jmath_function",
-        id:"MinHp" as MathFunctionID,
+        id:"U_MaxHp" as MathFunctionID,
         num_args: 0,
-        return:"min(u_hp('torso') , u_hp('head') , u_hp('leg_l') , u_hp('leg_r') , u_hp('arm_l') , u_hp('arm_r'))"
+        return:"max(u_hp('torso') , u_hp('head') , u_hp('leg_l') , u_hp('leg_r') , u_hp('arm_l') , u_hp('arm_r'))"
     }
     /**最高血量  
      * function()  
      */
-    const MaxHp:MathFunction={
-        type:"jmath_function",
-        id:"MaxHp" as MathFunctionID,
-        num_args: 0,
-        return:"max(u_hp('torso') , u_hp('head') , u_hp('leg_l') , u_hp('leg_r') , u_hp('arm_l') , u_hp('arm_r'))"
-    }
+    const NMaxHp=replaceFron({
+        id:"N_MaxHp",
+        from:UMaxHp,
+        ...ReplaceUHP,
+    });
+
     /**根据专注调整经验值 */
     const UAdjForFocus:MathFunction={
         type:"jmath_function",
@@ -81,7 +159,11 @@ export async function createMathFunc(dm:DataManager){
         "return": "_0 - (((((u_proficiency('prof_magic_enhancement_beginner', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_apprentice', 'format': 'percent') * 1) / 10) + ((u_proficiency('prof_magic_enhancement_master', 'format': 'percent') * 1) / 10))) * _1 )"
     }
     dm.addData([
-        SumHp,AvgHp,MinHp,MaxHp,
+        USumHp, NSumHp,
+        USumMaxHp,NSumMaxHp,
+        UAvgHp,NAvgHp,
+        UMinHp,NMinHp,
+        UMaxHp,NMaxHp,
         UAdjForFocus,NAdjForFocus,
         USpellCastExp,NSpellCastExp,
         ProfBonusCalc,ProfNegCalc

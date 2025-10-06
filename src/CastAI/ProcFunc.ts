@@ -240,8 +240,8 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     const filterTargetSpell:Spell = {
         id:SADef.genSpellID(`${uid}_FilterTarget`),
         type:"SPELL",
-        name:`${spell.id}_筛选索敌`,
-        description:`${spell.id}的筛选索敌法术`,
+        name:await awt`${zh(spell.name)}_筛选索敌`,
+        description:await awt`${zh(spell.name)}的筛选索敌法术`,
         teachable:false,
         effect:"effect_on_condition",
         effect_str:filterTargetEoc.id,
