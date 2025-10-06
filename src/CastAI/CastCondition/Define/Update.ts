@@ -193,7 +193,7 @@ export const BattleSummonMonster:DefineCastCondFunc<BattleSummonMonster> = (data
             hook:"BattleUpdate",
             target:"raw",
             condition:{math:[
-                JM.monstersNearby('u',[`'${effect_str}'`],{radius:`${BattleRange}`,attitude:'friendly'}),'<=','0'
+                JM.monstersNearby('u',[`'${effect_str}'`],{radius:`${BattleRange}`,attitude:"'friendly'"}),'<=','0'
             ]},
         }],
         one_in_chance:2,
