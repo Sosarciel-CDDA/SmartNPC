@@ -29,7 +29,7 @@
         "explosive_decompression": "TargetDamage",
         "vacuum_decompression": "TargetDamage",
         "air_bubble": null,
-        "storm_superconductor": "SelfAoeDamage",
+        "storm_superconductor": "BattleSelfAoeDamage",
         "shocking_dash": null,
         "shocking_teleport": null,
         "toxtricity": "TargetDamage",

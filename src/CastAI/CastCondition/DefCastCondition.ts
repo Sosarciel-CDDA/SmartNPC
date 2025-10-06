@@ -20,6 +20,6 @@ export function getDefCastData(data:DefCastData|CastAIData,spellid:SpellID):Cast
 
     if(dtype==undefined) return data as any;
 
-    const gener = (CastCondFuncTable as any)[dtype as any] as any;
+    const gener = (CastCondFuncTable)[dtype as keyof typeof CastCondFuncTable] as any;
     return gener(data,getSpellByID(spellid));
 }
