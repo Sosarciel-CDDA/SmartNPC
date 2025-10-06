@@ -1,5 +1,5 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Effect, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { Effect, Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SADef } from "@/src/Define";
 import { CombatRuleTopicID } from "@/src/Define";
 
@@ -60,6 +60,25 @@ const talkTopic:TalkTopic={
 }
 
 
+//定期清空需求值
+const resetNeed:Eoc = {
+    id:SADef.genEocID('ResetNeed'),
+    type:"effect_on_condition",
+    eoc_type:"RECURRING",
+    recurrence: '12 h',
+    effect:[
+        { math: [JM.vitamin('u',`'redcells'`),'=','0'] },
+        { math: [JM.vitamin('u',`'bad_food'`),'=','0'] },
+        { math: [JM.vitamin('u',`'blood'`),'=','0'] },
+        { math: [JM.vitamin('u',`'instability`),'=','0'] },
+        { math: [JM.val('u',`'hunger'`),'=','0'] },
+        { math: [JM.val('u',`'thirst'`),'=','0'] },
+        { math: [JM.val('u',`'sleepiness'`),'=','0'] },
+        { math: [JM.val('u',`'sleep_deprivation'`),'=','0'] },
+    ],
+    condition:'u_is_npc'
+}
+
 
 export async function buildStaticEffect(dm:DataManager){
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
@@ -94,7 +113,7 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
     dm.addData([
-        talkTopic,
+        talkTopic,resetNeed,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
         joinBattle,joinBattleSpell
     ],'Strength','StaticEffect.json');
