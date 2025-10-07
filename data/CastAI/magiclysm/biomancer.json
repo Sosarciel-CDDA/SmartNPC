@@ -61,7 +61,7 @@
         },
         "create_rune_biomancer": null,
         "biomancer_paralytic_dart": "TargetDamage",
-        "biomancer_visceral_projection": "BattleSelfAoeDamage",
+        "biomancer_visceral_projection": "SelfAoeDamage",
         "biomancer_coagulant_weave": "BattleSelfBuff",
         "biomancer_caustic_aura": "BattleSelfBuff",
         "biomancer_caustic_aura_plus": "BattleSelfBuff",

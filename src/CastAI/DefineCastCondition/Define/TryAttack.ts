@@ -1,4 +1,4 @@
-import { BoolExpr } from "@sosarciel-cdda/schema";
+import { BoolExpr, JM } from "@sosarciel-cdda/schema";
 import { CastAIData } from "../../Interface";
 import { DefineCastCond, DefineCastCondFunc } from "../Interface";
 import { concentratedDamageCast, genEffectCond, randomDamageCast } from "../Util";
@@ -92,6 +92,30 @@ export const TargetDebuffCond:DefineCastCondFunc<TargetDebuffCond> = (data,spell
         },
         randomDamageCast(spell,condition),
         concentratedDamageCast(spell,condition),
+        {
+            hook:"None",
+            target:"control_cast",
+        }],
+        one_in_chance:2,
+    }
+    return dat;
+}
+
+
+/**自身半径AOE伤害 */
+export type SelfAoeDamage = DefineCastCond<"SelfAoeDamage">;
+export const SelfAoeDamage:DefineCastCondFunc<SelfAoeDamage> = (data,spell)=>{
+    const aoeexpr = getAoeExpr(spell);
+    const dat:CastAIData = {
+        cast_condition:[{
+            hook:"TryMeleeAttack",
+        },{
+            hook:"BattleUpdate",
+            target:"raw",
+            condition:{math:[
+                JM.monstersNearby('u',[],{radius:`(${aoeexpr}) / 2`,attitude:"'hostile'"}),'>=','1'
+            ]}
+        },
         {
             hook:"None",
             target:"control_cast",

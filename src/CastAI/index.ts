@@ -1,3 +1,3 @@
 export * from './CastAI';
 export * from './Interface';
-export * from './CastCondition';
+export * from './DefineCastCondition';

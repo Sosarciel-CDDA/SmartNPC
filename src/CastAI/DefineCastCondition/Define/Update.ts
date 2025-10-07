@@ -6,22 +6,6 @@ import { getAoeExpr } from "../../UtilFunc";
 
 //#region 自身buff
 
-/**战斗自身buff */
-export type BattleSelfBuff = DefineCastCond<"BattleSelfBuff">;
-export const BattleSelfBuff:DefineCastCondFunc<BattleSelfBuff> = (data,spell)=>{
-    const dat:CastAIData = {
-        cast_condition:{
-            condition:genEffectCond('u',spell),
-            hook:"BattleUpdate",
-            target:'raw',
-            force_vaild_target:['self'],
-        },
-        one_in_chance:2,
-        weight:1,
-    }
-    return dat;
-}
-
 /**常态自身buff */
 export type AlawaySelfBuff = DefineCastCond<"AlawaySelfBuff">;
 export const AlawaySelfBuff:DefineCastCondFunc<AlawaySelfBuff> = (data,spell)=>{
@@ -42,6 +26,23 @@ export const AlawaySelfBuff:DefineCastCondFunc<AlawaySelfBuff> = (data,spell)=>{
     }
     return dat;
 }
+
+/**战斗自身buff */
+export type BattleSelfBuff = DefineCastCond<"BattleSelfBuff">;
+export const BattleSelfBuff:DefineCastCondFunc<BattleSelfBuff> = (data,spell)=>{
+    const dat:CastAIData = {
+        cast_condition:{
+            condition:genEffectCond('u',spell),
+            hook:"BattleUpdate",
+            target:'raw',
+            force_vaild_target:['self'],
+        },
+        one_in_chance:2,
+        weight:1,
+    }
+    return dat;
+}
+
 
 /**条件触发的常态自身buff */
 export type AlawaySelfBuffCond = DefineCastCond<"AlawaySelfBuffCond",{
@@ -91,24 +92,6 @@ export const BattleSelfBuffCond:DefineCastCondFunc<BattleSelfBuffCond> = (data,s
 
 //#region 目标buff
 
-/**战斗目标buff */
-export type BattleTargetBuff = DefineCastCond<"BattleTargetBuff">;
-export const BattleTargetBuff:DefineCastCondFunc<BattleTargetBuff> = (data,spell)=>{
-    const dat:CastAIData = {
-        cast_condition:[{
-            condition:genEffectCond('n',spell),
-            hook:"BattleUpdate",
-            target:"filter_random"
-        },{
-            hook:"None",
-            target:"control_cast",
-        }],
-        one_in_chance:2,
-        weight:1,
-    }
-    return dat;
-}
-
 /**常态目标buff */
 export type AlawayTargetBuff = DefineCastCond<"AlawayTargetBuff">;
 export const AlawayTargetBuff:DefineCastCondFunc<AlawayTargetBuff> = (data,spell)=>{
@@ -120,6 +103,24 @@ export const AlawayTargetBuff:DefineCastCondFunc<AlawayTargetBuff> = (data,spell
         },{
             condition:genEffectCond('n',spell),
             hook:"SlowUpdate",
+            target:"filter_random"
+        },{
+            hook:"None",
+            target:"control_cast",
+        }],
+        one_in_chance:2,
+        weight:1,
+    }
+    return dat;
+}
+
+/**战斗目标buff */
+export type BattleTargetBuff = DefineCastCond<"BattleTargetBuff">;
+export const BattleTargetBuff:DefineCastCondFunc<BattleTargetBuff> = (data,spell)=>{
+    const dat:CastAIData = {
+        cast_condition:[{
+            condition:genEffectCond('n',spell),
+            hook:"BattleUpdate",
             target:"filter_random"
         },{
             hook:"None",
@@ -155,27 +156,6 @@ export const BattleTargetBuffCond:DefineCastCondFunc<BattleTargetBuffCond> = (da
 
 //#endregion
 
-
-/**自身半径AOE伤害 */
-export type BattleSelfAoeDamage = DefineCastCond<"BattleSelfAoeDamage">;
-export const BattleSelfAoeDamage:DefineCastCondFunc<BattleSelfAoeDamage> = (data,spell)=>{
-    const aoeexpr = getAoeExpr(spell);
-    const dat:CastAIData = {
-        cast_condition:[{
-            hook:"BattleUpdate",
-            target:"raw",
-            condition:{math:[
-                JM.monstersNearby('u',[],{radius:`(${aoeexpr}) / 2`,attitude:"'hostile'"}),'>=','1'
-            ]}
-        },
-        {
-            hook:"None",
-            target:"control_cast",
-        }],
-        one_in_chance:2,
-    }
-    return dat;
-}
 
 //战斗距离
 const BattleRange = 20;

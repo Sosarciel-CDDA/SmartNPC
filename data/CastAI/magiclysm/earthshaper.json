@@ -9,11 +9,11 @@
             "type": "BattleSelfBuffCond",
             "condition": { "not": { "u_has_item": "stonefist" } }
         },
-        "seismic_stomp": "BattleSelfAoeDamage",
+        "seismic_stomp": "SelfAoeDamage",
         "recover_stamina": null,
         "eshaper_shardspray": "TargetDamage",
         "eshaper_piercing_bolt": "TargetDamage",
-        "eshaper_shardstorm": "BattleSelfAoeDamage",
+        "eshaper_shardstorm": "SelfAoeDamage",
         "eshaper_rockbolt": "TargetDamage",
         "move_earth": null,
         "create_rune_earthshaper": null,
