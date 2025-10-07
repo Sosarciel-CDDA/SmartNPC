@@ -1,0 +1,77 @@
+import {regionMacro, UtilMacro} from '@zwa73/dev-utils';
+import path from 'pathe';
+import fs from 'fs';
+
+
+/**生成TypeList并导出 */
+export async function exportTypeList(arg:{
+    region:string;
+    listName:string;
+    /**生成的list所在文件 */
+    targetFile:string;
+    /**type文件列表 需与 targetFile 在同一目录下 */
+    typeFileList:string[];
+}) {
+    const {listName,targetFile,typeFileList,region} = arg;
+
+    // 收集所有EocEffect类型
+    const typeList = (await Promise.all(typeFileList.map(async filePath=>{
+        const content = (await fs.promises.readFile(filePath, 'utf-8')).replace(/\r\n/g,'\n');
+
+        // 匹配类型定义和注释
+        const typeMatches = content.matchAll(
+            /\/\*\*([\s\S]*?)\*\/\s*export\s*?type\s+([A-Za-z0-9_]+)\s*=[\s\S]+?\n\n/g);
+
+        return await Promise.all([...typeMatches].map(async match =>{
+            const comment = match[1].trim();
+            const typeName = match[2].trim();
+
+            return {
+                from:filePath,
+                name:typeName,
+                cmt:comment.split('\n')[0].trim(),
+            };
+        }));
+    }))).flat();
+
+    const importList = typeList
+        .reduce((acc,cur)=>acc.includes(cur.from) ? acc : [...acc,cur.from],[] as string[])
+        .map(from=>`import {${typeList.filter(t=>t.from==from).map(t=>t.name).join(', ')}} from './${path.parse(from).name}'`)
+        .join('\n');
+
+    const exportList = typeList.map(type => `${type.name.padEnd(24, ' ')},//${type.cmt}`).join('\n    ');
+    const exportList = typeList.map(type => `${type.name.padEnd(24, ' ')},//${type.cmt}`).join('\n    ');
+
+    // 生成EocEffectList定义
+    return regionMacro(region,() => `
+${importList}
+/**${region} */
+export type ${listName} = [
+    ${exportList}
+];
+`.trim(),{filePath:targetFile})
+}
+
+
+const ROOT_DIR = path.join(__dirname,'..');
+const DefineCastCondition = path.join(ROOT_DIR,'src','CastAI','DefineCastCondition','Define');
+//#region typelist转导
+// 使用宏生成EocEffectList
+void exportTypeList({
+    listName:'EocEffectList',
+    targetFile:path.join(DefineCastCondition,"EocEffect","EocEffectIndex.ts"),
+    typeFileList:[
+        path.join(DefineCastCondition,"EocEffect","NpcEffect.ts"),
+        path.join(DefineCastCondition,"EocEffect","GenericEffect.ts"),
+        path.join(DefineCastCondition,"EocEffect","CharacterEffect.ts"),
+        path.join(DefineCastCondition,"EocEffect","ItemEffect.ts"),
+    ],
+    region:'Eoc效果表导出'
+});
+
+void exportTypeList({
+    listName:'BoolExprList',
+    targetFile:path.join(DefineCastCondition,"Expression","BoolExprIndex.ts"),
+    typeFileList:[path.join(DefineCastCondition,"Expression","BoolExpr.ts")],
+    region:'BoolExpr导出'
+});
