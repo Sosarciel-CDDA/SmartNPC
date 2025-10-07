@@ -41,7 +41,7 @@
         },
         "spell_stalker_eyes"           :{
             "type":"AlawaySelfBuffCond",
-            "condition":{"not":{"u_has_trait":"karstalker_eyesma_arms"}}
+            "condition":{"not":{"u_has_trait":"stalker_eyes"}}
         },
         "spell_devil_tail"             :{
             "type":"AlawaySelfBuffCond",
