@@ -35,8 +35,8 @@ const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
     const costVar = COST_MAP[costType];
     if(costVar===undefined) return [];
 
-    if(costType=="STAMINA") //模拟耐力
-        return [{math:[costVar,'-=',`(${num})/10`]}];
+    //if(costType=="STAMINA") //模拟耐力
+    //    return [{math:[costVar,'-=',`(${num})/10`]}];
 
     return [{math:[costVar,'-=',num]}];
 }
