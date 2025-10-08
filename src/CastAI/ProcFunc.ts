@@ -1,9 +1,9 @@
 import { JObject} from "@zwa73/utils";
 import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
-import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt} from "@sosarciel-cdda/schema";
+import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
-import { CastProcData, TargetType } from "./Interface";
+import { BaseCondTable, CastProcData, TargetType } from "./Interface";
 
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={
@@ -27,6 +27,11 @@ const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
     return out.filter(item=>item!=undefined) as any;
 }
 
+const flatBaseCond = (cond:BaseCondTable):BoolExpr[]=>{
+    const {cooldown,cost,counter,know,manualSwitch} = cond;
+    return [...manualSwitch, ...cost, ...cooldown, ...counter, ...know];
+}
+
 /**控制施法所需的前置效果 */
 export const ControlCastSpeakerEffects:EocEffect[] = [];
 /**控制施法的回复 */
@@ -46,7 +51,7 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(base_cond,[cast_condition.condition]);
+    const fixedCond = concat(flatBaseCond(base_cond),[cast_condition.condition]);
 
     //主逻辑eoc
     const mainEoc:Eoc = {
@@ -89,7 +94,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(base_cond,[cast_condition.condition]);
+    const fixedCond = concat(flatBaseCond(base_cond),[cast_condition.condition]);
 
     //创建施法EOC 应与filter一样使用标记法术 待修改
     const castEoc:Eoc={
@@ -265,7 +270,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
             {u_cast_spell:{id:filterTargetSpell.id,min_level}},
             {run_eocs:castEoc.id},
         ],
-        condition:{and:[{ one_in_chance:one_in_chance??1 },...base_cond]},
+        condition:{and:[{ one_in_chance:one_in_chance??1 },...flatBaseCond(base_cond)]},
     }
 
     //建立便于event合并的if语法
@@ -289,7 +294,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(base_cond,
+    const fixedCond = concat(flatBaseCond(base_cond),
         [cast_condition.condition],
         [{math:["distance('u', 'npc')" as const,"<=" as const,getRangeExpr(spell)]}] //射程条件
     );
@@ -356,19 +361,19 @@ async function autoProc(dm:DataManager,cpd:CastProcData){
 }
 
 async function control_castProc(dm:DataManager,cpd:CastProcData){
-    const {skill,cast_condition} = cpd;
-    const {base_cond,after_effect,before_effect,min_level} = cpd;
+    const {skill,cast_condition, base_cond,after_effect,before_effect,min_level} = cpd;
     const {id,merge_condition} = skill;
     const spell = getSpellByID(id);
     const uid = `${spell.id}_ControlCast_${cast_condition.id}`;
 
     //删除开关条件
     //计算基础条件时 确保第一个为技能开关, 用于此刻读取
-    const [switchCond,...restCond] = base_cond;
+    const restCond = {...base_cond};
+    restCond.manualSwitch = [];
 
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(restCond,[cast_condition.condition],[merge_condition]); // 不经过触发, 需要加上merge_condition
+    const fixedCond = concat(flatBaseCond(restCond),[cast_condition.condition],[merge_condition]); // 不经过触发, 需要加上merge_condition
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};

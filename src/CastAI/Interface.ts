@@ -118,12 +118,25 @@ export type CastCond={
     force_vaild_target?  : Spell['valid_targets'];
 }
 
+/**基础条件表 */
+export type BaseCondTable = {
+    /**手动开关 */
+    manualSwitch:BoolExpr[];
+    /**能量消耗 */
+    cost:BoolExpr[];
+    /**冷却 */
+    cooldown:BoolExpr[];
+    /**备用计数器 */
+    counter:BoolExpr[];
+    /**了解该法术 */
+    know:BoolExpr[];
+}
 /**基础技能数据 */
 export type CastProcData = Readonly<{
     /**技能 */
     skill:CastAIData;
     /**基础释放eoc条件 */
-    base_cond: (BoolExpr)[];
+    base_cond: BaseCondTable;
     /**基础成功eoc效果 */
     after_effect:EocEffect[];
     /**基础准备释放Eoc */

@@ -4,7 +4,7 @@ import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
-import { CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
+import { BaseCondTable, CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
 import { ConcentratedAttack, getDefCastData } from "./DefineCastCondition";
@@ -141,29 +141,27 @@ export async function buildCastAI(dm:DataManager){
 
 
             //#region 计算基础条件
-            //确保第一个为技能开关, 用于cast_control读取 
-            const base_cond: BoolExpr[] = [
-                {math:[uv(getDisableSpellVar(spell)),"!=","1"]},
-                {math:[uv(gcdValName),"<=","0"]},
-            ];
-            //能量消耗
-            if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
-                base_cond.push({math:[costVar,">=",getCostExpr(spell)]});
-            //物品消耗
-            //if(spell.)
-            //冷却
-            if(cooldown)
-                base_cond.push({math:[uv(cdValName),"<=","0"]});
-            //备用计数器
-            if(fallback_with !== undefined)
-                base_cond.push({math:[uv(fallbackValName),">=",`${fallback_with}`]})
-
             //计算施法等级
             const maxstr = parseSpellNumObj(spell,'max_level');
-            let min_level:NumberExpr = {math:[`min(u_spell_level('${spell.id}'), ${maxstr})`] as [string]};
-            if(cast_condition.force_lvl!=null)
-                min_level = cast_condition.force_lvl;
-            else base_cond.push({math:[`u_spell_level('${spell.id}')`,">=","0"]});
+            const hasMinLvl = cast_condition.force_lvl!=null;
+            const min_level:NumberExpr = hasMinLvl
+                ? cast_condition.force_lvl!
+                : {math:[`min(u_spell_level('${spell.id}'), ${maxstr})`]};
+
+            const base_cond: BaseCondTable ={
+                manualSwitch:[
+                    {math:[uv(getDisableSpellVar(spell)),"!=","1"]},
+                    {math:[uv(gcdValName),"<=","0"]},
+                ],
+                cost: (spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
+                    ? [{math:[costVar,">=",getCostExpr(spell)]}] : [],
+                cooldown: (cooldown != undefined && cooldown > 0)
+                    ? [{math:[uv(cdValName),"<=","0"]}] : [],
+                counter: (fallback_with != undefined && fallback_with > 0)
+                    ? [{math:[uv(fallbackValName),">=",`${fallback_with}`]}] : [],
+                know: hasMinLvl ? [] : [{math:[`u_spell_level('${spell.id}')`,">=","0"]}],
+            }
+
             //#endregion
 
 
