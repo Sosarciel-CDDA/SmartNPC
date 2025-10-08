@@ -38,7 +38,6 @@ export const ControlCastSpeakerEffects:EocEffect[] = [];
 export const ControlCastResps:Resp[]=[];
 
 
-
 //命中id
 const fhitvar = `${SADef.MOD_PREFIX}_HasTarget`;
 

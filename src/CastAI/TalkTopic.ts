@@ -2,9 +2,9 @@ import { DataManager } from "@sosarciel-cdda/event";
 import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
 import { Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SADef, getSpellByID } from "@/src/Define";
-import { CastAIDataMap, gcdValName } from "./CastAI";
+import { CastAIDataMap, CoCooldownName, CoSwitchDisableName } from "./CastAI";
 import { CastAIData } from "./Interface";
-import { getDisableSpellVar, nv } from "./UtilFunc";
+import { getDisableSpellVar, nv, uv } from "./UtilFunc";
 
 
 
@@ -55,7 +55,7 @@ async function createCastControlResp(dm:DataManager){
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
         id:castControlTalkTopicId,
-        dynamic_line:`&当前魔法值: <npc_val:${displayManaName}> 公共冷却: <npc_val:${gcdValName}>`,
+        dynamic_line:`&当前魔法值: <npc_val:${displayManaName}> 公共冷却: <npc_val:${CoCooldownName}>`,
         responses:[...ControlCastResps,{
             text: "Never mind.",
             topic: "TALK_NONE"
@@ -105,7 +105,20 @@ async function createSkillResp(dm:DataManager){
         type:"talk_topic",
         id:skillTalkTopicId,
         dynamic_line:"&<mypronoun>应该做些什么？",
-        responses:[...skillRespList,{
+        responses:[{
+            truefalsetext:{
+                condition:{math:[uv(CoSwitchDisableName),"==","1"]},
+                true:`[已停止自动施法]`,
+                false:`[已开启自动施法]`,
+            },
+            effect:{
+                if:{math:[uv(CoSwitchDisableName),"==","1"]},
+                then:[{math:[uv(CoSwitchDisableName),"=","0"]}],
+                else:[{math:[uv(CoSwitchDisableName),"=","1"]}],
+            },
+            topic:skillTalkTopicId,
+        },
+        ...skillRespList,{
             text: "Never mind.",
             topic: "TALK_DONE"
         }]

@@ -13,10 +13,13 @@ import { createCastAITalkTopic } from "./TalkTopic";
 
 
 //全局冷却字段名
-export const gcdValName = `${SADef.MOD_PREFIX}_CoCooldown`;
+export const CoCooldownName = `${SADef.MOD_PREFIX}_CoCooldown`;
 
 //falback字段名
 export const fallbackValName = `${SADef.MOD_PREFIX}_CastFallbackCounter`;
+
+/**总开关 */
+export const CoSwitchDisableName = `${SADef.MOD_PREFIX}_CoSwitchDisable`;
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
@@ -46,6 +49,8 @@ tableList.forEach((file)=>{
         //处理辅助条件
         castData.merge_condition = {and:[
             "u_is_npc",
+            {math:[uv(CoCooldownName),"<=","0"]},
+            {math:[uv(CoSwitchDisableName),"!=","0"]},
             ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
             ... (json.common_condition!==undefined ? [json.common_condition] : []),
         ]};
@@ -66,8 +71,8 @@ export async function buildCastAI(dm:DataManager){
 
     //全局冷却事件
     const GCDEoc = SADef.genActEoc(`CoCooldown`,
-        [{math:[uv(gcdValName),"-=","1"]}],
-        {math:[uv(gcdValName),">","0"]});
+        [{math:[uv(CoCooldownName),"-=","1"]}],
+        {math:[uv(CoCooldownName),">","0"]});
     //备用计数器
     const FBEoc = SADef.genActEoc(`Fallback`,
         [{math:[uv(fallbackValName),"+=","1"]}],
@@ -75,7 +80,7 @@ export async function buildCastAI(dm:DataManager){
     dm.addInvokeEoc("NpcUpdate",0,GCDEoc,FBEoc);
     //初始化全局冷却
     const GCDInit = SADef.genActEoc(`CoCooldown_Init`,
-        [{math:[uv(gcdValName),"=","0"]}]);
+        [{math:[uv(CoCooldownName),"=","0"]}]);
     dm.addInvokeEoc("Init",0,GCDInit);
     out.push(GCDEoc,FBEoc,GCDInit);
 
@@ -113,7 +118,7 @@ export async function buildCastAI(dm:DataManager){
             const after_effect:EocEffect[]=[];
             //共通冷却
             if(common_cooldown!=0)
-                after_effect.push({math:[uv(gcdValName),"=",`${common_cooldown??1}`]});
+                after_effect.push({math:[uv(CoCooldownName),"=",`${common_cooldown??1}`]});
             //独立冷却
             if(cooldown)
                 after_effect.push({math:[uv(cdValName),"=",`${cooldown??0}`]});
@@ -151,7 +156,6 @@ export async function buildCastAI(dm:DataManager){
             const base_cond: BaseCondTable ={
                 manualSwitch:[
                     {math:[uv(getDisableSpellVar(spell)),"!=","1"]},
-                    {math:[uv(gcdValName),"<=","0"]},
                 ],
                 cost: (spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
                     ? [{math:[costVar,">=",getCostExpr(spell)]}] : [],

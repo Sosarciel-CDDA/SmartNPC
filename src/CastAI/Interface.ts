@@ -55,7 +55,7 @@ export type CastAIData = {
     cast_condition   :CastCond|CastCond[];
     /**共同条件 与cast_condition相与 */
     common_condition?:(BoolExpr);
-    /**合并条件 用于辅助event合并的条件 无需填写 */
+    /**合并条件 用于辅助event合并的条件 基于表单自动生成 无需填写 */
     merge_condition?:(BoolExpr);
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?          :number;
