@@ -3,7 +3,7 @@ import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
-import { BaseCondTable, CastProcData, TargetType } from "./Interface";
+import { BaseCondTable, CastProcData, MergeCondTable, TargetType } from "./Interface";
 
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={
@@ -30,6 +30,13 @@ const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
 const flatBaseCond = (cond:BaseCondTable):BoolExpr[]=>{
     const {cooldown,cost,counter,know,manualSwitch} = cond;
     return [...manualSwitch, ...cost, ...cooldown, ...counter, ...know];
+}
+
+const flatMergeCond = (cond:MergeCondTable|undefined):BoolExpr=>{
+    if(cond==undefined)
+        throw "一个mergeCond未定义";
+    const {other,manualSwitch} = cond;
+    return {and:[...manualSwitch,...other]};
 }
 
 /**控制施法所需的前置效果 */
@@ -74,7 +81,7 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
 
     //建立便于event合并的if语法
     const eff:EocEffect={
-        if:merge_condition!,
+        if:flatMergeCond(merge_condition),
         then:[{run_eocs:[mainEoc.id]}]
     }
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
@@ -175,7 +182,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 
     //建立便于event合并的if语法
     const eff:EocEffect={
-        if:merge_condition!,
+        if:flatMergeCond(merge_condition),
         then:[{run_eocs:[mainEoc.id]}]
     }
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
@@ -274,7 +281,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
 
     //建立便于event合并的if语法
     const eff:EocEffect={
-        if:merge_condition!,
+        if:flatMergeCond(merge_condition),
         then:[{run_eocs:[mainEoc.id]}]
     }
 
@@ -325,7 +332,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
 
     //建立便于event合并的if语法
     const eff:EocEffect={
-        if:merge_condition!,
+        if:flatMergeCond(merge_condition),
         then:[{run_eocs:[castEoc.id]}]
     }
     dm.addEvent(hook,getEventWeight(skill,cast_condition),[eff]);
@@ -370,9 +377,12 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     const restCond = {...base_cond};
     restCond.manualSwitch = [];
 
+    const fixedMgrCond = {...(merge_condition!)};
+    fixedMgrCond.manualSwitch = [];
+
     const fixedBeforeEffect = concat(before_effect,cast_condition.before_effect??[]);
     const fixedAfterEffect = concat(after_effect,cast_condition.after_effect??[]);
-    const fixedCond = concat(flatBaseCond(restCond),[cast_condition.condition],[merge_condition]); // 不经过触发, 需要加上merge_condition
+    const fixedCond = concat(flatBaseCond(restCond),[cast_condition.condition],[flatMergeCond(fixedMgrCond)]); // 不经过触发, 需要加上merge_condition
 
     //玩家的选择位置
     const playerSelectLoc = { global_val:`${spell.id}_control_cast_loc`};

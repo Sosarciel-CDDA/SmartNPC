@@ -56,7 +56,7 @@ export type CastAIData = {
     /**共同条件 与cast_condition相与 */
     common_condition?:(BoolExpr);
     /**合并条件 用于辅助event合并的条件 基于表单自动生成 无需填写 */
-    merge_condition?:(BoolExpr);
+    merge_condition ?:MergeCondTable;
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
     weight?          :number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
@@ -118,6 +118,13 @@ export type CastCond={
     force_vaild_target?  : Spell['valid_targets'];
 }
 
+/**合并条件表 */
+export type MergeCondTable = {
+    /**手动开关 */
+    manualSwitch:BoolExpr[];
+    /**其他 */
+    other:BoolExpr[];
+}
 /**基础条件表 */
 export type BaseCondTable = {
     /**手动开关 */

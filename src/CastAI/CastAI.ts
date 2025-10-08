@@ -3,7 +3,7 @@ import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
-import { getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
+import { getCastTimeExpr, getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { BaseCondTable, CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
@@ -30,7 +30,16 @@ const COST_MAP:Record<SpellEnergySource,string|undefined>={
     "STAMINA": "u_val('mana')",
     "NONE"   : undefined,
 }
+//法术消耗 使用能量表达式
+const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
+    const costVar = COST_MAP[costType];
+    if(costVar===undefined) return [];
 
+    if(costType=="STAMINA") //模拟耐力
+        return [{math:[costVar,'-=',`(${num})/10`]}];
+
+    return [{math:[costVar,'-=',num]}];
+}
 
 //载入数据
 /**施法AI数据 */
@@ -47,13 +56,22 @@ tableList.forEach((file)=>{
         CastAIDataMap[spellID as SpellID] = castData;
 
         //处理辅助条件
-        castData.merge_condition = {and:[
-            "u_is_npc",
-            {math:[uv(CoCooldownName),"<=","0"]},
-            {math:[uv(CoSwitchDisableName),"!=","0"]},
-            ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
-            ... (json.common_condition!==undefined ? [json.common_condition] : []),
-        ]};
+        castData.merge_condition = {
+            manualSwitch:[{math:[uv(CoSwitchDisableName),"!=","1"]}],
+            other:[
+                "u_is_npc",
+                {math:[uv(CoCooldownName),"<=","0"]},
+                ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
+                ... (json.common_condition!==undefined ? [json.common_condition] : []),
+            ]
+        }
+        //{and:[
+        //    "u_is_npc",
+        //    {math:[uv(CoCooldownName),"<=","0"]},
+        //    {math:[uv(CoSwitchDisableName),"!=","1"]},
+        //    ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
+        //    ... (json.common_condition!==undefined ? [json.common_condition] : []),
+        //]};
     })
 });
 
@@ -91,9 +109,8 @@ export async function buildCastAI(dm:DataManager){
         const spell = getSpellByID(id);
 
         //法术消耗变量类型
-        const costVar = spell.energy_source !== undefined
-            ? COST_MAP[spell.energy_source]
-            : COST_MAP.MANA;
+        const costType = spell.energy_source ?? "MANA";
+        const costVar = COST_MAP[costType];
 
         //生成冷却变量名
         const cdValName = getCDName(spell);
@@ -104,8 +121,8 @@ export async function buildCastAI(dm:DataManager){
 
         //遍历释放条件
         const ccList = Array.isArray(cast_condition)
-            ? cast_condition
-            : [cast_condition] as const;
+            ? cast_condition : [cast_condition];
+
         //设置释放条件uid
         ccList.forEach((cc,i)=>cc.id = cc.id??`${i}`);
 
@@ -127,16 +144,14 @@ export async function buildCastAI(dm:DataManager){
                 after_effect.push(...skill.after_effect);
             //施法时间
             if(spell.base_casting_time){
-                const ct =  `min(${parseSpellNumObj(spell,"base_casting_time")} + ${parseSpellNumObj(spell,"casting_time_increment")} * `+
-                            `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_casting_time",MAX_NUM)})`;
                 after_effect.push(
-                    {math:[SPELL_CT_MODMOVE_VAR,"=",ct]},
+                    {math:[SPELL_CT_MODMOVE_VAR,"=",getCastTimeExpr(spell)]},
                     {u_cast_spell:{id:SPELL_CT_MODMOVE,hit_self:true}}
                 );
             }
             //能量消耗
-            if(spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
-                after_effect.push({math:[costVar,"-=",getCostExpr(spell)]});
+            if(spell.base_energy_cost!=undefined && ignore_cost!==true)
+                after_effect.push(... useCost(costType,getCostExpr(spell)));
             //经验增长
             if(cast_condition.infoge_exp!=true)
                 after_effect.push({math:[JM.spellExp('u',`'${spell.id}'`),"+=",`U_SpellCastExp(${spell.difficulty??0})`]});

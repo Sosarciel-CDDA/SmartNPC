@@ -25,15 +25,14 @@ function revTalker<T extends JToken>(obj:T):T{
 
 /**解析NumObj为math表达式 */
 export function parseNumObj(value?:any){
-    let strExp = `0`;
     if(value!==undefined){
         if(typeof value == "number")
-            strExp = value+"";
+            return `${value}`;
         else if(typeof value == "object" && "math" in value)
-            strExp = value.math[0];
+            return value.math[0];
         else throw `伤害解析只支持固定值number 或 math表达式`
     }
-    return strExp;
+    return `0`;
 }
 /**解析法术伤害字符串 */
 export function parseSpellNumObj(spell:Spell,field:keyof Spell,def?:number){
@@ -50,6 +49,9 @@ export const getCostExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_e
 
 export const getRangeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_range")} + ${parseSpellNumObj(spell,"range_increment")} * `+
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"max_range",MAX_NUM)})`;
+
+export const getCastTimeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_casting_time")} + ${parseSpellNumObj(spell,"casting_time_increment")} * `+
+    `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_casting_time",MAX_NUM)})`;
 
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(spell:Spell){
