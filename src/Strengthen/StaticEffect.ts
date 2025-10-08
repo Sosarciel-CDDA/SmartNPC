@@ -34,6 +34,8 @@ const SmartNpcMut:Mutation={
             { value:'AVOID_FRIENDRY_FIRE', add:1  },
             { value:'PAIN'               , multiply:-1   },//移除疼痛
             { value:'PAIN_REMOVE'        , multiply:10   },
+            { value:'MAX_MANA'           , add:1000      },//模拟耐力补正
+            { value:'REGEN_MANA'         , multiply:0.25 },
             { value:'SKILL_RUST_RESIST'  , add:100       },//移除技能遗忘
         ],
         ench_effects:[{
