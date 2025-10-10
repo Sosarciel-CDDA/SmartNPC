@@ -17,12 +17,12 @@ const replaceFron = (arg:{
 }
 
 const ReplaceUHP = {
-    source:/u_hp/,
+    source:/u_hp/g,
     traget:'n_hp',
 }
 
 const ReplaceUHPMax = {
-    source:/u_hp_max/,
+    source:/u_hp_max/g,
     traget:'n_hp_max',
 }
 
