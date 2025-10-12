@@ -4,7 +4,7 @@
         "classless_toggleable_concentration_end":{
             "type": "AlawaySelfBuffCond",
             "condition":{"and":[
-                {"math":["u_CNPCAIEF_inBattle",">","0"]},
+                {"math":["u_CNPCAIEF_inBattle","<=","0"]},
                 {"u_has_any_effect":[
                     "effect_biokin_physical",
                     "effect_biokin_overcome_pain",
