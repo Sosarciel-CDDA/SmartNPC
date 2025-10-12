@@ -43,7 +43,6 @@ export const BattleSelfBuff:DefineCastCondFunc<BattleSelfBuff> = (data,spell)=>{
     return dat;
 }
 
-
 /**条件触发的常态自身buff */
 export type AlawaySelfBuffCond = DefineCastCond<"AlawaySelfBuffCond",{
     /**触发条件 u 为自身 n 不存在 */
@@ -86,7 +85,6 @@ export const BattleSelfBuffCond:DefineCastCondFunc<BattleSelfBuffCond> = (data,s
         weight:1,
     }
 }
-
 //#endregion
 
 

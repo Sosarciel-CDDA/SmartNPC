@@ -1,0 +1,26 @@
+{
+    "require_mod": "mindovermatter",
+    "table": {
+        "classless_toggleable_concentration_end":{
+            "type": "AlawaySelfBuffCond",
+            "condition":{"and":[
+                {"math":["u_CNPCAIEF_inBattle",">","0"]},
+                {"u_has_any_effect":[
+                    "effect_biokin_physical",
+                    "effect_biokin_overcome_pain",
+                    "effect_biokin_breathe_skin",
+                    "effect_biokin_armor_skin",
+                    "effect_biokin_climate_control",
+                    "effect_biokin_enhance_mobility",
+                    "effect_biokin_hammerhand",
+                    "effect_biokin_reflex",
+                    "effect_biokin_metabolism_enhance",
+                    "effect_biokin_guided_evolution",
+                    "effect_biokin_combat_dance",
+                    "effect_telekinetic_momentum",
+                    "effect_telekinetic_armor"
+                ]}
+            ]}
+        }
+    }
+}
