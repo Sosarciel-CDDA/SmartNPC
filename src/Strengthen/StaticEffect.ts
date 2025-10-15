@@ -59,7 +59,7 @@ const controlNPCEoc:Eoc = {
     effect:[
         {u_add_trait:SmartNpcMut.id},
         {npc_lose_trait:SmartNpcMut.id},
-        {math:[`n_${PsionicDrainLock}`,'=',JM.vitamin('u',"'vitamin_psionic_drain'")]},
+        {math:[`n_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
         "take_control",
     ],
 }
@@ -120,6 +120,7 @@ export async function buildStaticEffect(dm:DataManager){
     //初始化
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
         {u_add_trait:SmartNpcMut.id},
+        {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
     ],{and:["u_is_npc",{not:{u_has_trait:SmartNpcMut.id}}]});
     dm.addInvokeID('Init',0,initNpcStrength.id);
     dm.addInvokeID('EnterBattle',0,initNpcStrength.id);
@@ -129,6 +130,7 @@ export async function buildStaticEffect(dm:DataManager){
     const removeAvatarStrength = SADef.genActEoc('removeAvatarStrength',[
         {u_lose_effect:Courage.id},
         {u_lose_trait:SmartNpcMut.id},
+        {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
     ],'u_is_avatar');
     dm.addInvokeID('SlowUpdate',0,removeAvatarStrength.id);
 
