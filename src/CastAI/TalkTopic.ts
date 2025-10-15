@@ -107,14 +107,14 @@ async function createSkillResp(dm:DataManager){
         dynamic_line:"&<mypronoun>应该做些什么？",
         responses:[{
             truefalsetext:{
-                condition:{math:[uv(CoSwitchDisableName),"==","1"]},
+                condition:{math:[nv(CoSwitchDisableName),"==","1"]},
                 true:`[已停止自动施法]`,
                 false:`[已开启自动施法]`,
             },
             effect:{
-                if:{math:[uv(CoSwitchDisableName),"==","1"]},
-                then:[{math:[uv(CoSwitchDisableName),"=","0"]}],
-                else:[{math:[uv(CoSwitchDisableName),"=","1"]}],
+                if:{math:[nv(CoSwitchDisableName),"==","1"]},
+                then:[{math:[nv(CoSwitchDisableName),"=","0"]}],
+                else:[{math:[nv(CoSwitchDisableName),"=","1"]}],
             },
             topic:skillTalkTopicId,
         },
