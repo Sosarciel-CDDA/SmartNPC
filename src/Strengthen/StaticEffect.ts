@@ -59,7 +59,7 @@ const controlNPCEoc:Eoc = {
     effect:[
         {u_add_trait:SmartNpcMut.id},
         {npc_lose_trait:SmartNpcMut.id},
-        {math:[`n_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
+        {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('u',"'vitamin_psionic_drain'")]},
         "take_control",
     ],
 }
@@ -101,17 +101,11 @@ const psionicDrainLockEoc:Eoc = {
     type:"effect_on_condition",
     id:SADef.genEocID('PsionicDrainLock'),
     effect:[
-        {if:"u_is_avatar",
-            then:[
-                {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
-            ],
-            else:[
-                {if:{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'>',`u_${PsionicDrainLock}`]},
-                    then:[{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=',`u_${PsionicDrainLock}`]}],
-                    else:[{math:[`u_${PsionicDrainLock}`,'=', JM.vitamin('u',"'vitamin_psionic_drain'")]}]}
-            ]},
+        {if:{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'>',`u_${PsionicDrainLock}`]},
+            then:[{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=',`u_${PsionicDrainLock}`]}],
+            else:[{math:[`u_${PsionicDrainLock}`,'=', JM.vitamin('u',"'vitamin_psionic_drain'")]}]}
     ],
-    condition:{mod_is_loaded:"mindovermatter"}
+    condition:{and:["u_is_npc",{mod_is_loaded:"mindovermatter"}]}
 }
 
 const psionicDrainLock_CastSpell:Eoc = {
@@ -120,7 +114,7 @@ const psionicDrainLock_CastSpell:Eoc = {
     eoc_type:"EVENT",
     required_event:"character_casts_spell",
     effect:[{run_eocs:[psionicDrainLockEoc.id]}],
-    condition:{mod_is_loaded:"mindovermatter"}
+    condition:{and:["u_is_npc",{mod_is_loaded:"mindovermatter"}]}
 }
 
 export async function buildStaticEffect(dm:DataManager){
