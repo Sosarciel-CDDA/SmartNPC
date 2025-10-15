@@ -101,26 +101,32 @@ const psionicDrainLockEoc:Eoc = {
     type:"effect_on_condition",
     id:SADef.genEocID('PsionicDrainLock'),
     effect:[
-        {if:{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'>',`u_${PsionicDrainLock}`]},
-            then:[{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=',`u_${PsionicDrainLock}`]}],
-            else:[{math:[`u_${PsionicDrainLock}`,'=', JM.vitamin('u',"'vitamin_psionic_drain'")]}]}
+        {if:"u_is_avatar",
+            then:[
+                {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
+            ],
+            else:[
+                {if:{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'>',`u_${PsionicDrainLock}`]},
+                    then:[{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=',`u_${PsionicDrainLock}`]}],
+                    else:[{math:[`u_${PsionicDrainLock}`,'=', JM.vitamin('u',"'vitamin_psionic_drain'")]}]}
+            ]},
     ],
-    condition:{and:["u_is_npc",{mod_is_loaded:"mindovermatter"}]}
+    condition:{mod_is_loaded:"mindovermatter"}
 }
-const resetPsionicEffect:Eoc = {
+
+const psionicDrainLock_CastSpell:Eoc = {
     type:"effect_on_condition",
     id:SADef.genEocID('PsionicDrainLock_CastSpell'),
     eoc_type:"EVENT",
     required_event:"character_casts_spell",
     effect:[{run_eocs:[psionicDrainLockEoc.id]}],
-    condition:{and:["u_is_npc",{mod_is_loaded:"mindovermatter"}]}
+    condition:{mod_is_loaded:"mindovermatter"}
 }
 
 export async function buildStaticEffect(dm:DataManager){
     //初始化
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
         {u_add_trait:SmartNpcMut.id},
-        {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
     ],{and:["u_is_npc",{not:{u_has_trait:SmartNpcMut.id}}]});
     dm.addInvokeID('Init',0,initNpcStrength.id);
     dm.addInvokeID('EnterBattle',0,initNpcStrength.id);
@@ -130,7 +136,6 @@ export async function buildStaticEffect(dm:DataManager){
     const removeAvatarStrength = SADef.genActEoc('removeAvatarStrength',[
         {u_lose_effect:Courage.id},
         {u_lose_trait:SmartNpcMut.id},
-        {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('n',"'vitamin_psionic_drain'")]},
     ],'u_is_avatar');
     dm.addInvokeID('SlowUpdate',0,removeAvatarStrength.id);
 
@@ -157,7 +162,7 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID("SlowUpdate",0,psionicDrainLockEoc.id);
 
     dm.addData([
-        controlNPCTalkTopic,controlNPCEoc,resetNeed,psionicDrainLockEoc,resetPsionicEffect,
+        controlNPCTalkTopic,controlNPCEoc,resetNeed,psionicDrainLockEoc,psionicDrainLock_CastSpell,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
         joinBattle,joinBattleSpell,
     ],'Strength','StaticEffect.json');
