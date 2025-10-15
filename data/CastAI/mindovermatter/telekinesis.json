@@ -2,11 +2,11 @@
     "require_mod": "mindovermatter",
     "table": {
         "telekinetic_momentum":{
-            "type": "BattleSelfBuffCond",
+            "type": "AlawaySelfBuffCond",
             "condition": {"not":{"u_has_effect":"effect_telekinetic_momentum"}}
         },
         "telekinetic_shield":{
-            "type": "BattleSelfBuffCond",
+            "type": "AlawaySelfBuffCond",
             "condition": {"not":{"u_has_effect":"effect_telekinetic_armor"}}
         },
         "telekinetic_hammer":"TargetDamage",

@@ -48,14 +48,26 @@ const SmartNpcMut:Mutation={
 //战斗距离
 const BattleRange = 20;
 
+//控制队友初始化
+const controlNPCEoc:Eoc = {
+    id:SADef.genEocID('ControlNpc'),
+    type:"effect_on_condition",
+    eoc_type:"ACTIVATION",
+    effect:[
+        {u_add_trait:SmartNpcMut.id},
+        {npc_lose_trait:SmartNpcMut.id},
+        "take_control",
+    ],
+}
+
 //对话
-const talkTopic:TalkTopic={
+const controlNPCTalkTopic:TalkTopic={
     type:"talk_topic",
     id:["TALK_ALLY_ORDERS"],
     insert_before_standard_exits:true,
     responses:[{
         text:`控制队友`,
-        effect:"take_control",
+        effect:{run_eocs:[controlNPCEoc.id]},
         topic:"TALK_DONE"
     }]
 }
@@ -78,6 +90,21 @@ const resetNeed:Eoc = {
         { math: [JM.val('u',`'sleep_deprivation'`),'=','0'] },
     ],
     condition:'u_is_npc'
+}
+
+//清空灵能响应效果
+const resetPsionicEffect:Eoc = {
+    type:"effect_on_condition",
+    id:SADef.genEocID('ResetVita'),
+    eoc_type:"EVENT",
+    required_event:"character_casts_spell",
+    effect:[
+        {math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=','0']}
+    ],
+    condition:{and:[
+        "u_is_npc",
+        {mod_is_loaded:"mindovermatter"},
+    ]}
 }
 
 
@@ -114,8 +141,8 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
     dm.addData([
-        talkTopic,resetNeed,
+        controlNPCTalkTopic,controlNPCEoc,resetNeed,resetPsionicEffect,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
-        joinBattle,joinBattleSpell
+        joinBattle,joinBattleSpell,
     ],'Strength','StaticEffect.json');
 }
