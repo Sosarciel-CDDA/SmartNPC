@@ -1,5 +1,5 @@
 import { Spell, TalkTopic } from "@sosarciel-cdda/schema";
-import { CombatRuleTopicID, CON_SPELL_FLAG, SADef } from "../Define";
+import { CombatRuleTopicID, CON_SPELL_FLAG, SNDef } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 const QuickBackRange = 10;
@@ -35,7 +35,7 @@ const QuickBackEocSubMovemod: Spell = {
     flags: [...CON_SPELL_FLAG],
 }
 /**快速后退施法委托 */
-const QuickBackEoc = SADef.genActEoc('QuickBack',[
+const QuickBackEoc = SNDef.genActEoc('QuickBack',[
     {npc_location_variable:{context_val:"tmploc"}}, // 记录施法者的位置
     {u_cast_spell: {id:QuickBackEocSubPush.id},loc:{context_val:'tmploc'}}, // 委托怪物对施法者释放一次movemod与一次push
     {u_cast_spell: {id:QuickBackEocSubMovemod.id},loc:{context_val:'tmploc'}}
@@ -93,7 +93,7 @@ const CombatRuleTalkTopic:TalkTopic={
 }
 
 export function buildQuickBack(dm: DataManager) {
-    const autoback = SADef.genActEoc('AutoQuickBack',[
+    const autoback = SNDef.genActEoc('AutoQuickBack',[
         {u_cast_spell: {id:QuickBack.id}},
         //{u_message:"<global_val:tmpstr>"},
         //{u_cast_spell: {id:'fireball',min_level:10}},

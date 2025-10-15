@@ -67,6 +67,24 @@ export const AlawaySelfBuffCond:DefineCastCondFunc<AlawaySelfBuffCond> = (data,s
     }
 }
 
+/**条件触发的非战斗自身buff */
+export type NonBattleSelfBuffCond = DefineCastCond<"NonBattleSelfBuffCond",{
+    /**触发条件 u 为自身 n 不存在 */
+    condition:(BoolExpr)
+}>;
+export const NonBattleSelfBuffCond:DefineCastCondFunc<NonBattleSelfBuffCond> = (data,spell)=>{
+    const {condition} = data;
+    return {
+        cast_condition:[{
+            condition:condition,
+            hook:"NonBattleSlowUpdate",
+            target:'raw',
+            force_vaild_target:['self'],
+        }],
+        one_in_chance:2,
+    }
+}
+
 /**条件触发的战斗自身buff */
 export type BattleSelfBuffCond = DefineCastCond<"BattleSelfBuffCond",{
     /**触发条件 u 为自身 n 不存在 */

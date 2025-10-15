@@ -2,7 +2,7 @@ import { Inherit } from '.';
 import { ControlCast } from '.';
 import { ItemCast } from '.';
 import { MeleeTargetDamage, RangeTargetDamage, SelfAoeDamage, TargetDamage, TargetDebuff, TargetDebuffCond } from './TryAttack';
-import { AlawaySelfBuff, AlawaySelfBuffCond, AlawayTargetBuff, BattleSelfBuff, BattleSelfBuffCond, BattleSummonMonster, BattleTargetBuff, BattleTargetBuffCond } from './Update';
+import { AlawaySelfBuff, AlawaySelfBuffCond, AlawayTargetBuff, BattleSelfBuff, BattleSelfBuffCond, BattleSummonMonster, BattleTargetBuff, BattleTargetBuffCond, NonBattleSelfBuffCond } from './Update';
 
 export * from './Other';
 export * from './TryAttack';
@@ -19,6 +19,7 @@ export const CastCondFuncTable = {
     AlawaySelfBuff       ,
     BattleSelfBuff       ,
     AlawaySelfBuffCond   ,
+    NonBattleSelfBuffCond,
     BattleSelfBuffCond   ,
     AlawayTargetBuff     ,
     BattleTargetBuff     ,
@@ -42,6 +43,7 @@ export type CastCondDataTable = {
     AlawaySelfBuff       : AlawaySelfBuff       ;
     BattleSelfBuff       : BattleSelfBuff       ;
     AlawaySelfBuffCond   : AlawaySelfBuffCond   ;
+    NonBattleSelfBuffCond: NonBattleSelfBuffCond;
     BattleSelfBuffCond   : BattleSelfBuffCond   ;
     AlawayTargetBuff     : AlawayTargetBuff     ;
     BattleTargetBuff     : BattleTargetBuff     ;

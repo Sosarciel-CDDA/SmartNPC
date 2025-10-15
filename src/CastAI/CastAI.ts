@@ -1,5 +1,5 @@
 import { JObject, UtilFT } from "@zwa73/utils";
-import { DATA_PATH, MAX_NUM, SADef, getSpellByID } from "@/src/Define";
+import { DATA_PATH, MAX_NUM, SNDef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
@@ -13,13 +13,13 @@ import { createCastAITalkTopic } from "./TalkTopic";
 
 
 //全局冷却字段名
-export const CoCooldownName = `${SADef.MOD_PREFIX}_CoCooldown`;
+export const CoCooldownName = SNDef.genVarID(`CoCooldown`);
 
 //falback字段名
-export const fallbackValName = `${SADef.MOD_PREFIX}_CastFallbackCounter`;
+export const fallbackValName = SNDef.genVarID(`CastFallbackCounter`);
 
 /**总开关 */
-export const CoSwitchDisableName = `${SADef.MOD_PREFIX}_CoSwitchDisable`;
+export const CoSwitchDisableName = SNDef.genVarID(`CoSwitchDisable`);
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
@@ -79,7 +79,7 @@ tableList.forEach((file)=>{
 /**处理角色技能 */
 export async function buildCastAI(dm:DataManager){
     //集火
-    const conattack = SADef.genActEoc("ConcentratedAttack",[{npc_add_effect:ConcentratedAttack.id,duration:10}])
+    const conattack = SNDef.genActEoc("ConcentratedAttack",[{npc_add_effect:ConcentratedAttack.id,duration:10}])
     dm.addInvokeEoc("TryAttack",0,conattack);
 
     const out:JObject[] = [ConcentratedAttack,conattack];
@@ -88,16 +88,16 @@ export async function buildCastAI(dm:DataManager){
     const skills = (Object.values(CastAIDataMap) as CastAIData[]);
 
     //全局冷却事件
-    const GCDEoc = SADef.genActEoc(`CoCooldown`,
+    const GCDEoc = SNDef.genActEoc(`CoCooldown`,
         [{math:[uv(CoCooldownName),"-=","1"]}],
         {math:[uv(CoCooldownName),">","0"]});
     //备用计数器
-    const FBEoc = SADef.genActEoc(`Fallback`,
+    const FBEoc = SNDef.genActEoc(`Fallback`,
         [{math:[uv(fallbackValName),"+=","1"]}],
         {math:[uv(fallbackValName),"<","1000"]});
     dm.addInvokeEoc("NpcUpdate",0,GCDEoc,FBEoc);
     //初始化全局冷却
-    const GCDInit = SADef.genActEoc(`CoCooldown_Init`,
+    const GCDInit = SNDef.genActEoc(`CoCooldown_Init`,
         [{math:[uv(CoCooldownName),"=","0"]}]);
     dm.addInvokeEoc("Init",0,GCDInit);
     out.push(GCDEoc,FBEoc,GCDInit);
@@ -196,12 +196,12 @@ export async function buildCastAI(dm:DataManager){
 
         //独立冷却事件
         if(cooldown){
-            const CDEoc=SADef.genActEoc(`${spell.id}_cooldown`,
+            const CDEoc=SNDef.genActEoc(`${spell.id}_cooldown`,
                 [{math:[uv(cdValName),"-=","1"]}],
                 {math:[uv(cdValName),">","0"]})
             dm.addInvokeEoc("NpcUpdate",0,CDEoc);
             //初始化冷却
-            const CDInit = SADef.genActEoc(`${spell.id}_cooldown_Init`,
+            const CDInit = SNDef.genActEoc(`${spell.id}_cooldown_Init`,
                 [{math:[uv(cdValName),"=","0"]}]);
             dm.addInvokeEoc("Init",0,CDInit);
             out.push(CDEoc,CDInit);

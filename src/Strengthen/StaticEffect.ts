@@ -1,13 +1,11 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { Effect, Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef } from "@/src/Define";
-
-const UID = "CAI";
+import { CON_SPELL_FLAG, SNDef } from "@/src/Define";
 
 /**取消逃跑效果 */
 const Courage:Effect={
     type:"effect_type",
-    id:SADef.genEffectID("Courage"),
+    id:SNDef.genEffectID("Courage"),
     name:["勇气"],
     desc:["NPC不会逃跑, 不会陷入攫抓状态"],
     removes_effects:[
@@ -20,7 +18,7 @@ const Courage:Effect={
 //Npc属性优化
 const SmartNpcMut:Mutation={
     type:'mutation',
-    id:SADef.genMutationID('SmartNpc'),
+    id:SNDef.genMutationID('SmartNpc'),
     flags:['NO_SPELLCASTING','NO_PSIONICS'] as any,//关闭自动施法
     name:"NPC属性优化",
     description:"NPC属性优化",
@@ -49,11 +47,11 @@ const SmartNpcMut:Mutation={
 const BattleRange = 20;
 
 //灵能响应等级锁
-const PsionicDrainLock = `${UID}_PsionicDrainLock`;
+const PsionicDrainLock = SNDef.genVarID('PsionicDrainLock');
 
 //控制队友初始化
 const controlNPCEoc:Eoc = {
-    id:SADef.genEocID('ControlNpc'),
+    id:SNDef.genEocID('ControlNpc'),
     type:"effect_on_condition",
     eoc_type:"ACTIVATION",
     effect:[
@@ -79,7 +77,7 @@ const controlNPCTalkTopic:TalkTopic={
 
 //定期清空需求值
 const resetNeed:Eoc = {
-    id:SADef.genEocID('ResetNeed'),
+    id:SNDef.genEocID('ResetNeed'),
     type:"effect_on_condition",
     eoc_type:"RECURRING",
     recurrence: '12 h',
@@ -99,7 +97,7 @@ const resetNeed:Eoc = {
 //清空灵能响应效果
 const psionicDrainLockEoc:Eoc = {
     type:"effect_on_condition",
-    id:SADef.genEocID('PsionicDrainLock'),
+    id:SNDef.genEocID('PsionicDrainLock'),
     effect:[
         {if:"u_is_avatar",
             then:[
@@ -116,7 +114,7 @@ const psionicDrainLockEoc:Eoc = {
 
 const psionicDrainLock_CastSpell:Eoc = {
     type:"effect_on_condition",
-    id:SADef.genEocID('PsionicDrainLock_CastSpell'),
+    id:SNDef.genEocID('PsionicDrainLock_CastSpell'),
     eoc_type:"EVENT",
     required_event:"character_casts_spell",
     effect:[{run_eocs:[psionicDrainLockEoc.id]}],
@@ -125,7 +123,7 @@ const psionicDrainLock_CastSpell:Eoc = {
 
 export async function buildStaticEffect(dm:DataManager){
     //初始化
-    const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
+    const initNpcStrength = SNDef.genActEoc('InitSmartNpcStrength',[
         {u_add_trait:SmartNpcMut.id},
     ],{and:["u_is_npc",{not:{u_has_trait:SmartNpcMut.id}}]});
     dm.addInvokeID('Init',0,initNpcStrength.id);
@@ -133,7 +131,7 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID('SlowUpdate' ,0 ,initNpcStrength.id);
 
     //回收SmartNpc变异
-    const removeAvatarStrength = SADef.genActEoc('removeAvatarStrength',[
+    const removeAvatarStrength = SNDef.genActEoc('removeAvatarStrength',[
         {u_lose_effect:Courage.id},
         {u_lose_trait:SmartNpcMut.id},
     ],'u_is_avatar');
@@ -142,12 +140,12 @@ export async function buildStaticEffect(dm:DataManager){
 
     //加入战斗
     const joinBattleSpell:Spell = {
-        id:SADef.genSpellID('JoinBattleSpell'),
+        id:SNDef.genSpellID('JoinBattleSpell'),
         name:"加入战斗",
         description:"使周围友军加入战斗",
         type:"SPELL",
         effect:"effect_on_condition",
-        effect_str:dm.getHelperEoc('TryJoinBattle').id,
+        effect_str:dm.getHelperEoc("TryJoinBattle").id,
         min_aoe:BattleRange, max_aoe:BattleRange,
         min_range:1,max_range:1,
         shape:"blast",
@@ -155,7 +153,7 @@ export async function buildStaticEffect(dm:DataManager){
         teachable:false,
         flags:[...CON_SPELL_FLAG],
     }
-    const joinBattle = SADef.genActEoc('JoinBattle',[{u_cast_spell:{id:joinBattleSpell.id}}]);
+    const joinBattle = SNDef.genActEoc('JoinBattle',[{u_cast_spell:{id:joinBattleSpell.id}}]);
     dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
     //灵能响应锁

@@ -1,11 +1,11 @@
 import { Eoc } from "@sosarciel-cdda/schema";
-import { SADef } from "../Define";
+import { SNDef } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 
 
 /**完全回复EOC */
-export const EOC_FULL_RECIVERY = SADef.genEocID("FullRecovery");
+export const EOC_FULL_RECIVERY = SNDef.genEocID("FullRecovery");
 /**完全回复 */
 const FullRecivery: Eoc = {
     type: "effect_on_condition",

@@ -1,18 +1,18 @@
 import { Spell } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SADef, MAX_NUM } from "../Define";
+import { CON_SPELL_FLAG, SNDef, MAX_NUM } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 
 /**施法后摇变量 */
 export const SPELL_CT_MODMOVE_VAR = 'casttime_modmove';
 /**施法后摇法术ID */
-export const SPELL_CT_MODMOVE = SADef.genSpellID(`CastTimeModMove`);
+export const SPELL_CT_MODMOVE = SNDef.genSpellID(`CastTimeModMove`);
 /**加速一回合 */
-export const SPELL_G1T = SADef.genSpellID("Gain1Turn");
+export const SPELL_G1T = SNDef.genSpellID("Gain1Turn");
 /**扣除一回合 */
-export const SPELL_L1T = SADef.genSpellID("Lose1Turn");
+export const SPELL_L1T = SNDef.genSpellID("Lose1Turn");
 /**扣除一tick */
-export const SPELL_L1Tick = SADef.genSpellID("Lose1Tick");
+export const SPELL_L1Tick = SNDef.genSpellID("Lose1Tick");
 export async function createUtilSpell(dm:DataManager){
     const spellCT:Spell = {
         id: SPELL_CT_MODMOVE,

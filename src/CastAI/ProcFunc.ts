@@ -1,5 +1,5 @@
 import { JObject} from "@zwa73/utils";
-import { SADef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
+import { SNDef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
 import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt, BoolExpr} from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
@@ -46,7 +46,7 @@ export const ControlCastResps:Resp[]=[];
 
 
 //命中id
-const fhitvar = `${SADef.MOD_PREFIX}_HasTarget`;
+const fhitvar = SNDef.genVarID(`HasTarget`);
 
 async function rawProc(dm:DataManager,cpd:CastProcData){
     const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
@@ -62,7 +62,7 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
     //主逻辑eoc
     const mainEoc:Eoc = {
         type:"effect_on_condition",
-        id: SADef.genEocID(uid),
+        id: SNDef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
@@ -70,7 +70,7 @@ async function rawProc(dm:DataManager,cpd:CastProcData){
                 u_cast_spell:{ id:spell.id, min_level },
                 targeted: false,
                 true_eocs:{
-                    id:SADef.genEocID(`${uid}_TrueEoc`),
+                    id:SNDef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -105,7 +105,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //创建施法EOC 应与filter一样使用标记法术 待修改
     const castEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEocID(`${uid}_Cast`),
+        id:SNDef.genEocID(`${uid}_Cast`),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
@@ -113,7 +113,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
                 u_cast_spell:{ id:spell.id, min_level },
                 targeted: false,
                 true_eocs:{
-                    id:SADef.genEocID(`${uid}_TrueEoc`),
+                    id:SNDef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -125,7 +125,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
 
     //辅助法术记录坐标的Eoc
     const randomTargetEoc:Eoc={
-        id:SADef.genEocID(`${uid}_RandomTarget`),
+        id:SNDef.genEocID(`${uid}_RandomTarget`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
         effect:[
@@ -140,7 +140,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //随机目标flag只在extra内起效, 所以需要此子法术来索敌
     const randomTargetSpell:Spell={
         type: "SPELL",
-        id:SADef.genSpellID(`${uid}_RandomTarget`),
+        id:SNDef.genSpellID(`${uid}_RandomTarget`),
         name:await awt`${zh(spell.name)}_子随机索敌`,
         description:await awt`${zh(spell.name)}的子随机索敌法术`,
         teachable:false,
@@ -155,7 +155,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //用于进行随机索敌的法术
     const randomTargetMainSpell:Spell={
         type: "SPELL",
-        id: SADef.genSpellID(`${uid}_RandomTargetMain`),
+        id: SNDef.genSpellID(`${uid}_RandomTargetMain`),
         name:await awt`${zh(spell.name)}_主随机索敌`,
         description:await awt`${zh(spell.name)}的主随机索敌法术`,
         teachable:false,
@@ -170,7 +170,7 @@ async function randomProc(dm:DataManager,cpd:CastProcData){
     //主逻辑eoc
     const mainEoc:Eoc = {
         type:"effect_on_condition",
-        id: SADef.genEocID(uid),
+        id: SNDef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             {math:[fhitvar,"=","0"]},
@@ -205,14 +205,14 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     //创建施法EOC
     const castEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEocID(`${uid}_Cast`),
+        id:SNDef.genEocID(`${uid}_Cast`),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
             {
                 u_cast_spell:{ id:spell.id, min_level },
                 true_eocs:{
-                    id:SADef.genEocID(`${uid}_TrueEoc`),
+                    id:SNDef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -224,11 +224,11 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
 
     //筛选目标的Eoc
     const filterTargetEoc:Eoc={
-        id:SADef.genEocID(`${uid}_FilterTarget`),
+        id:SNDef.genEocID(`${uid}_FilterTarget`),
         type:"effect_on_condition",
         eoc_type:"ACTIVATION",
         effect:[{run_eocs:{
-            id:SADef.genEocID(`${uid}_FilterTarget_Rev`),
+            id:SNDef.genEocID(`${uid}_FilterTarget_Rev`),
             eoc_type:"ACTIVATION",
             effect:[{if:{and:[
                 ... (cast_condition.condition ? [cast_condition.condition] : []),
@@ -249,7 +249,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
         max_level,valid_targets,targeted_monster_ids} = spell;
     //console.log(spell.id);
     const filterTargetSpell:Spell = {
-        id:SADef.genSpellID(`${uid}_FilterTarget`),
+        id:SNDef.genSpellID(`${uid}_FilterTarget`),
         type:"SPELL",
         name:await awt`${zh(spell.name)}_筛选索敌`,
         description:await awt`${zh(spell.name)}的筛选索敌法术`,
@@ -268,7 +268,7 @@ async function filter_randomProc(dm:DataManager,cpd:CastProcData){
     //主逻辑eoc
     const mainEoc:Eoc = {
         type:"effect_on_condition",
-        id:SADef.genEocID(uid),
+        id:SNDef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             //{set_string_var:`try ${spell.id}`,target_var:{global_val:'tmpstr'}},
@@ -308,7 +308,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
     //创建施法EOC
     const castEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEocID(uid),
+        id:SNDef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             ...fixedBeforeEffect,
@@ -316,7 +316,7 @@ async function direct_hitProc(dm:DataManager,cpd:CastProcData){
             {
                 u_cast_spell:{ id:spell.id, min_level},
                 true_eocs:{
-                    id:SADef.genEocID(`${uid}_TrueEoc`),
+                    id:SNDef.genEocID(`${uid}_TrueEoc`),
                     effect:[...fixedAfterEffect],
                     eoc_type:"ACTIVATION",
                 },
@@ -390,7 +390,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     //创建选择施法eoc
     const controlEoc:Eoc={
         type:"effect_on_condition",
-        id:SADef.genEocID(uid),
+        id:SNDef.genEocID(uid),
         eoc_type:"ACTIVATION",
         effect:[
             {npc_set_talker:{global_val:"tmp_control_cast_npctalker"}},
@@ -402,15 +402,15 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
             {location_variable_adjust:playerSelectLoc,z_adjust:-10},
 
             {run_eocs:{
-                id:SADef.genEocID(`${uid}_Rev`),
+                id:SNDef.genEocID(`${uid}_Rev`),
                 eoc_type:"ACTIVATION",
                 effect:[
                     {if:{and:[...fixedCond]}, then:[
                         {run_eocs:{
-                            id:SADef.genEocID(`${uid}_Queue`),
+                            id:SNDef.genEocID(`${uid}_Queue`),
                             eoc_type:"ACTIVATION",
                             effect:[{run_eocs:{
-                                id: SADef.genEocID(`${uid}_Queue_With`),
+                                id: SNDef.genEocID(`${uid}_Queue_With`),
                                 eoc_type:"ACTIVATION",
                                 effect:[
                                     {npc_query_tile:"line_of_sight",target_var:playerSelectLoc,range:30},
@@ -419,7 +419,7 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
                                         {u_cast_spell:{ id:spell.id, min_level },
                                         targeted: false,
                                         true_eocs:{
-                                            id:SADef.genEocID(`${uid}_TrueEoc`),
+                                            id:SNDef.genEocID(`${uid}_TrueEoc`),
                                             effect:[...fixedAfterEffect],
                                             eoc_type:"ACTIVATION",
                                         },
@@ -437,8 +437,8 @@ async function control_castProc(dm:DataManager,cpd:CastProcData){
     }
 
     //预先计算能耗与翻转条件
-    const costVar  = `${SADef.MOD_PREFIX}_Tmp_${spell.id}_Cost`;
-    const vaildVar = `${SADef.MOD_PREFIX}_Tmp_${spell.id}_Vaild`;
+    const costVar  = SNDef.genVarID(`Tmp_${spell.id}_Cost`);
+    const vaildVar = SNDef.genVarID(`Tmp_${spell.id}_Vaild`);
     ControlCastSpeakerEffects.push(
         {math:[`u_${costVar}`,"=",getCostExpr(spell)]},
         {

@@ -3,9 +3,9 @@ import { AnyCddaJsonList, GAME_MOD_DIR, ModDefine, Spell, SpellID } from "@sosar
 import path from 'pathe';
 
 /**mod物品前缀 */
-export const MOD_PREFIX = "CAI";
+export const MOD_PREFIX = "SNPC";
 
-export const SADef = new ModDefine(MOD_PREFIX);
+export const SNDef = new ModDefine(MOD_PREFIX);
 
 /**默认最大数字 */
 export const MAX_NUM = 1000000;
@@ -48,4 +48,4 @@ export const CON_SPELL_FLAG = [
 ] as const;
 
 // 战斗规则对话ID
-export const CombatRuleTopicID = SADef.genTalkTopicID(`CombatRule`);
+export const CombatRuleTopicID = SNDef.genTalkTopicID(`CombatRule`);

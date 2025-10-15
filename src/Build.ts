@@ -10,7 +10,7 @@ import { buildCommon } from "./Common";
 
 
 export async function build(){
-    const AIDm = new DataManager(DATA_PATH,OUT_PATH,"CNPCAIEF",{enableMoveStatus:false});
+    const AIDm = new DataManager(DATA_PATH,OUT_PATH,"SNPC_EventFrame",{enableMoveStatus:false});
     await buildCommon(AIDm);
     await buildCastAI(AIDm);
     await buildStrengthen(AIDm);

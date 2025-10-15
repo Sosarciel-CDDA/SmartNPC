@@ -1,18 +1,18 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
 import { Resp, TalkTopic } from "@sosarciel-cdda/schema";
-import { CombatRuleTopicID, SADef, getSpellByID } from "@/src/Define";
+import { CombatRuleTopicID, SNDef, getSpellByID } from "@/src/Define";
 import { CastAIDataMap, CoCooldownName, CoSwitchDisableName } from "./CastAI";
 import { CastAIData } from "./Interface";
 import { getDisableSpellVar, nv, uv } from "./UtilFunc";
 
 
 
-const displayManaName = `${SADef.MOD_PREFIX}_DisplayMana`;
+const displayManaName = SNDef.genVarID(`DisplayMana`);
 
 export async function createCastAITalkTopic(dm:DataManager){
     //对话EOC
-    const TalkEoc = SADef.genActEoc('CastControlTopicEffect',[
+    const TalkEoc = SNDef.genActEoc('CastControlTopicEffect',[
         {run_eocs:{
             id:`CastControlTopicEffect_Rev`,
             eoc_type:"ACTIVATION",
@@ -50,7 +50,7 @@ export async function createCastAITalkTopic(dm:DataManager){
 /**创建施法对话 */
 async function createCastControlResp(dm:DataManager){
     //主对话id
-    const castControlTalkTopicId = SADef.genTalkTopicID(`CastControl`);
+    const castControlTalkTopicId = SNDef.genTalkTopicID(`CastControl`);
     //施法主对话
     const castControlTalkTopic:TalkTopic={
         type:"talk_topic",
@@ -69,7 +69,7 @@ async function createCastControlResp(dm:DataManager){
 /**创建技能对话 */
 async function createSkillResp(dm:DataManager){
     //主对话id
-    const skillTalkTopicId = SADef.genTalkTopicID(`CastSwitch`);
+    const skillTalkTopicId = SNDef.genTalkTopicID(`CastSwitch`);
 
     const skills = (Object.values(CastAIDataMap) as CastAIData[]);
 

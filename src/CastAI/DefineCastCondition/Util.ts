@@ -1,13 +1,13 @@
 import { BoolExpr, Effect, Spell } from "@sosarciel-cdda/schema";
 import { CastCond } from "../Interface";
 import { getAoeExpr } from "../UtilFunc";
-import { SADef } from "@/src/Define";
+import { SNDef } from "@/src/Define";
 
 
 //集火标记
 export const ConcentratedAttack:Effect={
     type:"effect_type",
-    id:SADef.genEffectID("ConcentratedAttack"),
+    id:SNDef.genEffectID("ConcentratedAttack"),
     show_in_info:true,
     name:["被集火"],
     desc:["被集火"],

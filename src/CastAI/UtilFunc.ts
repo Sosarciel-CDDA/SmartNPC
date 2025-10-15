@@ -1,6 +1,6 @@
 import { Spell } from "@sosarciel-cdda/schema";
 import { JToken } from "@zwa73/utils";
-import { MAX_NUM, SADef } from "@/src/Define";
+import { MAX_NUM, SNDef } from "@/src/Define";
 import { CastAIData, CastCond } from "./Interface";
 
 //翻转u与n
@@ -55,7 +55,7 @@ export const getCastTimeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"ba
 
 /**使某个技能停止使用的变量 */
 export function getDisableSpellVar(spell:Spell){
-    return `${SADef.MOD_PREFIX}_${spell.id}_SwitchDisable`;
+    return SNDef.genVarID(`${spell.id}_SwitchDisable`);
 }
 
 /**获得施法的event权重 >0 <1 */
@@ -66,7 +66,7 @@ export function getEventWeight(skill:CastAIData,cond:CastCond){
     return fixweight;
 }
 /**获得法术cdname */
-export const getCDName = (spell:Spell)=>`${SADef.MOD_PREFIX}_${spell.id}_Cooldown`;
+export const getCDName = (spell:Spell)=>SNDef.genVarID(`${spell.id}_Cooldown`);
 
 export const uv = (id:string)=>`u_${id}`;
 export const nv = (id:string)=>`n_${id}`;
