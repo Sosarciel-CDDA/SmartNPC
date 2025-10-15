@@ -59,6 +59,7 @@ const controlNPCEoc:Eoc = {
     effect:[
         {u_add_trait:SmartNpcMut.id},
         {npc_lose_trait:SmartNpcMut.id},
+        {math:[`n_${PsionicDrainLock}`,'=',JM.vitamin('u',"'vitamin_psionic_drain'")]},
         "take_control",
     ],
 }
