@@ -1,8 +1,8 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { Effect, Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SADef } from "@/src/Define";
-import { CombatRuleTopicID } from "@/src/Define";
 
+const UID = "CAI";
 
 /**取消逃跑效果 */
 const Courage:Effect={
@@ -47,6 +47,9 @@ const SmartNpcMut:Mutation={
 
 //战斗距离
 const BattleRange = 20;
+
+//灵能响应等级锁
+const PsionicDrainLock = `${UID}_PsionicDrainLock`;
 
 //控制队友初始化
 const controlNPCEoc:Eoc = {
@@ -93,22 +96,27 @@ const resetNeed:Eoc = {
 }
 
 //清空灵能响应效果
+const psionicDrainLockEoc:Eoc = {
+    type:"effect_on_condition",
+    id:SADef.genEocID('PsionicDrainLock'),
+    effect:[
+        {if:{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'>',`u_${PsionicDrainLock}`]},
+            then:[{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=',`u_${PsionicDrainLock}`]}],
+            else:[{math:[`u_${PsionicDrainLock}`,'=', JM.vitamin('u',"'vitamin_psionic_drain'")]}]}
+    ],
+    condition:{and:["u_is_npc",{mod_is_loaded:"mindovermatter"}]}
+}
 const resetPsionicEffect:Eoc = {
     type:"effect_on_condition",
-    id:SADef.genEocID('ResetVita'),
+    id:SADef.genEocID('PsionicDrainLock_CastSpell'),
     eoc_type:"EVENT",
     required_event:"character_casts_spell",
-    effect:[
-        {math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=','0']}
-    ],
-    condition:{and:[
-        "u_is_npc",
-        {mod_is_loaded:"mindovermatter"},
-    ]}
+    effect:[{run_eocs:[psionicDrainLockEoc.id]}],
+    condition:{and:["u_is_npc",{mod_is_loaded:"mindovermatter"}]}
 }
 
-
 export async function buildStaticEffect(dm:DataManager){
+    //初始化
     const initNpcStrength = SADef.genActEoc('InitSmartNpcStrength',[
         {u_add_trait:SmartNpcMut.id},
     ],{and:["u_is_npc",{not:{u_has_trait:SmartNpcMut.id}}]});
@@ -116,6 +124,7 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID('EnterBattle',0,initNpcStrength.id);
     dm.addInvokeID('SlowUpdate' ,0 ,initNpcStrength.id);
 
+    //回收SmartNpc变异
     const removeAvatarStrength = SADef.genActEoc('removeAvatarStrength',[
         {u_lose_effect:Courage.id},
         {u_lose_trait:SmartNpcMut.id},
@@ -123,6 +132,7 @@ export async function buildStaticEffect(dm:DataManager){
     dm.addInvokeID('SlowUpdate',0,removeAvatarStrength.id);
 
 
+    //加入战斗
     const joinBattleSpell:Spell = {
         id:SADef.genSpellID('JoinBattleSpell'),
         name:"加入战斗",
@@ -140,8 +150,11 @@ export async function buildStaticEffect(dm:DataManager){
     const joinBattle = SADef.genActEoc('JoinBattle',[{u_cast_spell:{id:joinBattleSpell.id}}]);
     dm.addInvokeID("EnterBattle",0,joinBattle.id);
 
+    //灵能响应锁
+    dm.addInvokeID("SlowUpdate",0,psionicDrainLockEoc.id);
+
     dm.addData([
-        controlNPCTalkTopic,controlNPCEoc,resetNeed,resetPsionicEffect,
+        controlNPCTalkTopic,controlNPCEoc,resetNeed,psionicDrainLockEoc,resetPsionicEffect,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
         joinBattle,joinBattleSpell,
     ],'Strength','StaticEffect.json');
