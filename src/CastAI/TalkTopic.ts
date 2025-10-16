@@ -4,7 +4,7 @@ import { Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SNDef, getSpellByID } from "@/src/Define";
 import { CastAIDataMap, CoCooldownName, CoSwitchDisableName } from "./CastAI";
 import { CastAIData } from "./Interface";
-import { getDisableSpellVar, nv, uv } from "./UtilFunc";
+import { getEnableSpellVar, nv, uv } from "./UtilFunc";
 
 
 
@@ -80,20 +80,20 @@ async function createSkillResp(dm:DataManager){
         const spell = getSpellByID(id);
         const name = `<spell_name:${id}>`;
 
-        const nStopVar = nv(getDisableSpellVar(spell));
+        const nEnableVar = nv(getEnableSpellVar(spell));
 
         //开关对话
         const resp:Resp={
             condition:{math:[`n_spell_level('${spell.id}')`,">=","0"]},
             truefalsetext:{
-                condition:{math:[nStopVar,"==","1"]},
-                true:`[已停用] ${name}`,
-                false:`[已启用] ${name}`,
+                condition:{math:[nEnableVar,"==","1"]},
+                true:`[已启用] ${name}`,
+                false:`[已停用] ${name}`,
             },
             effect:{
-                if:{math:[nStopVar,"==","1"]},
-                then:[{math:[nStopVar,"=","0"]}],
-                else:[{math:[nStopVar,"=","1"]}],
+                if:{math:[nEnableVar,"==","1"]},
+                then:[{math:[nEnableVar,"=","0"]}],
+                else:[{math:[nEnableVar,"=","1"]}],
             },
             topic:skillTalkTopicId,
         }

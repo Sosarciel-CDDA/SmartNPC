@@ -3,7 +3,7 @@ import { DATA_PATH, MAX_NUM, SNDef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "@sosarciel-cdda/schema";
 import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
-import { getCastTimeExpr, getCDName, getCostExpr, getDisableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
+import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { BaseCondTable, CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
 import { procSpellTarget } from "./ProcFunc";
 import * as path from 'pathe';
@@ -170,7 +170,7 @@ export async function buildCastAI(dm:DataManager){
 
             const base_cond: BaseCondTable ={
                 manualSwitch:[
-                    {math:[uv(getDisableSpellVar(spell)),"!=","1"]},
+                    {math:[uv(getEnableSpellVar(spell)),"==","1"]},
                 ],
                 cost: (spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
                     ? [{math:[costVar,">=",getCostExpr(spell)]}] : [],

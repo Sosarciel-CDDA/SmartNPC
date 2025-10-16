@@ -54,8 +54,8 @@ export const getCastTimeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"ba
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_casting_time",MAX_NUM)})`;
 
 /**使某个技能停止使用的变量 */
-export function getDisableSpellVar(spell:Spell){
-    return SNDef.genVarID(`${spell.id}_SwitchDisable`);
+export function getEnableSpellVar(spell:Spell){
+    return SNDef.genVarID(`${spell.id}_SwitchEnable`);
 }
 
 /**获得施法的event权重 >0 <1 */
