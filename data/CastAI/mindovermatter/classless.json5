@@ -1,9 +1,9 @@
 {
-    "require_mod": "mindovermatter",
-    "table": {
-        "classless_toggleable_concentration_end":{
-            "type": "NonBattleSelfBuffCond",
-            "condition":{ "u_has_any_effect":[
+    require_mod: "mindovermatter",
+    table: {
+        classless_toggleable_concentration_end:{
+            type: "NonBattleSelfBuffCond",
+            condition:{ u_has_any_effect:[
                 "effect_biokin_physical",
                 "effect_biokin_overcome_pain",
                 "effect_biokin_breathe_skin",
