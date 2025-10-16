@@ -6,6 +6,13 @@ import { getAoeExpr } from "../../UtilFunc";
 
 //#region 自身buff
 
+type BuffCond = {
+    /**触发条件 u 为自身 n TargetBuff时为目标 SelfBuff时不存在 */
+    condition:(BoolExpr);
+    /**权重 默认1 */
+    weight?:number;
+}
+
 /**常态自身buff */
 export type AlawaySelfBuff = DefineCastCond<"AlawaySelfBuff">;
 export const AlawaySelfBuff:DefineCastCondFunc<AlawaySelfBuff> = (data,spell)=>{
@@ -44,12 +51,12 @@ export const BattleSelfBuff:DefineCastCondFunc<BattleSelfBuff> = (data,spell)=>{
 }
 
 /**条件触发的常态自身buff */
-export type AlawaySelfBuffCond = DefineCastCond<"AlawaySelfBuffCond",{
-    /**触发条件 u 为自身 n 不存在 */
-    condition:(BoolExpr)
-}>;
+export type AlawaySelfBuffCond = DefineCastCond<"AlawaySelfBuffCond",BuffCond>;
 export const AlawaySelfBuffCond:DefineCastCondFunc<AlawaySelfBuffCond> = (data,spell)=>{
-    const {condition} = data;
+    const {
+        condition,
+        weight = 1,
+    } = data;
     return {
         cast_condition:[{
             condition:condition,
@@ -63,17 +70,17 @@ export const AlawaySelfBuffCond:DefineCastCondFunc<AlawaySelfBuffCond> = (data,s
             force_vaild_target:['self'],
         }],
         one_in_chance:2,
-        weight:1,
+        weight:weight,
     }
 }
 
 /**条件触发的非战斗自身buff */
-export type NonBattleSelfBuffCond = DefineCastCond<"NonBattleSelfBuffCond",{
-    /**触发条件 u 为自身 n 不存在 */
-    condition:(BoolExpr)
-}>;
+export type NonBattleSelfBuffCond = DefineCastCond<"NonBattleSelfBuffCond",BuffCond>;
 export const NonBattleSelfBuffCond:DefineCastCondFunc<NonBattleSelfBuffCond> = (data,spell)=>{
-    const {condition} = data;
+    const {
+        condition,
+        weight = 1,
+    } = data;
     return {
         cast_condition:[{
             condition:condition,
@@ -82,16 +89,17 @@ export const NonBattleSelfBuffCond:DefineCastCondFunc<NonBattleSelfBuffCond> = (
             force_vaild_target:['self'],
         }],
         one_in_chance:2,
+        weight:weight,
     }
 }
 
 /**条件触发的战斗自身buff */
-export type BattleSelfBuffCond = DefineCastCond<"BattleSelfBuffCond",{
-    /**触发条件 u 为自身 n 不存在 */
-    condition:(BoolExpr)
-}>;
+export type BattleSelfBuffCond = DefineCastCond<"BattleSelfBuffCond",BuffCond>;
 export const BattleSelfBuffCond:DefineCastCondFunc<BattleSelfBuffCond> = (data,spell)=>{
-    const {condition} = data;
+    const {
+        condition,
+        weight = 1,
+    } = data;
     return {
         cast_condition:[{
             condition:condition,
@@ -100,7 +108,7 @@ export const BattleSelfBuffCond:DefineCastCondFunc<BattleSelfBuffCond> = (data,s
             force_vaild_target:['self'],
         }],
         one_in_chance:2,
-        weight:1,
+        weight:weight,
     }
 }
 //#endregion
@@ -130,6 +138,32 @@ export const AlawayTargetBuff:DefineCastCondFunc<AlawayTargetBuff> = (data,spell
     return dat;
 }
 
+/**常态目标buff */
+export type AlawayTargetBuffCond = DefineCastCond<"AlawayTargetBuffCond",BuffCond>;
+export const AlawayTargetBuffCond:DefineCastCondFunc<AlawayTargetBuffCond> = (data,spell)=>{
+    const {
+        condition,
+        weight = 1,
+    } = data;
+    const dat:CastAIData = {
+        cast_condition:[{
+            condition:condition,
+            hook:"BattleUpdate",
+            target:"filter_random"
+        },{
+            condition:condition,
+            hook:"SlowUpdate",
+            target:"filter_random"
+        },{
+            hook:"None",
+            target:"control_cast",
+        }],
+        one_in_chance:2,
+        weight:weight,
+    }
+    return dat;
+}
+
 /**战斗目标buff */
 export type BattleTargetBuff = DefineCastCond<"BattleTargetBuff">;
 export const BattleTargetBuff:DefineCastCondFunc<BattleTargetBuff> = (data,spell)=>{
@@ -149,12 +183,12 @@ export const BattleTargetBuff:DefineCastCondFunc<BattleTargetBuff> = (data,spell
 }
 
 /**条件触发的战斗目标buff */
-export type BattleTargetBuffCond = DefineCastCond<"BattleTargetBuffCond",{
-    /**触发条件 u 为自身 n 为目标 */
-    condition:BoolExpr
-}>;
+export type BattleTargetBuffCond = DefineCastCond<"BattleTargetBuffCond",BuffCond>;
 export const BattleTargetBuffCond:DefineCastCondFunc<BattleTargetBuffCond> = (data,spell)=>{
-    const {condition} = data;
+    const {
+        condition,
+        weight = 1,
+    } = data;
     const dat:CastAIData = {
         cast_condition:[{
             condition:condition,
@@ -165,7 +199,7 @@ export const BattleTargetBuffCond:DefineCastCondFunc<BattleTargetBuffCond> = (da
             target:"control_cast",
         }],
         one_in_chance:2,
-        weight:1,
+        weight:weight,
     }
     return dat;
 }

@@ -127,7 +127,10 @@
         // 此异能需要持续专注来维持，若专注中断则可能失效。
         // 一旦进入战斗，此效果便会取消。
         // 维持此异能需要比平时更高的专注度。
-        biokin_guided_evolution: null,
+        biokin_guided_evolution: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_biokin_guided_evolution" } }
+        },
 
         // [Ψ]战斗之舞(C)
         // 你可以用灵能充盈你的身体，以提高你的战斗灵能。
@@ -143,13 +146,13 @@
         // 此异能需要持续专注来维持，若专注中断则可能失效。
         // 维持此异能需要比平时更高的专注度。
         // “完美律动”无法与“飓风之击”同时激活。
-        biokin_perfected_motion: null,
+        biokin_perfected_motion: "ControlCast",
 
         // [Ψ]暴风连击
         // 你攻击快如幻影，似乎根本看不到你抬手。
         // 在对手一个眨眼之间你就能发动数次攻击，在其刚开始察觉就打出了最后一击。
         // 移动会打断暴风连击的专注并终止效果。
         // 暴风连击 与 极速行动 不能共存。
-        biokin_hurricane_blows: null
+        biokin_hurricane_blows: "ControlCast",
     }
 }

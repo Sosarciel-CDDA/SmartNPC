@@ -29,25 +29,14 @@
         //伤痛分流
         //平摊各个肢体受到的伤害。
         pain_split: {
-            cast_condition: [{
-                hook: "BattleUpdate",
-                condition: { and: [
-                    { math: ["U_MaxHp()-U_MinHp()", ">", "max(U_AvgHp()/2, 10)"] },
-                    { or: [
-                        { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
-                        { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
-                    ]}
+            type: "AlawaySelfBuffCond",
+            condition:{ and: [
+                { math: ["U_MaxHp()-U_MinHp()", ">", "max(U_AvgHp()/2, 10)"] },
+                { or: [
+                    { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                    { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
                 ]}
-            },{
-                hook: "SlowUpdate",
-                condition: { and: [
-                    { math: ["U_MaxHp()-U_MinHp()", ">", "max(U_AvgHp()/2, 10)"] },
-                    { or: [
-                        { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
-                        { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
-                    ]}
-                ]}
-            }]
+            ]}
         },
 
         //残暴之鞭

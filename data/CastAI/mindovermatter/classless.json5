@@ -15,8 +15,20 @@
                 "effect_biokin_metabolism_enhance",
                 "effect_biokin_guided_evolution",
                 "effect_biokin_combat_dance",
+
                 "effect_telekinetic_momentum",
-                "effect_telekinetic_armor"
+                "effect_telekinetic_armor",
+
+                "effect_clair_better_senses",
+                "effect_clair_speed_reader",
+                "effect_clair_premonition",
+                "effect_clair_night_eyes",
+                "effect_clair_see_auras",
+                "effect_clair_ranged_enhance",
+                "effect_clair_dodge",
+                "effect_clair_craft_bonus",
+                "effect_clair_clear_sight",
+                "effect_clair_group_tactics_self",
             ]}
         }
     }
