@@ -58,11 +58,32 @@
 
         //舍己济人
         //将使用者自身部分生命力转化为医疗能量，为同伴治疗。
-        druidic_healing: null,
+        druidic_healing: {
+            cast_condition: [{
+                hook: "BattleUpdate",
+                condition: {and:[
+                    { math: ["u_hp('torso')", ">", "u_hp_max('torso')/2"] },
+                    { or: [
+                        { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                        { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
+                    ]}
+                ]}
+            },{
+                hook: "SlowUpdate",
+                condition: {and:[
+                    { math: ["u_hp('torso')", ">", "u_hp_max('torso')/2"] },
+                    { or: [
+                        { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                        { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
+                    ]}
+                ]}
+            }],
+            weight: -1
+        },
 
         //刺皮术
         //这个法术，从卷轴上覆盖的汁液和尖刺看来，似乎像是棘皮术，但现在那些荆棘效果变成撕裂皮肤造成流血。也许那些被污染的单词可能改变了法术的效果。
-        druid_tornskin: null,
+        druid_tornskin: "TargetDebuff",
 
         //狂野形态
         //这个法术释放出你内心暗藏的兽性，让你长出尖牙利爪，将你的敌人撕成碎片。
@@ -103,11 +124,27 @@
 
         //恢复
         //利用自然的力量慢慢治愈你的伤口。你必须在在户外且远离文明的自然区才能施展恢复。
-        druid_healing: null,
+        druid_healing: "ControlCast",
 
         //鲜花疗法
         //使用一些魔法草药来治疗自己。
-        druid_healing_herb: null,
+        druid_healing_herb: {
+            cast_condition: [{
+                hook: "BattleUpdate",
+                condition: { or: [
+                    { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                    { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
+                ]}
+            },{
+                hook: "SlowUpdate",
+                condition: { or: [
+                    { math: ["U_SumMaxHp() - U_SumHp()", ">", "10"] },
+                    { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                    { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
+                ]}
+            }],
+            weight: -1
+        },
 
         //植物药膏
         //这个法术将树皮和树叶的混合物变成一种强大的药膏，即使是严重的伤口也能止血。
@@ -155,7 +192,6 @@
         //召唤荆棘线
         //召唤出粗壮而迅猛生长的荆棘丛，可令其排成直线，化为坚壁；或使其弯曲成弧，围困敌人。
         druid_summon_brambles_line: null,
-
 
         //棘皮术
         //这个咒语将德鲁伊的皮肤变成一种树皮状的物质，上面覆盖着巨大的刺。
@@ -213,6 +249,6 @@
         //唤醒林卫
         //赋予附近的一棵树木意识与行动能力，使其挣脱土壤，拔地而起，去碾碎你的敌人。
         //当法术失效时，它会重新扎根。你必须站在一棵树的旁边才能让此法术生效。
-        druid_turn_tree_into_treant: null
+        druid_turn_tree_into_treant: "ControlCast"
     }
 }

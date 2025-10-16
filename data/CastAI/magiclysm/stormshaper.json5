@@ -143,7 +143,7 @@
 
         //召唤特拉伏特
         //召唤一只特拉伏特，一只小型、半灵智的灵魂体，它会锁定敌对生物并在接近后爆炸成为一团巨大的电火花云。
-        summon_teravolt: null,
+        summon_teravolt: "BattleSummonMonster",
 
         //迷雾斗篷
         //向天空中的神灵求助，请他们帮你躲避敌人。

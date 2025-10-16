@@ -129,7 +129,7 @@
 
         //熄灭
         //就像炽霜法师可以生火一样，他们也可以通过将火焰的热量直接转化为冰冷，不留下任何让火焰持续的东西，来使其熄灭。
-        kelvinist_extinguish_fire_spell: null,
+        kelvinist_extinguish_fire_spell: "ControlCast",
 
         //寒冰结界
         //召唤一个寒冰法球，只要法球存续，置于其中的任何物品都将得到保鲜。

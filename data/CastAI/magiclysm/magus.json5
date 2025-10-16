@@ -60,14 +60,9 @@
         cats_grace: {
             cast_condition: {
                 hook: "BattleUpdate",
-                condition: {
-                    and: [
-                        { not: { u_has_effect: "cats_grace" } },
-                        { not: { u_has_effect: "eagles_sight" } },
-                        { not: { u_has_effect: "ogres_strength" } },
-                        { not: { u_has_effect: "foxs_cunning" } }
-                    ]
-                }
+                condition:{ not: { u_has_any_effect: [
+                    "cats_grace","eagles_sight","ogres_strength","foxs_cunning"
+                ] } },
             }
         },
 
@@ -76,14 +71,9 @@
         eagles_sight: {
             cast_condition: {
                 hook: "BattleUpdate",
-                condition: {
-                    and: [
-                        { not: { u_has_effect: "cats_grace" } },
-                        { not: { u_has_effect: "eagles_sight" } },
-                        { not: { u_has_effect: "ogres_strength" } },
-                        { not: { u_has_effect: "foxs_cunning" } }
-                    ]
-                }
+                condition:{ not: { u_has_any_effect: [
+                    "cats_grace","eagles_sight","ogres_strength","foxs_cunning"
+                ] } },
             }
         },
 
@@ -92,14 +82,9 @@
         ogres_strength: {
             cast_condition: {
                 hook: "BattleUpdate",
-                condition: {
-                    and: [
-                        { not: { u_has_effect: "cats_grace" } },
-                        { not: { u_has_effect: "eagles_sight" } },
-                        { not: { u_has_effect: "ogres_strength" } },
-                        { not: { u_has_effect: "foxs_cunning" } }
-                    ]
-                }
+                condition:{ not: { u_has_any_effect: [
+                    "cats_grace","eagles_sight","ogres_strength","foxs_cunning"
+                ] } },
             }
         },
 
@@ -108,14 +93,9 @@
         foxs_cunning: {
             cast_condition: {
                 hook: "BattleUpdate",
-                condition: {
-                    and: [
-                        { not: { u_has_effect: "cats_grace" } },
-                        { not: { u_has_effect: "eagles_sight" } },
-                        { not: { u_has_effect: "ogres_strength" } },
-                        { not: { u_has_effect: "foxs_cunning" } }
-                    ]
-                }
+                condition:{ not: { u_has_any_effect: [
+                    "cats_grace","eagles_sight","ogres_strength","foxs_cunning"
+                ] } },
             }
         },
 

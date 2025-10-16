@@ -81,7 +81,7 @@
 
         //反应装甲
         //引爆你的石肤，对附近的敌人造成巨量伤害。
-        reactive_armor: null,
+        reactive_armor: "ControlCast",
 
         //穿刺
         //从地下召唤出岩石尖刺，刺穿你的敌人，并使其暂时无法动弹。
@@ -108,7 +108,7 @@
 
         //召唤塑地者傀儡
         //塑造一个强大的石制傀儡。能帮上你很多，但你没有足够的能量永远维持它。
-        summon_eshaper_golem: null,
+        summon_eshaper_golem: "BattleSummonMonster",
 
         //召唤巨石
         //运用你的塑地之力，从地下的基岩中抽出一张光滑的石桌。

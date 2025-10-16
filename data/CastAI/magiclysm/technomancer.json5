@@ -75,7 +75,7 @@
 
         //魔剑苏生
         //此法术将召唤"活着"的魔法飞剑，切割敌人，切碎为止。
-        animated_blade: "ControlCast",
+        animated_blade: "BattleSummonMonster",
 
         //召唤镜像
         //这个法术通过操纵光线形成一个几乎不可触及的影子生物，简而言之就是一个魔法全息投影。
@@ -101,7 +101,7 @@
         //喷嚏激光术
         //你将体内的生化电池过载，从你的脸上射出半定向的激光光束。
         //这个法术的发明者一定有某种诡异的幽默感。
-        overcharge_eyes: null,
+        overcharge_eyes: "TargetDamage",
 
         //X光视觉
         //你发射一束X射线锥形光束，能在短时间内看清该区域。
@@ -169,6 +169,6 @@
 
         //机械之躯
         //一声令咒，你催动自己的身体如机械般运作，在短暂的片刻间部分无视痛楚。
-        technomancer_pain_ignore: null
+        technomancer_pain_ignore: "BattleSelfBuff"
     }
 }
