@@ -5,63 +5,81 @@
         // 创造一小片光芒，它不是很明亮，但足够阅读或进行其他简单任务。
         // 此项灵能需要专注维持，可能失效于打断专注后。
         // 进入战斗失效。
-        photokinetic_light_local: null,
+        photokinetic_light_local: {
+            type: "NonBattleSelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_light_local" } }
+        },
 
         // [Ψ]驱暗灵光
         // 创造光子，并操控其照亮整片区域。
-        photokinetic_create_light: null,
+        photokinetic_create_light: "ControlCast",
 
         // [Ψ]光照术
         // 创造光子，并操控其照亮整片区域。
-        photokinetic_light_up_enemy: null,
+        photokinetic_light_up_enemy: "ControlCast",
 
         // [Ψ]黑暗降临
         // 截断光线的流动以创造一个黑暗区域。
-        photokinetic_snuff_light: null,
+        photokinetic_snuff_light: "ControlCast",
 
         // [Ψ]光线戏法(C)
         // 操纵身体周围的光线，制造出不断变化的幻象，
         // 模糊你的轮廓与位置，从而让你更难被击中。
         // 一旦被敌人成功击中，你的位置就会暴露，此异能也会随之中断。
         // 此异能需要持续专注来维持，若专注中断则可能失效。
-        photokinetic_light_dodge: null,
+        photokinetic_light_dodge: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_dodge" } }
+        },
 
         // [Ψ]光子集束
         // 汇集一道高能光子束。
-        photokinetic_light_beam: null,
+        photokinetic_light_beam: "TargetDamage",
 
         // [Ψ]拟态伪装(C)
         // 通过将自身反射光与附近表面反射光混合，
         // 你可以使自己在远处更难被发现。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        photokinetic_camouflage: null,
+        photokinetic_camouflage: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_camouflage" } }
+        },
 
         // [Ψ]灵光屏障(C)
         // 在你周围创建一道光的屏障，以保护免受辐射和光能伤害。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        photokinetic_rad_immunity: null,
+        photokinetic_rad_immunity: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_light_barrier" } }
+        },
 
         // [Ψ]幻象武器
         // 用光线创造出额外的手臂，握持物品与武器，
         // 以真真假假的攻击诱使敌人失去平衡，做出错误的防御。
-        photokinetic_light_arms: null,
+        photokinetic_light_arms: "BattleSelfBuff",
 
         // [Ψ]易容幻象(C)
         // 用不起眼的幻象隐藏你真实的形态，
         // 防止没见识的普通人类对你的变异肢体或改造部位大惊小怪。
         // 此项灵能需要专注维持，可能失效于打断专注后。
         // 进入战斗失效。
-        photokinetic_hide_ugly: null,
+        photokinetic_hide_ugly: {
+            type: "NonBattleSelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_hide_ugly" } }
+        },
 
         // [Ψ]幻影替身
         // 操控幻影汇集成你自己的形象，从而混淆和分散敌人的注意力。
-        photokinetic_light_image: null,
+        photokinetic_light_image: "BattleSummonMonster",
 
         // [Ψ]电波交流(C)
         // 调整你的感官以接收无线电波，使你能够侦听或发送信息。
         // 此项灵能需要专注维持，可能失效于打断专注后。
         // 进入战斗失效。
-        photokinetic_radio: null,
+        photokinetic_radio: {
+            type: "NonBattleSelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokinetic_radio" } }
+        },
 
         // [Ψ]伽马灭菌
         // 通过集中的高能辐射束消灭食物中的微生物，
@@ -71,28 +89,34 @@
 
         // [Ψ]传感器干扰
         // 释放一次局部的电磁辐射脉冲，使区域内所有的电子传感设备超载。
-        photokinetic_stun_robots: null,
+        photokinetic_stun_robots: "ControlCast",
 
         // [Ψ]光之帷幕(C)
         // 折射你周围的光线来使你隐身。
         // 如果能力不够熟练，移动时有概率使隐身失效；
         // 近战攻击也会导致隐身失效。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        photokinetic_invisibility: null,
+        photokinetic_invisibility: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_invisibility" } }
+        },
 
         // [Ψ]恒星耀光
         // 创造一道线性的毁灭闪光，对光束路径上的所有目标造成伤害。
-        photokinetic_light_flash: null,
+        photokinetic_light_flash: "TargetDamage",
 
         // [Ψ]致盲光辉 (C)
         // 你可以释放出耀眼的光芒，
         // 任何试图攻击你的人都有被致盲的风险。
         // 此异能需要持续专注来维持，若专注中断则可能失效。
-        photokinetic_blinding_glare: null,
+        photokinetic_blinding_glare: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_blinding_glare" } }
+        },
 
         // [Ψ]瓦解光束
         // 将大量光线集中到一个单一目标上，将其瓦解。
-        photokinetic_light_disintegrate: null,
+        photokinetic_light_disintegrate: "TargetDamage",
 
         // [Ψ]幻影军团 (C)
         // 在周身创造出无数幻象，用以误导和迷惑敌人。
@@ -100,7 +124,10 @@
         // 此异能需要持续专注来维持，若专注中断则可能失效。
         // 维持此异能需要比平时更高的专注度。
         // 当所有幻象都被摧毁时，专注会自动结束。
-        photokinetic_light_army: null,
+        photokinetic_light_army: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_photokin_light_army" } }
+        },
 
         // [Ψ]Phantom Legion Destruction
         // Removes all remaining illusions when the power ends.

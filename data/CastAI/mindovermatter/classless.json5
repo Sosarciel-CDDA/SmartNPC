@@ -16,9 +16,6 @@
                 "effect_biokin_guided_evolution",
                 "effect_biokin_combat_dance",
 
-                "effect_telekinetic_momentum",
-                "effect_telekinetic_armor",
-
                 "effect_clair_better_senses",
                 "effect_clair_speed_reader",
                 "effect_clair_premonition",
@@ -29,6 +26,57 @@
                 "effect_clair_craft_bonus",
                 "effect_clair_clear_sight",
                 "effect_clair_group_tactics_self",
+
+                "effect_electrokin_see_electricity",
+                "effect_electrokin_zap_enemies",
+                "effect_electrokin_melee_attacks",
+                "effect_electrokin_hacking_interface",
+                "effect_electrokin_personal_battery",
+                "effect_electrokin_reduce_pain",
+                "effect_electrokinetic_speed_boost",
+                "effect_electrokinetic_lightning_aura",
+
+                "effect_photokin_light_local",
+                "effect_photokin_dodge",
+                "effect_photokin_camouflage",
+                "effect_photokin_light_barrier",
+                "effect_photokin_hide_ugly",
+                "effect_photokinetic_radio",
+                "effect_photokin_invisibility",
+                "effect_photokin_blinding_glare",
+                "effect_photokin_light_army",
+
+                "effect_pyrokinetic_fire_tool",
+                "effect_pyrokinetic_cloak",
+                "effect_pyrokinetic_torch_weld",
+                "effect_pyrokinetic_aura",
+                "effect_pyrokinetic_flame_immunity",
+
+                "effect_telekinetic_momentum",
+                "effect_telekinetic_water_walking",
+                "effect_telekinetic_lifting_field",
+                "effect_telekinetic_strength",
+                "effect_telekinetic_vehicle_lift",
+                "effect_telekinetic_armor",
+                "effect_telekinetic_levitation",
+
+                "effect_telepathic_learning_bonus",
+                "effect_telepathic_psi_armor",
+                "effect_telepath_sense_minds",
+                "effect_telepathic_morale",
+
+                "effect_teleport_stride",
+                "effect_teleport_reactive_displacement",
+                "effect_teleport_warped_strikes",
+                "effect_teleport_ephemeral_walk",
+                "effect_teleport_warper_combat",
+
+                "effect_vita_health",
+                "effect_vitakin_slow_bleeding",
+                "effect_vita_concentrated_healing",
+                "effect_vita_cure_disease",
+                "effect_vita_super_heal",
+                "effect_vita_return_from_death",
             ]}
         }
     }

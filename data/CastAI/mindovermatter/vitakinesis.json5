@@ -5,13 +5,22 @@
         // 你的异能可使你永葆康健，这也能中止或预防哮喘发作。
         // 此异能需要集中精神来维持，若精神被打断则可能会失效。
         // 治愈光辉无法与集中再生同时激活。
-        vita_health_power: null,
+        vita_health_power: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_any_effect: [
+                "effect_vita_health",
+                "effect_vita_concentrated_healing"
+            ] } }
+        },
 
         // [Ψ]减缓流血(C)
         // 通过提高血小板的效率和加速其流动，
         // 你可以减缓流血的速度，甚至在出血之前就能预防流血。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        vita_slow_bleeding: null,
+        vita_slow_bleeding: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_vitakin_slow_bleeding" } }
+        },
 
         // [Ψ]止血
         // 你专注于你的伤口，让它们愈合、停止流血。
@@ -23,17 +32,39 @@
         // 你也可以用它来控制哮喘发作。
         // 此异能需要集中精神来维持，若精神被打断则可能会失效。
         // “集中再生”无法与“治愈光辉”同时激活。
-        vita_concentrated_healing: null,
+        vita_concentrated_healing: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_any_effect: [
+                "effect_vita_health",
+                "effect_vita_concentrated_healing"
+            ] } }
+        },
 
         // [Ψ]衰弱之触
         // 只要轻轻一碰，你的目标就会开始慢慢衰弱。
         // 这对拥有超自然治愈能力的目标效果显著，但对正常人也有效果。
-        vita_hurt_touch: null,
+        vita_hurt_touch: "TargetDebuff",
 
         // [Ψ]疗愈之触
         // 你可以将治愈光辉灵能施加在一个追随者或盟友身上。
         // 这也可以阻止哮喘发作。
-        vita_health_power_ally: null,
+        vita_health_power_ally: {
+            cast_condition: [{
+                hook: "BattleUpdate",
+                condition: { or: [
+                    { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                    { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
+                ]}
+            },{
+                hook: "SlowUpdate",
+                condition: { or: [
+                    { math: ["N_SumMaxHp()-N_SumHp()", ">", "10"] },
+                    { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                    { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
+                ]}
+            }],
+            weight: -1
+        },
 
         // [Ψ]排出毒素
         // 你在中毒后可以将毒素隔离并移动到汗腺中，
@@ -49,7 +80,10 @@
         // [Ψ]免疫增强(C)
         // 将你的免疫系统加速，以对抗你可能正在遭受的任何疾病。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        vita_cure_disease: null,
+        vita_cure_disease: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_vita_cure_disease" } }
+        },
 
         // [Ψ]消除感染
         // 之前你用一个念头就能止血。
@@ -63,7 +97,7 @@
         // [Ψ]撕裂触碰
         // 疗愈者灵能的反向应用，
         // 你随机撕裂肌肉、切断血管，对目标造成显著的伤害。
-        vita_attack_touch: null,
+        vita_attack_touch: "TargetDamage",
 
         // [Ψ]辐射净化
         // 使用你的灵能来隔离和冲洗你体内的辐射。
@@ -85,7 +119,10 @@
         // 你调动身体的潜能，将自愈速度提高百倍。
         // 此项灵能需要专注维持，可能失效于打断专注后。
         // 比其寻常灵能需要更多专注。
-        vita_super_heal: null,
+        vita_super_heal: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_vita_super_heal" } }
+        },
 
         // [Ψ]断肢再生
         // 你将你的思绪沉入自己内心最深处，进入冥想的状态，
@@ -97,12 +134,15 @@
         // 作为疗愈者逆转生命进程之力的终极体现，
         // 此能力可引发目标体内大规模的细胞崩解，
         // 导致其重伤、衰弱，甚至可能死亡。
-        vita_degenerating_touch: null,
+        vita_degenerating_touch: "TargetDamage",
 
         // [Ψ]回光返照(C)
         // 当这个灵能处于激活状态时，
         // 如果你遭受潜在致命伤害，你的疗愈灵能将超负荷运转以维系你的生命。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        vita_return_from_death: null
+        vita_return_from_death: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_vita_return_from_death" } }
+        },
     }
 }

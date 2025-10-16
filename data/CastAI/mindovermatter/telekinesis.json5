@@ -41,18 +41,28 @@
         // 通过抬升自身来抵消体重，从而让液体的表面张力足以支撑你，使你能够行走于水面之上。
         // 此异能需要持续专注来维持，若专注中断则可能失效。
         // 维持此异能需要比平时更高的专注度。
-        telekinetic_water_walk: null,
+        telekinetic_water_walk: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_telekinetic_water_walking" } }
+        },
+
 
         // [Ψ]悬浮场(C)
         // 将一个物体悬停在你旁边，供你轻松取用或腾出双手执行其他任务。
         // 此项灵能需要专注维持，可能失效于打断专注后。
-        telekinetic_lifting_field: null,
+        telekinetic_lifting_field: {
+            type: "AlawaySelfBuffCond",
+            condition: { not: { u_has_effect: "effect_telekinetic_lifting_field" } }
+        },
 
         // [Ψ]强化力量(C)
         // 集中提高你的灵能，让你能够移动更重的物体或砸破墙壁。
         // 此项灵能需要专注维持，可能失效于打断专注后。
         // 进入战斗失效。
-        telekinetic_strength: null,
+        telekinetic_strength: {
+            type: "NonBattleSelfBuffCond",
+            condition: { not: { u_has_effect: "effect_telekinetic_strength" } }
+        },
 
         // [Ψ]念力锤击
         // 用灵能砸击单个目标或小片区域。
@@ -63,7 +73,10 @@
         // 随着你的灵能增加，你将能够举起更重的车辆。
         // 此项灵能需要专注维持，可能失效于打断专注后。
         // 进入战斗失效。
-        telekinetic_vehicle_lift: null,
+        telekinetic_vehicle_lift: {
+            type: "NonBattleSelfBuffCond",
+            condition: { not: { u_has_effect: "effect_telekinetic_vehicle_lift" } }
+        },
 
         // [Ψ]念力屏障(C)
         // 创建一个念动屏障，保护自己免受伤害。
@@ -83,7 +96,10 @@
         // 此异能需要持续专注来维持，若专注中断则可能失效。
         // 一旦进入战斗，此效果便会取消。
         // 维持此异能需要比平时更高的专注度。
-        telekinetic_levitation: null,
+        telekinetic_levitation: {
+            type: "NonBattleSelfBuffCond",
+            condition: { not: { u_has_effect: "effect_telekinetic_levitation" } }
+        },
 
         // [Ψ]超念动
         // 范围及强度更大的念动，这种灵能可以让你移动非常重的物品，
