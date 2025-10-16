@@ -1,8 +1,7 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Effect, Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { Effect, Eoc, JM, listCtor, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SNDef } from "../Define";
 import { EOC_FULL_RECIVERY } from "@/src/Common";
-import { listCtor } from "../Utils";
 
 const IslandModId = "skyisland";
 const IslandModOrigLocId = 'OM_HQ_origin';
