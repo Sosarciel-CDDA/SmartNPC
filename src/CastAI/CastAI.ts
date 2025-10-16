@@ -44,9 +44,12 @@ const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
 //载入数据
 /**施法AI数据 */
 export const CastAIDataMap:CastAIDataTable = {};
-const tableList = UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json").replaceAll("\\","/"));
+const tableList = [
+    ...UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json")),
+    ...UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json5")),
+];
 tableList.forEach((file)=>{
-    const json = UtilFT.loadJSONFileSync(file) as CastAIDataJsonTable;
+    const json = UtilFT.loadJSONFileSync(file,{json5:true,forceExt:true}) as CastAIDataJsonTable;
 
     Object.entries(json.table).forEach(([spellID,castData])=>{
         if(castData==undefined) return;

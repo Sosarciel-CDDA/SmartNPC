@@ -1,7 +1,0 @@
-{
-    "require_mod": "magiclysm",
-    "table": {
-        "obfuscated_body":"BattleSelfBuff",
-        "obfuscated_body_plus":"BattleSelfBuff"
-    }
-}
