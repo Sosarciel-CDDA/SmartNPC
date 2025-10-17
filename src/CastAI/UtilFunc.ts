@@ -53,7 +53,7 @@ export const getRangeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"min_r
 export const getCastTimeExpr = (spell:Spell)=> `min(${parseSpellNumObj(spell,"base_casting_time")} + ${parseSpellNumObj(spell,"casting_time_increment")} * `+
     `u_spell_level('${spell.id}'), ${parseSpellNumObj(spell,"final_casting_time",MAX_NUM)})`;
 
-/**使某个技能停止使用的变量 */
+/**使某个技能允许使用的变量 */
 export function getEnableSpellVar(spell:Spell){
     return SNDef.genVarID(`${spell.id}_SwitchEnable`);
 }

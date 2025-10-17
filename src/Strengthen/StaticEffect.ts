@@ -48,6 +48,7 @@ const BattleRange = 20;
 
 //灵能响应等级锁
 const PsionicDrainLock = SNDef.genVarID('PsionicDrainLock');
+const uPsiVit = JM.vitamin('u',"'vitamin_psionic_drain'");
 
 //控制队友初始化
 const controlNPCEoc:Eoc = {
@@ -57,7 +58,7 @@ const controlNPCEoc:Eoc = {
     effect:[
         {u_add_trait:SmartNpcMut.id},
         {npc_lose_trait:SmartNpcMut.id},
-        {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('u',"'vitamin_psionic_drain'")]},
+        {math:[`u_${PsionicDrainLock}`,'=',uPsiVit]},
         "take_control",
     ],
 }
@@ -101,12 +102,13 @@ const psionicDrainLockEoc:Eoc = {
     effect:[
         {if:"u_is_avatar",
             then:[
-                {math:[`u_${PsionicDrainLock}`,'=',JM.vitamin('u',"'vitamin_psionic_drain'")]},
+                {math:[`u_${PsionicDrainLock}`,'=',uPsiVit]},
             ],
             else:[
-                {if:{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'>',`u_${PsionicDrainLock}`]},
-                    then:[{math:[JM.vitamin('u',"'vitamin_psionic_drain'"),'=',`u_${PsionicDrainLock}`]}],
-                    else:[{math:[`u_${PsionicDrainLock}`,'=', JM.vitamin('u',"'vitamin_psionic_drain'")]}]}
+                {math:[uPsiVit,'-=','1']},
+                {if:{math:[uPsiVit,'>',`u_${PsionicDrainLock}`]},
+                    then:[{math:[uPsiVit,'=',`u_${PsionicDrainLock}`]}],
+                    else:[{math:[`u_${PsionicDrainLock}`,'=',uPsiVit]}]}
             ]},
     ],
     condition:{mod_is_loaded:"mindovermatter"}
