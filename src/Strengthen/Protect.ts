@@ -1,7 +1,7 @@
 import { DataManager } from "@sosarciel-cdda/event";
 import { Effect, Eoc, JM, listCtor, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SNDef } from "../Define";
-import { EOC_FULL_RECIVERY } from "@/src/Common";
+import { CONTROL_MAGIC_TYPE_ID, EOC_FULL_RECIVERY } from "@/src/Common";
 
 const IslandModId = "skyisland";
 const IslandModOrigLocId = 'OM_HQ_origin';
@@ -104,6 +104,7 @@ export async function buildProtect(dm:DataManager){
         shape:'blast',
         teachable:false,
         flags:[...CON_SPELL_FLAG],
+        magic_type:CONTROL_MAGIC_TYPE_ID,
     }
 
 
@@ -127,6 +128,7 @@ export async function buildProtect(dm:DataManager){
         shape:'blast',
         teachable:false,
         flags:[...CON_SPELL_FLAG],
+        magic_type:CONTROL_MAGIC_TYPE_ID,
     }
     //#endregion 传送到出生点
 

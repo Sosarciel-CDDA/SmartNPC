@@ -21,10 +21,8 @@ const SmartNpcMut:Mutation={
     id:SNDef.genMutationID('SmartNpc'),
     flags:[
         'NO_SPELLCASTING','NO_PSIONICS',
-        "NO_THORNWITCHERY",
-        "NO_FEY_MAGIC",
-        "NO_HEDGE_MAGICK",
-        "NO_VAMPIRE_BLOOD_POWERS",
+        "NO_THORNWITCHERY", "NO_FEY_MAGIC",
+        "NO_HEDGE_MAGICK", "NO_VAMPIRE_BLOOD_POWERS",
         "NO_WEREWOLF_POWERS"
     ] as any,//关闭自动施法
     name:"NPC属性优化",
@@ -49,6 +47,7 @@ const SmartNpcMut:Mutation={
         }]
     }]
 }
+
 
 //战斗距离
 const BattleRange = 20;
