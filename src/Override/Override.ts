@@ -99,5 +99,5 @@ const xedra = [
 export const buildXedraOverride = (dm:DataManager)=>{
     dm.addData([
         ...xedra,
-    ],'Override','Xedra');
+    ],'mod_interactions','xedra_evolved','Override');
 }
