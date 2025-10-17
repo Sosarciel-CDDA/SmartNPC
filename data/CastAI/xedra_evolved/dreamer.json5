@@ -32,40 +32,20 @@
         dreamer_artifact: null,
         xedra_dreamer_generate_accelerated_time: null,
         spell_ethereal_wings:{
-            type: "Inherit",
-            base:{
-                type: "AlawaySelfBuffCond",
-                condition:{not:{u_has_trait:"ethereal_wings"}}
-            },
-            ignore_cost: true,
-            ignore_time: true,
+            type: "AlawaySelfBuffCond",
+            condition:{not:{u_has_trait:"ethereal_wings"}}
         },
         spell_karma_arms:{
-            type: "Inherit",
-            base:{
-                type: "AlawaySelfBuffCond",
-                condition:{not:{u_has_trait:"karma_arms"}}
-            },
-            ignore_cost: true,
-            ignore_time: true,
+            type: "AlawaySelfBuffCond",
+            condition:{not:{u_has_trait:"karma_arms"}}
         },
         spell_stalker_eyes:{
-            type: "Inherit",
-            base:{
-                type: "AlawaySelfBuffCond",
-                condition:{not:{u_has_trait:"stalker_eyes"}}
-            },
-            ignore_cost: true,
-            ignore_time: true,
+            type: "AlawaySelfBuffCond",
+            condition:{not:{u_has_trait:"stalker_eyes"}}
         },
         spell_devil_tail:{
-            type: "Inherit",
-            base:{
-                type: "AlawaySelfBuffCond",
-                condition:{not:{u_has_trait:"devil_tail"}}
-            },
-            ignore_cost: true,
-            ignore_time: true,
+            type: "AlawaySelfBuffCond",
+            condition:{not:{u_has_trait:"devil_tail"}}
         },
         dreamer_lucid_dreams: null
     }
