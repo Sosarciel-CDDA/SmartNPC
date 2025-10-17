@@ -47,6 +47,21 @@ export type CastAIDataJsonTable = {
     table:(CastAIDataTable);
 };
 
+type OverrideOpt = {
+    /**忽略能量消耗 */
+    ignore_cost?    : boolean;
+    /**忽略施法时间 */
+    ignore_time?    : boolean;
+    /**忽略经验增长 */
+    ignore_exp?     : boolean;
+    /**不检查是否学会, 强制使用某个法术等级 */
+    force_lvl?      : (NumberExpr);
+    /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
+    weight?          :number;
+    /**强制覆盖的有效目标 适用于random与filter_random */
+    force_vaild_target?  : Spell['valid_targets'];
+}
+
 /**施法数据 */
 export type CastAIData = {
     /**目标法术ID 默认为键值 */
@@ -57,8 +72,6 @@ export type CastAIData = {
     common_condition?:(BoolExpr);
     /**合并条件 用于辅助event合并的条件 基于表单自动生成 无需填写 */
     merge_condition ?:MergeCondTable;
-    /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
-    weight?          :number;
     /**概率 有1/chance的几率使用这个技能 默认1 */
     one_in_chance?   :number;
     /**冷却时间 单位为每次CharUpdate 默认0 */
@@ -71,9 +84,7 @@ export type CastAIData = {
     after_effect?    :EocEffect[];
     /**尝试释放时就运行的效果 */
     before_effect?   :EocEffect[];
-    /**强制覆盖的有效目标 适用于random与filter_random */
-    force_vaild_target?  : Spell['valid_targets'];
-};
+}&OverrideOpt;
 /**未处理的施法数据 */
 export type RawCastAIData = CastAIData|DefCastData;
 
@@ -104,19 +115,9 @@ export type CastCond={
     after_effect?   : EocEffect[];
     /**尝试释放时就运行的效果 */
     before_effect?  : EocEffect[];
-    /**忽略能量消耗 */
-    ignore_cost?    : boolean;
-    /**忽略经验增长 */
-    infoge_exp?     : boolean;
-    /**不检查是否学会, 强制使用某个法术等级 */
-    force_lvl?      : (NumberExpr);
-    /**此条件的独立权重 取值范围 -99 ~ 99 默认0 */
-    weight?         : number;
     /**在 n 秒没有成功施法后才会启用此条件 */
     fallback_with?  : number;
-    /**强制覆盖的有效目标 适用于random与filter_random */
-    force_vaild_target?  : Spell['valid_targets'];
-}
+}&OverrideOpt;
 
 /**合并条件表 */
 export type MergeCondTable = {

@@ -107,7 +107,8 @@ export async function buildCastAI(dm:DataManager){
 
     //遍历技能
     for(const skill of skills){
-        const {id,cast_condition,cooldown,common_cooldown} = skill;
+        const {id,cast_condition,cooldown,common_cooldown,} = skill;
+        
         //获取法术数据
         const spell = getSpellByID(id);
 
@@ -131,8 +132,14 @@ export async function buildCastAI(dm:DataManager){
 
         //遍历释放条件生成施法eoc
         for(const cast_condition of ccList){
-            const {target, ignore_cost, fallback_with} = cast_condition;
+            const {target, fallback_with} = cast_condition;
+
+            const ignore_cost= cast_condition.ignore_cost??skill.ignore_cost??false;
+            const ignore_time= cast_condition.ignore_time??skill.ignore_time??false;
+            const ignore_exp = cast_condition.ignore_exp ??skill.ignore_exp??false;
+            const force_lvl  = cast_condition.force_lvl ??skill.force_lvl;
             const force_vaild_target = cast_condition.force_vaild_target ?? skill.force_vaild_target;
+
 
             //#region 计算成功效果
             const after_effect:EocEffect[]=[];
@@ -146,7 +153,7 @@ export async function buildCastAI(dm:DataManager){
             if(skill.after_effect)
                 after_effect.push(...skill.after_effect);
             //施法时间
-            if(spell.base_casting_time){
+            if(spell.base_casting_time && ignore_time!==true){
                 after_effect.push(
                     {math:[SPELL_CT_MODMOVE_VAR,"=",getCastTimeExpr(spell)]},
                     {u_cast_spell:{id:SPELL_CT_MODMOVE,hit_self:true}}
@@ -156,7 +163,7 @@ export async function buildCastAI(dm:DataManager){
             if(spell.base_energy_cost!=undefined && ignore_cost!==true)
                 after_effect.push(... useCost(costType,getCostExpr(spell)));
             //经验增长
-            if(cast_condition.infoge_exp!=true)
+            if(ignore_exp!==true)
                 after_effect.push({math:[JM.spellExp('u',`'${id}'`),"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
             //清空备用计数器
             after_effect.push({math:[uv(fallbackValName),"=",String(fallback_with ?? 0)]})
@@ -172,9 +179,9 @@ export async function buildCastAI(dm:DataManager){
             //#region 计算基础条件
             //计算施法等级
             const maxstr = parseSpellNumObj(spell,'max_level');
-            const hasMinLvl = cast_condition.force_lvl!=null;
+            const hasMinLvl = force_lvl!=null;
             const min_level:NumberExpr = hasMinLvl
-                ? cast_condition.force_lvl!
+                ? force_lvl!
                 : {math:[`min(u_spell_level('${spell.id}'), ${maxstr})`]};
 
             const base_cond: BaseCondTable ={
