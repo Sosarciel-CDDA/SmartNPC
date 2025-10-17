@@ -3,6 +3,7 @@ import { buildCastAI } from "./CastAI";
 import { DATA_PATH, OUT_PATH } from "./Define";
 import { buildStrengthen } from "./Strengthen";
 import { buildCommon } from "./Common";
+import { buildOverride } from "./Override";
 
 
 
@@ -14,5 +15,6 @@ export async function build(){
     await buildCommon(AIDm);
     await buildCastAI(AIDm);
     await buildStrengthen(AIDm);
+    await buildOverride(AIDm);
     await AIDm.saveAllData();
 }
