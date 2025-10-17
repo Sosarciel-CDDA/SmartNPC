@@ -1,0 +1,49 @@
+import { DataManager } from "@sosarciel-cdda/event";
+
+const mom = [
+    {
+        id: "classless_toggleable_concentration_end",
+        type: "SPELL",
+        name: "[Ψ]Stop Concentrating",
+        description:
+            "End your concentration on all of your maintained powers.\n\nChanneling this power <color_green>always succeeds</color>.",
+        message: "You stop concentrating on your powers.",
+        teachable: false,
+        valid_targets: ["self"],
+        skill: "metaphysics",
+        flags: ["PSIONIC", "NO_FAIL", "NON_MAGICAL", "SILENT", "NO_HANDS", "NO_LEGS"],
+        effect: "effect_on_condition",
+        effect_str: "EOC_END_PSI_POWERS_MAINTAINED",
+        shape: "blast",
+        max_level: 1,
+        energy_source: "STAMINA",
+        base_energy_cost: 0,
+        base_casting_time: 0,
+        magic_type: "mom_psionics",
+    },
+    {
+        id: "classless_specific_concentration_end",
+        type: "SPELL",
+        name: "[Ψ]Stop Concentrating (Individual)",
+        description:
+            "End your concentration on a specific power.\n\nChanneling this power <color_green>always succeeds</color>.",
+        message: "You stop concentrating on one of your powers.",
+        teachable: false,
+        valid_targets: ["self"],
+        skill: "metaphysics",
+        flags: ["PSIONIC", "NO_FAIL", "NON_MAGICAL", "SILENT", "NO_HANDS", "NO_LEGS"],
+        effect: "effect_on_condition",
+        effect_str: "EOC_END_PSI_POWERS_SPECIFIC",
+        shape: "blast",
+        max_level: 1,
+        energy_source: "STAMINA",
+        base_energy_cost: 0,
+        base_casting_time: 0,
+        magic_type: "mom_psionics",
+    },
+];
+
+
+export const buildMomOverride = (dm: DataManager) => {
+    dm.addData([...mom], "mod_interactions", "mindovermatter", "Override");
+};

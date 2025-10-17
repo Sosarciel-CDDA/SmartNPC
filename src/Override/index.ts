@@ -1,5 +1,6 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { buildXedraOverride } from "./Override";
+import { buildXedraOverride } from "./xedra_evolved";
+import { buildMomOverride } from "./mindovermatter";
 
 
 
@@ -8,5 +9,6 @@ import { buildXedraOverride } from "./Override";
 export const buildOverride = async (dm:DataManager)=>{
     await Promise.all([
         buildXedraOverride(dm),
+        buildMomOverride(dm),
     ]);
 }

@@ -15,5 +15,6 @@ export async function build(){
     await buildCommon(AIDm);
     await buildCastAI(AIDm);
     await buildStrengthen(AIDm);
+    await buildOverride(AIDm);
     await AIDm.saveAllData();
 }
