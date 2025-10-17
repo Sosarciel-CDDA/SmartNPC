@@ -38,7 +38,7 @@ export function getSpellByID(id?:SpellID){
     }
     spell.name = (typeof spell.name == 'string' ? spell.name : spell.name.str??spell.name.str_sp??spell.name.str_pl??spell.name.ctxt) as string;
     if(spell.magic_type!=undefined && spell.energy_source==undefined)
-        spell.energy_source = spellTypeMap[spell.magic_type]!.energy_source;
+        spell.energy_source = spellTypeMap[spell.magic_type]?.energy_source;
 
     return spell;
 }
