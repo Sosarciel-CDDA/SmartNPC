@@ -8,23 +8,7 @@
         //血肉缝合
         //使目标的伤口蠕动，血肉自行聚合，从而治愈其伤势。
         //此术虽诡异可怖，痛苦难当，却颇有奇效。
-        light_healing: {
-            cast_condition: [{
-                hook: "BattleUpdate",
-                condition: { or: [
-                    { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
-                    { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
-                ]}
-            },{
-                hook: "SlowUpdate",
-                condition: { or: [
-                    { math: ["N_SumMaxHp()-N_SumHp()", ">", "10"] },
-                    { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
-                    { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
-                ]}
-            }],
-            weight: -1
-        },
+        light_healing: "TargetHeal",
 
         //伤痛分流
         //平摊各个肢体受到的伤害。

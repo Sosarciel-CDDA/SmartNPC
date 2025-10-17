@@ -128,23 +128,7 @@
 
         //鲜花疗法
         //使用一些魔法草药来治疗自己。
-        druid_healing_herb: {
-            cast_condition: [{
-                hook: "BattleUpdate",
-                condition: { or: [
-                    { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
-                    { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
-                ]}
-            },{
-                hook: "SlowUpdate",
-                condition: { or: [
-                    { math: ["U_SumMaxHp() - U_SumHp()", ">", "10"] },
-                    { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
-                    { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
-                ]}
-            }],
-            weight: -1
-        },
+        druid_healing_herb: "SelfHeal",
 
         //植物药膏
         //这个法术将树皮和树叶的混合物变成一种强大的药膏，即使是严重的伤口也能止血。

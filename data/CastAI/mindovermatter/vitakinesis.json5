@@ -48,23 +48,7 @@
         // [Ψ]疗愈之触
         // 你可以将治愈光辉灵能施加在一个追随者或盟友身上。
         // 这也可以阻止哮喘发作。
-        vita_health_power_ally: {
-            cast_condition: [{
-                hook: "BattleUpdate",
-                condition: { or: [
-                    { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
-                    { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
-                ]}
-            },{
-                hook: "SlowUpdate",
-                condition: { or: [
-                    { math: ["N_SumMaxHp()-N_SumHp()", ">", "10"] },
-                    { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
-                    { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
-                ]}
-            }],
-            weight: -1
-        },
+        vita_health_power_ally: "TargetHeal",
 
         // [Ψ]排出毒素
         // 你在中毒后可以将毒素隔离并移动到汗腺中，

@@ -1571,8 +1571,10 @@
 															"MeleeTargetDamage",
 															"RangeTargetDamage",
 															"SelfAoeDamage",
+															"SelfHeal",
 															"TargetDamage",
-															"TargetDebuff"
+															"TargetDebuff",
+															"TargetHeal"
 														],
 														"type": "string"
 													}
@@ -1830,8 +1832,10 @@
 															"MeleeTargetDamage",
 															"RangeTargetDamage",
 															"SelfAoeDamage",
+															"SelfHeal",
 															"TargetDamage",
-															"TargetDebuff"
+															"TargetDebuff",
+															"TargetHeal"
 														],
 														"type": "string"
 													}
@@ -1859,8 +1863,10 @@
 									"MeleeTargetDamage",
 									"RangeTargetDamage",
 									"SelfAoeDamage",
+									"SelfHeal",
 									"TargetDamage",
-									"TargetDebuff"
+									"TargetDebuff",
+									"TargetHeal"
 								],
 								"type": "string"
 							},

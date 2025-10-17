@@ -209,6 +209,7 @@ export const BattleTargetBuffCond:DefineCastCondFunc<BattleTargetBuffCond> = (da
 
 //战斗距离
 const BattleRange = 20;
+
 /**召唤怪物 */
 export type BattleSummonMonster = DefineCastCond<"BattleSummonMonster">;
 export const BattleSummonMonster:DefineCastCondFunc<BattleSummonMonster> = (data,spell)=>{
@@ -229,4 +230,51 @@ export const BattleSummonMonster:DefineCastCondFunc<BattleSummonMonster> = (data
         one_in_chance:2,
     }
 
+}
+
+/**目标治疗 */
+export type TargetHeal = DefineCastCond<"TargetHeal">;
+export const TargetHeal:DefineCastCondFunc<TargetHeal> = (data,spell)=>{
+    return {
+        cast_condition: [{
+            hook: "BattleUpdate",
+            condition: { or: [
+                { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
+            ]}
+        },{
+            hook: "SlowUpdate",
+            condition: { or: [
+                { math: ["N_SumMaxHp()-N_SumHp()", ">", "10"] },
+                { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
+                { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
+            ]}
+        },{
+            hook:"None",
+            target:"control_cast",
+        }],
+        weight: -1
+    }
+}
+
+/**自身治疗 */
+export type SelfHeal = DefineCastCond<"SelfHeal">;
+export const SelfHeal:DefineCastCondFunc<SelfHeal> = (data,spell)=>{
+    return {
+        cast_condition: [{
+            hook: "BattleUpdate",
+            condition: { or: [
+                { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
+            ]}
+        },{
+            hook: "SlowUpdate",
+            condition: { or: [
+                { math: ["U_SumMaxHp() - U_SumHp()", ">", "10"] },
+                { math: ["u_hp('torso')", "<=", "u_hp_max('torso')/3"] },
+                { math: ["u_hp('head')", "<=", "u_hp_max('head')/3"] }
+            ]}
+        }],
+        weight: -1
+    }
 }
