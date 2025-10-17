@@ -29,7 +29,7 @@ const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
 
 const flatBaseCond = (cond:BaseCondTable):BoolExpr[]=>{
     const {cooldown,cost,counter,know,manualSwitch} = cond;
-    return [...manualSwitch, ...cost, ...cooldown, ...counter, ...know];
+    return [...manualSwitch, ...cooldown, ...counter, ...know, ...cost];
 }
 
 const flatMergeCond = (cond:MergeCondTable|undefined):BoolExpr=>{

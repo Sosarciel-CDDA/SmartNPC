@@ -1,7 +1,7 @@
 import { JObject, UtilFT } from "@zwa73/utils";
 import { DATA_PATH, MAX_NUM, SNDef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "@sosarciel-cdda/schema";
-import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
+import { EOC_SEND_MESSAGE, EOC_SEND_MESSAGE_VAR, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { BaseCondTable, CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
@@ -157,9 +157,15 @@ export async function buildCastAI(dm:DataManager){
                 after_effect.push(... useCost(costType,getCostExpr(spell)));
             //经验增长
             if(cast_condition.infoge_exp!=true)
-                after_effect.push({math:[JM.spellExp('u',`'${spell.id}'`),"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
+                after_effect.push({math:[JM.spellExp('u',`'${id}'`),"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
             //清空备用计数器
             after_effect.push({math:[uv(fallbackValName),"=",String(fallback_with ?? 0)]})
+            //发送施法消息
+            after_effect.push(
+                {set_string_var:`<u_name> 释放了 <spell_name:${id}>`,
+                    target_var:{global_val:EOC_SEND_MESSAGE_VAR},parse_tags:true},
+                {message:{global_val:EOC_SEND_MESSAGE_VAR}},
+            );
             //#endregion
 
 

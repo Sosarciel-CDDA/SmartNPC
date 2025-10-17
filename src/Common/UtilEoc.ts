@@ -70,9 +70,20 @@ const FullRecivery: Eoc = {
     ],
 };
 
+/**发送消息EOC */
+export const EOC_SEND_MESSAGE = SNDef.genEocID("SendMessage");
+export const EOC_SEND_MESSAGE_VAR = SNDef.genVarID("SendMessage_Var");
+/**发送消息 */
+const SendMessage: Eoc = {
+    type: "effect_on_condition",
+    eoc_type: "ACTIVATION",
+    id: EOC_SEND_MESSAGE,
+    effect:[{u_message:{global_val:EOC_SEND_MESSAGE_VAR}}]
+}
+
 export async function createUtilEoc(dm:DataManager){
     dm.addData([
-        FullRecivery
+        FullRecivery,SendMessage,
     ],"Common","Eoc");
 }
 
