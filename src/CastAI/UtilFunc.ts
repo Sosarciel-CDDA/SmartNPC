@@ -65,6 +65,7 @@ export function getEventWeight(skill:CastAIData,cond:CastCond){
     if(fixweight > 1 || fixweight < 0) throw `${skill.id} 的 weight: ${weight} 超出施法权重取值范围 -99 ~ 99`;
     return fixweight;
 }
+
 /**获得法术cdname */
 export const getCDName = (spell:Spell)=>SNDef.genVarID(`${spell.id}_Cooldown`);
 

@@ -1,25 +1,16 @@
-import { JObject, UtilFT } from "@zwa73/utils";
-import { DATA_PATH, MAX_NUM, SNDef, getSpellByID } from "@/src/Define";
-import { SpellEnergySource, EocEffect, SpellID, BoolExpr, NumberExpr, JM} from "@sosarciel-cdda/schema";
-import { EOC_SEND_MESSAGE, EOC_SEND_MESSAGE_VAR, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
+import { JObject } from "@zwa73/utils";
+import { SNDef, getSpellByID } from "@/src/Define";
+import { SpellEnergySource, EocEffect, NumberExpr, JM} from "@sosarciel-cdda/schema";
+import { EOC_SEND_MESSAGE_VAR, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
-import { BaseCondTable, CastAIData, CastAIDataJsonTable, CastAIDataTable, CastProcData } from "./Interface";
-import { procSpellTarget } from "./ProcFunc";
-import * as path from 'pathe';
-import { ConcentratedAttack, getDefCastData } from "./DefineCastCondition";
+import { BaseCondTable, CastAIData, CastProcData } from "./Interface";
+import { procSpellTarget } from "./TargetProcFunc";
+import { ConcentratedAttack } from "./DefineCastCondition";
 import { createCastAITalkTopic } from "./TalkTopic";
+import { CastAIDataMap, CoCooldownName, fallbackValName } from "./Define";
 
 
-
-//全局冷却字段名
-export const CoCooldownName = SNDef.genVarID(`CoCooldown`);
-
-//falback字段名
-export const fallbackValName = SNDef.genVarID(`CastFallbackCounter`);
-
-/**总开关 */
-export const CoSwitchDisableName = SNDef.genVarID(`CoSwitchDisable`);
 
 //法术消耗变量类型映射
 const COST_MAP:Record<SpellEnergySource,string|undefined>={
@@ -40,43 +31,6 @@ const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
 
     return [{math:[costVar,'-=',num]}];
 }
-
-//载入数据
-/**施法AI数据 */
-export const CastAIDataMap:CastAIDataTable = {};
-const tableList = [
-    ...UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json")),
-    ...UtilFT.fileSearchGlobSync(DATA_PATH,path.join("CastAI","**","*.json5")),
-];
-tableList.forEach((file)=>{
-    const json = UtilFT.loadJSONFileSync(file,{json5:true,forceExt:true}) as CastAIDataJsonTable;
-
-    Object.entries(json.table).forEach(([spellID,castData])=>{
-        if(castData==undefined) return;
-        //转换预定义castAiData
-        castData = getDefCastData(castData,spellID as SpellID);
-        castData!.id = castData!.id??spellID as SpellID;
-        CastAIDataMap[spellID as SpellID] = castData;
-
-        //处理辅助条件
-        castData.merge_condition = {
-            manualSwitch:[{math:[uv(CoSwitchDisableName),"!=","1"]}],
-            other:[
-                "u_is_npc",
-                {math:[uv(CoCooldownName),"<=","0"]},
-                ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
-                ... (json.common_condition!==undefined ? [json.common_condition] : []),
-            ]
-        }
-        //{and:[
-        //    "u_is_npc",
-        //    {math:[uv(CoCooldownName),"<=","0"]},
-        //    {math:[uv(CoSwitchDisableName),"!=","1"]},
-        //    ... (json.require_mod!==undefined ? [{mod_is_loaded:json.require_mod}] : []),
-        //    ... (json.common_condition!==undefined ? [json.common_condition] : []),
-        //]};
-    })
-});
 
 
 /**处理角色技能 */
@@ -134,12 +88,13 @@ export async function buildCastAI(dm:DataManager){
         for(const cast_condition of ccList){
             const {target, fallback_with} = cast_condition;
 
-            const ignore_cost= cast_condition.ignore_cost??skill.ignore_cost??false;
-            const ignore_time= cast_condition.ignore_time??skill.ignore_time??false;
-            const ignore_exp = cast_condition.ignore_exp ??skill.ignore_exp??false;
-            const force_lvl  = cast_condition.force_lvl ??skill.force_lvl;
-            const force_vaild_target = cast_condition.force_vaild_target ?? skill.force_vaild_target;
-
+            const  {
+                ignore_cost        = false,
+                ignore_time        = false,
+                ignore_exp         = false,
+                force_lvl          = undefined,
+                force_vaild_target = undefined,
+            } = Object.assign({},skill,cast_condition);
 
             //#region 计算成功效果
             const after_effect:EocEffect[]=[];

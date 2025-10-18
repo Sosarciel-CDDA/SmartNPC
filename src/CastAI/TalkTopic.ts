@@ -1,10 +1,9 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { ControlCastResps, ControlCastSpeakerEffects } from "./ProcFunc";
 import { Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SNDef, getSpellByID } from "@/src/Define";
-import { CastAIDataMap, CoCooldownName, CoSwitchDisableName } from "./CastAI";
 import { CastAIData } from "./Interface";
 import { getEnableSpellVar, nv, uv } from "./UtilFunc";
+import { CastAIDataMap, CoCooldownName, ControlCastResps, ControlCastSpeakerEffects, CoSwitchDisableName } from "./Define";
 
 
 

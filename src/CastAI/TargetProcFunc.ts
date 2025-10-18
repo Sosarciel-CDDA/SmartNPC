@@ -4,6 +4,7 @@ import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt, BoolExpr} from "@sosar
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
 import { BaseCondTable, CastProcData, MergeCondTable, TargetType } from "./Interface";
+import { ControlCastResps, ControlCastSpeakerEffects } from "./Define";
 
 /**处理方式表 */
 const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObject[]>>={
@@ -14,10 +15,13 @@ const ProcMap:Record<TargetType,(dm:DataManager,cpd:CastProcData)=>Promise<JObje
     "filter_random" : filter_randomProc,
     "control_cast"  : control_castProc,
 }
+
+/**依照目标类型处理施法 */
 export async function procSpellTarget(target:TargetType|undefined,dm:DataManager,cpd:CastProcData) {
     return ProcMap[target??"auto"](dm,cpd);
 }
 
+/**连接arr条件并过滤undefined */
 const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
     const out:(T|undefined)[] = [];
     for(const arg of args){
@@ -39,10 +43,6 @@ const flatMergeCond = (cond:MergeCondTable|undefined):BoolExpr=>{
     return {and:[...manualSwitch,...other]};
 }
 
-/**控制施法所需的前置效果 */
-export const ControlCastSpeakerEffects:EocEffect[] = [];
-/**控制施法的回复 */
-export const ControlCastResps:Resp[]=[];
 
 
 //命中id

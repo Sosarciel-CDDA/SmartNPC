@@ -31,8 +31,7 @@ export const TargetTypeList = [
  */
 export type TargetType = typeof TargetTypeList[number];
 
-/**数据表 技能ID : 施法数据
-*/
+/**数据表 技能ID : 施法数据 */
 export type CastAIDataTable = {
     /**技能ID : 施法数据 */
     [key:string]:(RawCastAIData|undefined|null)
@@ -47,6 +46,7 @@ export type CastAIDataJsonTable = {
     table:(CastAIDataTable);
 };
 
+/**CastAI与CastCond的公用数据 */
 type OverrideOpt = {
     /**忽略能量消耗 */
     ignore_cost?    : boolean;
@@ -57,7 +57,7 @@ type OverrideOpt = {
     /**不检查是否学会, 强制使用某个法术等级 */
     force_lvl?      : (NumberExpr);
     /**权重 优先尝试触发高权重的spell 取值范围 -99 ~ 99 默认0 */
-    weight?          :number;
+    weight?         :number;
     /**强制覆盖的有效目标 适用于random与filter_random */
     force_vaild_target?  : Spell['valid_targets'];
 }
