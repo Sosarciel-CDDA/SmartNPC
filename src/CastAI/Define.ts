@@ -10,7 +10,7 @@ import { uv } from "./UtilFunc";
 export const CoCooldownName = SNDef.genVarID(`CoCooldown`);
 
 //falback字段名
-export const fallbackValName = SNDef.genVarID(`CastFallbackCounter`);
+export const FallbackValName = SNDef.genVarID(`CastFallbackCounter`);
 
 /**总开关 */
 export const CoSwitchDisableName = SNDef.genVarID(`CoSwitchDisable`);

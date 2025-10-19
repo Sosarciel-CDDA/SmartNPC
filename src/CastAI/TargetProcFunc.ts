@@ -49,7 +49,7 @@ const flatMergeCond = (cond:MergeCondTable|undefined):BoolExpr=>{
 const fhitvar = SNDef.genVarID(`HasTarget`);
 
 async function rawProc(dm:DataManager,cpd:CastProcData){
-    const {skill,base_cond,after_effect,cast_condition,before_effect,min_level,force_vaild_target} = cpd;
+    const {skill,base_cond,after_effect,cast_condition,before_effect,min_level} = cpd;
     const {id,merge_condition,one_in_chance} = skill;
     const spell = getSpellByID(id);
     const {hook} = cast_condition;

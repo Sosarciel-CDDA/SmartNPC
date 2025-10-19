@@ -1,6 +1,6 @@
 import { JObject } from "@zwa73/utils";
 import { SNDef, getSpellByID } from "@/src/Define";
-import { SpellEnergySource, EocEffect, NumberExpr, JM} from "@sosarciel-cdda/schema";
+import { SpellEnergySource, EocEffect, NumberExpr, JM, Eoc} from "@sosarciel-cdda/schema";
 import { EOC_SEND_MESSAGE_VAR, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
@@ -8,7 +8,7 @@ import { BaseCondTable, CastAIData, CastProcData } from "./Interface";
 import { procSpellTarget } from "./TargetProcFunc";
 import { ConcentratedAttack } from "./DefineCastCondition";
 import { createCastAITalkTopic } from "./TalkTopic";
-import { CastAIDataMap, CoCooldownName, fallbackValName } from "./Define";
+import { CastAIDataMap, CoCooldownName, FallbackValName } from "./Define";
 
 
 
@@ -32,7 +32,6 @@ const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
     return [{math:[costVar,'-=',num]}];
 }
 
-
 /**处理角色技能 */
 export async function buildCastAI(dm:DataManager){
     //集火
@@ -50,8 +49,8 @@ export async function buildCastAI(dm:DataManager){
         {math:[uv(CoCooldownName),">","0"]});
     //备用计数器
     const FBEoc = SNDef.genActEoc(`Fallback`,
-        [{math:[uv(fallbackValName),"+=","1"]}],
-        {math:[uv(fallbackValName),"<","1000"]});
+        [{math:[uv(FallbackValName),"+=","1"]}],
+        {math:[uv(FallbackValName),"<","1000"]});
     dm.addInvokeEoc("NpcUpdate",0,GCDEoc,FBEoc);
     //初始化全局冷却
     const GCDInit = SNDef.genActEoc(`CoCooldown_Init`,
@@ -62,7 +61,7 @@ export async function buildCastAI(dm:DataManager){
     //遍历技能
     for(const skill of skills){
         const {id,cast_condition,cooldown,common_cooldown,} = skill;
-        
+
         //获取法术数据
         const spell = getSpellByID(id);
 
@@ -119,15 +118,11 @@ export async function buildCastAI(dm:DataManager){
                 after_effect.push(... useCost(costType,getCostExpr(spell)));
             //经验增长
             if(ignore_exp!==true)
-                after_effect.push({math:[JM.spellExp('u',`'${id}'`),"+=",`U_SpellCastExp(${spell.difficulty??0})`]});
+                after_effect.push({math:[JM.spellExp('u',`'${id}'`),"+=",`U_SpellCastExp(${JM.spellDifficulty("u",`'${id}'`)})`]});
             //清空备用计数器
-            after_effect.push({math:[uv(fallbackValName),"=",String(fallback_with ?? 0)]})
+            after_effect.push({math:[uv(FallbackValName),"=",String(fallback_with ?? 0)]})
             //发送施法消息
-            after_effect.push(
-                {set_string_var:`<u_name> 释放了 <spell_name:${id}>`,
-                    target_var:{global_val:EOC_SEND_MESSAGE_VAR},parse_tags:true},
-                {message:{global_val:EOC_SEND_MESSAGE_VAR}},
-            );
+            after_effect.push({message:`<u_name> 释放了 <spell_name:${id}>`});
             //#endregion
 
 
@@ -148,7 +143,7 @@ export async function buildCastAI(dm:DataManager){
                 cooldown: (cooldown != undefined && cooldown > 0)
                     ? [{math:[uv(cdValName),"<=","0"]}] : [],
                 counter: (fallback_with != undefined && fallback_with > 0)
-                    ? [{math:[uv(fallbackValName),">=",`${fallback_with}`]}] : [],
+                    ? [{math:[uv(FallbackValName),">=",`${fallback_with}`]}] : [],
                 know: hasMinLvl ? [] : [{math:[`u_spell_level('${spell.id}')`,">=","0"]}],
             }
 

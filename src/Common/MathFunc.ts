@@ -140,6 +140,7 @@ export async function createMathFunc(dm:DataManager){
         num_args: 1,
         return:"((((u_val('intelligence') - 8) / 8) + (_0 / 20) + (u_skill('spellcraft') / 10)) / 5 + 1) * 75 * U_AdjForFocus()"
     }
+
     const NSpellCastExp:MathFunction={
         type:"jmath_function",
         id:"N_SpellCastExp" as MathFunctionID,
