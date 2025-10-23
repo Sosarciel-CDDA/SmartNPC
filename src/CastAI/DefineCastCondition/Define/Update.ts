@@ -245,7 +245,7 @@ export const TargetHeal:DefineCastCondFunc<TargetHeal> = (data,spell)=>{
         },{
             hook: "SlowUpdate",
             condition: { or: [
-                { math: ["N_SumMaxHp()-N_SumHp()", ">", "10"] },
+                { math: ["N_SumMaxHp()-N_SumHp()", ">", "30"] },
                 { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
                 { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
             ]}

@@ -51,7 +51,7 @@ const costCond = (costType:SpellEnergySource,num:string):BoolExpr[]=>{
     switch(costVar){
         case "HP":{
             return [{and:[
-                {math:["U_SumHP()",">",num]},
+                {math:["U_SumHp()",">",num]},
                 {math:["u_hp('torso')",">",`(${num})/6`]},
                 {math:["u_hp('head')" ,">",`(${num})/6`]},
             ]}];
