@@ -32,8 +32,8 @@ const concat = <T>(...args:(T|undefined)[][]):Exclude<T,undefined>[]=>{
 }
 
 const flatBaseCond = (cond:BaseCondTable):BoolExpr[]=>{
-    const {cooldown,cost,counter,know,manualSwitch} = cond;
-    return [...manualSwitch, ...cooldown, ...counter, ...know, ...cost];
+    const {cooldown,cost,counter,know,manualSwitch,common} = cond;
+    return [...manualSwitch, ...cooldown, ...counter, ...know, ...cost, ...common];
 }
 
 const flatMergeCond = (cond:MergeCondTable|undefined):BoolExpr=>{

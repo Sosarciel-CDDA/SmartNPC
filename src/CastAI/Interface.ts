@@ -138,6 +138,8 @@ export type BaseCondTable = {
     counter:BoolExpr[];
     /**了解该法术 */
     know:BoolExpr[];
+    /**CastAI共同条件 */
+    common:BoolExpr[];
 }
 /**基础技能数据 */
 export type CastProcData = Readonly<{

@@ -1,6 +1,6 @@
 import { JObject } from "@zwa73/utils";
 import { SNDef, getSpellByID } from "@/src/Define";
-import { SpellEnergySource, EocEffect, NumberExpr, JM, Eoc} from "@sosarciel-cdda/schema";
+import { SpellEnergySource, EocEffect, NumberExpr, JM, Eoc, BoolExpr} from "@sosarciel-cdda/schema";
 import { EOC_SEND_MESSAGE_VAR, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
@@ -13,14 +13,16 @@ import { CastAIDataMap, CoCooldownName, FallbackValName } from "./Define";
 
 
 //法术消耗变量类型映射
-const COST_MAP:Record<SpellEnergySource,string|undefined>={
+const COST_MAP={
     "BIONIC" : "u_val('power')",
-    "HP"     : "u_hp('torso')",
+    //"HP"     : "u_hp('torso')",
     "MANA"   : "u_val('mana')",
     //"STAMINA": "u_val('stamina')",
-    "STAMINA": "u_val('mana')",
     "NONE"   : undefined,
-}
+    "HP"     : "HP",
+    "STAMINA": "STAMINA",
+} as const;
+
 //法术消耗 使用能量表达式
 const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
     const costVar = COST_MAP[costType];
@@ -29,7 +31,38 @@ const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
     //if(costType=="STAMINA") //模拟耐力
     //    return [{math:[costVar,'-=',`(${num})/10`]}];
 
-    return [{math:[costVar,'-=',num]}];
+    switch(costVar){
+        case "HP":{
+            const hplist = ["u_hp('torso')","u_hp('head')","u_hp('leg_l')","u_hp('leg_r')","u_hp('arm_l')","u_hp('arm_r')"];
+            return hplist.map(v=>({math:[v,"-=",`(${num})/6`]}))
+        }
+        case "STAMINA":{
+            return [{math:["u_val('mana')",'-=',num]}]
+        }
+        default:{
+            return [{math:[costVar,'-=',num]}];
+        }
+    }
+}
+//法术消耗条件
+const costCond = (costType:SpellEnergySource,num:string):BoolExpr[]=>{
+    const costVar = COST_MAP[costType];
+    if(costVar==undefined) return [];
+    switch(costVar){
+        case "HP":{
+            return [{and:[
+                {math:["U_SumHP()",">",num]},
+                {math:["u_hp('torso')",">",`(${num})/6`]},
+                {math:["u_hp('head')" ,">",`(${num})/6`]},
+            ]}];
+        }
+        case "STAMINA":{
+            return [{math:["u_val('mana')",'>=',num]}]
+        }
+        default:{
+            return [{math:[costVar,'>=',num]}];
+        }
+    }
 }
 
 /**处理角色技能 */
@@ -60,14 +93,14 @@ export async function buildCastAI(dm:DataManager){
 
     //遍历技能
     for(const skill of skills){
-        const {id,cast_condition,cooldown,common_cooldown,} = skill;
+        const {id,cast_condition,cooldown,common_cooldown,common_condition} = skill;
 
         //获取法术数据
         const spell = getSpellByID(id);
 
         //法术消耗变量类型
         const costType = spell.energy_source ?? "MANA";
-        const costVar = COST_MAP[costType];
+        const costVar = costCond(costType,getCostExpr(spell));
 
         //生成冷却变量名
         const cdValName = getCDName(spell);
@@ -138,13 +171,14 @@ export async function buildCastAI(dm:DataManager){
                 manualSwitch:[
                     {math:[uv(getEnableSpellVar(spell)),"==","1"]},
                 ],
-                cost: (spell.base_energy_cost!=undefined && costVar!=undefined && ignore_cost!==true)
-                    ? [{math:[costVar,">=",getCostExpr(spell)]}] : [],
+                cost: (spell.base_energy_cost!=undefined && costVar.length>0 && ignore_cost!==true)
+                    ? costVar : [],
                 cooldown: (cooldown != undefined && cooldown > 0)
                     ? [{math:[uv(cdValName),"<=","0"]}] : [],
                 counter: (fallback_with != undefined && fallback_with > 0)
                     ? [{math:[uv(FallbackValName),">=",`${fallback_with}`]}] : [],
                 know: hasMinLvl ? [] : [{math:[`u_spell_level('${spell.id}')`,">=","0"]}],
+                common: common_condition ? [common_condition] : [],
             }
 
             //#endregion

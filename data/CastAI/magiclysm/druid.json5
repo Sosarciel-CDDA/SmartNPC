@@ -59,25 +59,9 @@
         //舍己济人
         //将使用者自身部分生命力转化为医疗能量，为同伴治疗。
         druidic_healing: {
-            cast_condition: [{
-                hook: "BattleUpdate",
-                condition: {and:[
-                    { math: ["u_hp('torso')", ">", "u_hp_max('torso')/2"] },
-                    { or: [
-                        { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
-                        { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
-                    ]}
-                ]}
-            },{
-                hook: "SlowUpdate",
-                condition: {and:[
-                    { math: ["u_hp('torso')", ">", "u_hp_max('torso')/2"] },
-                    { or: [
-                        { math: ["n_hp('torso')", "<=", "n_hp_max('torso')/3"] },
-                        { math: ["n_hp('head')", "<=", "n_hp_max('head')/3"] }
-                    ]}
-                ]}
-            }],
+            type: "Inherit",
+            base: "TargetHeal",
+            common_condition:{ math: ["u_hp('torso')", ">", "u_hp_max('torso')/2"] },
             weight: -1
         },
 
