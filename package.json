@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@zwa73/js-utils": "^1.0.82",
     "@zwa73/utils": "*"
   },
   "name": "@sosarciel-cdda/smartnpc",
