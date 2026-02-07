@@ -2,8 +2,8 @@ import { DataManager } from "@sosarciel-cdda/event";
 import { Resp, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, SNDef, getSpellByID } from "@/src/Define";
 import { CastAIData } from "./Interface";
-import { getEnableSpellVar, nv, uv } from "./UtilFunc";
-import { CastAIDataMap, CoCooldownName, ControlCastResps, ControlCastSpeakerEffects, CoSwitchDisableName } from "./Define";
+import { getEnableSpellVar, nv } from "./UtilFunc";
+import { CastAIDataMap, CoCooldownName, ControlCastResps, ControlCastSpeakerEffects, CoSwitchDisableName, InitedCastSettingName } from "./Define";
 
 
 
@@ -12,11 +12,17 @@ const displayManaName = SNDef.genVarID(`DisplayMana`);
 export async function createCastAITalkTopic(dm:DataManager){
     //对话EOC
     const TalkEoc = SNDef.genActEoc('CastControlTopicEffect',[
+        //初始化
+        //施法开关仅控制完成初始化的npc
+        //用于避免敌对npc默认无法不施法
+        {math:[nv(InitedCastSettingName),'=','1']},
+        //控制施法初始化效果
         {run_eocs:{
             id:`CastControlTopicEffect_Rev`,
             eoc_type:"ACTIVATION",
             effect:[...ControlCastSpeakerEffects],
         },alpha_talker:"npc",beta_talker:"u"},
+        //渲染法力值以便直接嵌入显示
         {math:[nv(displayManaName),"=","n_val('mana')"]}
     ]);
     //主对话

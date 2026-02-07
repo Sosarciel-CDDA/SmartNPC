@@ -1,14 +1,14 @@
 import { JObject } from "@zwa73/utils";
 import { SNDef, getSpellByID } from "@/src/Define";
-import { SpellEnergySource, EocEffect, NumberExpr, JM, Eoc, BoolExpr} from "@sosarciel-cdda/schema";
-import { EOC_SEND_MESSAGE_VAR, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
+import { SpellEnergySource, EocEffect, NumberExpr, JM, BoolExpr } from "@sosarciel-cdda/schema";
+import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { BaseCondTable, CastAIData, CastProcData } from "./Interface";
 import { procSpellTarget } from "./TargetProcFunc";
 import { ConcentratedAttack } from "./DefineCastCondition";
 import { createCastAITalkTopic } from "./TalkTopic";
-import { CastAIDataMap, CoCooldownName, FallbackValName } from "./Define";
+import { CastAIDataMap, CoCooldownName, FallbackValName, InitedCastSettingName } from "./Define";
 
 
 
@@ -169,7 +169,10 @@ export async function buildCastAI(dm:DataManager){
 
             const base_cond: BaseCondTable ={
                 manualSwitch:[
-                    {math:[uv(getEnableSpellVar(spell)),"==","1"]},
+                    {or:[
+                        {math:[uv(getEnableSpellVar(spell)),"==","1"]},
+                        {math:[uv(InitedCastSettingName),'!=','1']}
+                    ]},
                 ],
                 cost: (spell.base_energy_cost!=undefined && costVar.length>0 && ignore_cost!==true)
                     ? costVar : [],

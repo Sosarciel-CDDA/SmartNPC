@@ -15,6 +15,8 @@ export const FallbackValName = SNDef.genVarID(`CastFallbackCounter`);
 /**总开关 */
 export const CoSwitchDisableName = SNDef.genVarID(`CoSwitchDisable`);
 
+/**完成初始化施法设置 */
+export const InitedCastSettingName = SNDef.genVarID(`InitedCastSetting`);
 
 /**控制施法所需的前置效果 */
 export const ControlCastSpeakerEffects:EocEffect[] = [];
