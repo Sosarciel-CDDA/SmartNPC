@@ -113,7 +113,7 @@
         //鞭笞触手
         //卷轴上说，此法术用于“减轻XE037暴露所带来的负面影响”，不管那是什么意思。
         //根据卷轴所述，应待法术效果完全结束后方可再次施放。
-        biomancer_lashing_tentacles: null,
+        biomancer_lashing_tentacles: "BattleSelfBuff",
 
         //涤病术
         //从你的双肩长出一对挥舞的触手。虽然不及“凶猛触手”那般长，但它们会自动攻击任何与你近战的敌人。
