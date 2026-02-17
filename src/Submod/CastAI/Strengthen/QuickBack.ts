@@ -103,5 +103,5 @@ export function buildQuickBack(dm: DataManager) {
         autoback,CombatRuleTalkTopic,
         QuickBack,QuickBackSub,QuickBackEoc,
         QuickBackEocSubMovemod,QuickBackEocSubPush
-    ],'Strength','QuickBack.json');
+    ],'CastAI','Strength','QuickBack.json');
 }

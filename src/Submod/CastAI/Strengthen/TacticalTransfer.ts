@@ -28,5 +28,5 @@ const TacticalTransferEoc = {
 export function buildTacticalTransfer(dm:DataManager) {
     dm.addData([
         TacticalTransfer,TacticalTransferEoc
-    ],'Strength','TacticalTransfer.json');
+    ],'CastAI','Strength','TacticalTransfer.json');
 }

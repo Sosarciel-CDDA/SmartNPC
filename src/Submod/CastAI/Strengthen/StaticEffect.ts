@@ -171,5 +171,5 @@ export async function buildStaticEffect(dm:DataManager){
         controlNPCTalkTopic,controlNPCEoc,resetNeed,psionicDrainLockEoc,psionicDrainLock_CastSpell,
         initNpcStrength,Courage,SmartNpcMut,removeAvatarStrength,
         joinBattle,joinBattleSpell,
-    ],'Strength','StaticEffect.json');
+    ],'CastAI','Strength','StaticEffect.json');
 }

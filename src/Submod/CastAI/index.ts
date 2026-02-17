@@ -4,6 +4,7 @@ import { buildSkill } from './CastAI';
 import { CommonModinfo } from '../Common';
 import { ModInfo } from '@sosarciel-cdda/schema';
 import { buildOverride } from '@/src/Override';
+import { buildStrengthen } from './Strengthen';
 
 export * from './CastAI';
 export * from './Interface';
@@ -27,4 +28,5 @@ export const buildCastAI = async (dm:DataManager)=>{
     //创建对话
     await createCastAITalkTopic(dm);
     await buildOverride(dm,"CastAI");
+    await buildStrengthen(dm);
 }
