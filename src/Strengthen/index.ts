@@ -11,8 +11,10 @@ import { buildProtect } from "./Protect";
  * @returns 无返回值，异步操作完成后数据将被添加。
  */
 export async function buildStrengthen(dm:DataManager){
-    buildQuickBack(dm);
-    buildTacticalTransfer(dm);
-    buildStaticEffect(dm);
-    buildProtect(dm);
+    return Promise.all([
+        buildQuickBack(dm),
+        buildTacticalTransfer(dm),
+        buildStaticEffect(dm),
+        buildProtect(dm),
+    ]);
 }
