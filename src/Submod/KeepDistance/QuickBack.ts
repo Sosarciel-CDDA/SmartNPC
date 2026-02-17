@@ -1,6 +1,7 @@
 import { Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CombatRuleTopicID, CON_SPELL_FLAG, SNDef } from "@/src/Define";
 import { DataManager } from "@sosarciel-cdda/event";
+import { KeepDistanceModinfo } from "./index";
 
 const QuickBackRange = 10;
 
@@ -97,11 +98,22 @@ export function buildQuickBack(dm: DataManager) {
         {u_cast_spell: {id:QuickBack.id}},
         //{u_message:"<global_val:tmpstr>"},
         //{u_cast_spell: {id:'fireball',min_level:10}},
-    ],{and:['u_is_npc',{math:[`u_${QuickBackSwitchVar}`,'==','1']}]});
+    ],{and:[
+        {or:[
+            {mod_is_loaded:'smartnpc'},
+            {mod_is_loaded:KeepDistanceModinfo.id},
+        ]},
+        'u_is_npc',
+        {math:[`u_${QuickBackSwitchVar}`,'==','1']}
+    ]});
+
+    //事件框架位于 CastAI 所以调用Eoc应放入 CastAI 目录
     dm.addInvokeID('BattleUpdate',0,autoback.id);
+    dm.addData([autoback],'CastAI','SubmodDep','KeepDistance.json');
+
     dm.addData([
-        autoback,CombatRuleTalkTopic,
+        CombatRuleTalkTopic,
         QuickBack,QuickBackSub,QuickBackEoc,
         QuickBackEocSubMovemod,QuickBackEocSubPush
-    ],'CastAI','Strength','QuickBack.json');
+    ],'KeepDistance','QuickBack.json');
 }

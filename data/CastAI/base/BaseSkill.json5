@@ -1,0 +1,16 @@
+{
+	common_condition:{or:[
+		{mod_is_loaded: "smartnpc-tacticaltransfer"},
+		{mod_is_loaded: "smartnpc"}
+	]},
+	table: {
+		tactical_transfer: {
+			cast_condition: {
+				"hook": "None",
+				"target": "control_cast",
+				"force_lvl": 0
+			},
+			cooldown: 64
+		}
+	}
+}
