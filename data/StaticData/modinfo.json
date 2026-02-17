@@ -5,7 +5,7 @@
         "name": "SmartNPC",
         "authors": ["zwa73"],
         "maintainers": ["zwa73"],
-        "description": "SmartNPC",
+        "description": "NPC智能施法,与强化, 加载此mod等同于加载所有/SamrtNpc-.*/匹配mod, 无需重复加载",
         "category": "other",
         "dependencies": ["dda","magiclysm"]
     }

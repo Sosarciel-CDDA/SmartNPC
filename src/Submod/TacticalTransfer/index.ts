@@ -9,7 +9,7 @@ const modinfo:ModInfo = {
     name:"SmartNpc-TacticalTransfer",
     "authors": ["zwa73"],
     "maintainers": ["zwa73"],
-    "description": "允许在施法对话使npc在使用一个30秒CD的短距传送法术",
+    "description": "添加一个NPC[施法]对话下可用的64秒CD短距传送法术",
     "category": "other",
     "dependencies": ["dda",CastAIModInfo.id]
 }

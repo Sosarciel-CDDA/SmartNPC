@@ -17,7 +17,7 @@ export const CommonModinfo:ModInfo = {
     name:"SmartNpc-Common",
     "authors": ["zwa73"],
     "maintainers": ["zwa73"],
-    "description": "SmartNpc子mod的共用依赖",
+    "description": "SmartNpc共用依赖",
     "category": "other",
     "dependencies": ["dda"]
 }
