@@ -10,12 +10,16 @@ import { CastAIDataMap, CoCooldownName, ControlCastResps, ControlCastSpeakerEffe
 const displayManaName = SNDef.genVarID(`DisplayMana`);
 
 export async function createCastAITalkTopic(dm:DataManager){
-    //对话EOC
-    const TalkEoc = SNDef.genActEoc('CastControlTopicEffect',[
+    const InitSettingEoc = SNDef.genActEoc('InitedCastSetting',[
         //初始化
         //施法开关仅控制完成初始化的npc
         //用于避免敌对npc默认无法不施法
         {math:[nv(InitedCastSettingName),'=','1']},
+    ])
+
+    //对话EOC
+    const TalkEoc = SNDef.genActEoc('CastControlTopicEffect',[
+        {run_eocs:[InitSettingEoc.id]},
         //控制施法初始化效果
         {run_eocs:{
             id:`CastControlTopicEffect_Rev`,
@@ -33,6 +37,7 @@ export async function createCastAITalkTopic(dm:DataManager){
         responses:[{
             text : "[战斗]我想给你一些作战指令。",
             topic: CombatRuleTopicID,
+            effect:{run_eocs:InitSettingEoc.id}
         },{
             text : "[施法]我想让你释放法术。",
             topic: await createCastControlResp(dm),
@@ -49,7 +54,7 @@ export async function createCastAITalkTopic(dm:DataManager){
             topic: await createSkillResp(dm)
         }]
     }
-    dm.addData([TalkEoc,mainTalkTopic,combatTalkTopic],"CastAI",'TalkTopic');
+    dm.addData([InitSettingEoc,TalkEoc,mainTalkTopic,combatTalkTopic],"CastAI",'TalkTopic');
 }
 
 /**创建施法对话 */
