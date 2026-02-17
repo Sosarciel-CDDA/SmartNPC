@@ -3,7 +3,7 @@ import { buildSpawnPoint } from "./SpawnPoint";
 import { buildCommon } from "./Common";
 import { buildCastAI } from "./CastAI";
 import { buildTacticalTransfer } from "./TacticalTransfer";
-import { buildQuickBack } from "./KeepDistance/QuickBack";
+import { buildKeepDistance } from "./KeepDistance";
 
 
 
@@ -13,6 +13,6 @@ export const buildSubmod = async (dm:DataManager)=>{
         buildSpawnPoint(dm),
         buildCastAI(dm),
         buildTacticalTransfer(dm),
-        buildQuickBack(dm),
+        buildKeepDistance(dm),
     ]);
 }
