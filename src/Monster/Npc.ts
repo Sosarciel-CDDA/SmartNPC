@@ -23,7 +23,6 @@ const WrapperNpcClass: NpcClass = {
     name: { str: "丧尸" },
     job_description: "丧尸",
     traits: [
-        { group: "BG_survival_story_EVACUEE" },
         { group: "NPC_starting_traits" },
         { group: "Appearance_demographics" },
         { trait: MonsterMut.id },
