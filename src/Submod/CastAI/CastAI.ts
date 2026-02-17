@@ -1,7 +1,7 @@
 import { JObject } from "@zwa73/utils";
 import { SNDef, getSpellByID } from "@/src/Define";
-import { SpellEnergySource, EocEffect, NumberExpr, JM, BoolExpr } from "@sosarciel-cdda/schema";
-import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Submod/Common";
+import { SpellEnergySource, EocEffect, NumberExpr, JM, BoolExpr, ModInfo } from "@sosarciel-cdda/schema";
+import { CommonModinfo, SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Submod/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { BaseCondTable, CastAIData, CastProcData } from "./Interface";
@@ -63,6 +63,17 @@ const costCond = (costType:SpellEnergySource,num:string):BoolExpr[]=>{
             return [{math:[costVar,'>=',num]}];
         }
     }
+}
+
+export const CastAIModInfo:ModInfo = {
+    "type": "MOD_INFO",
+    id:"smartnpc-castai",
+    name:"SmartNpc-CastAI",
+    "authors": ["zwa73"],
+    "maintainers": ["zwa73"],
+    "description": "SmartNpc的施法AI",
+    "category": "other",
+    "dependencies": ["dda",CommonModinfo.id]
 }
 
 /**处理角色技能 */
@@ -212,6 +223,7 @@ export async function buildCastAI(dm:DataManager){
     }
 
     dm.addData(out,"CastAI","Skill");
+    dm.addData([CastAIModInfo],"CastAI",'modinfo');
 
     //创建对话
     await createCastAITalkTopic(dm);

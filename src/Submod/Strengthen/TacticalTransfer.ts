@@ -1,5 +1,5 @@
 import { Spell } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG } from "../Define";
+import { CON_SPELL_FLAG } from "@/src/Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 /**战术转移 */

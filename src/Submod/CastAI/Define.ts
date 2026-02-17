@@ -1,5 +1,5 @@
 import { UtilFT } from "@zwa73/utils";
-import { DATA_PATH, SNDef } from "../Define";
+import { DATA_PATH, SNDef } from "@/src/Define";
 import { CastAIDataJsonTable, CastAIDataTable } from "./Interface";
 import path from 'pathe';
 import { EocEffect, Resp, SpellID } from "@sosarciel-cdda/schema";

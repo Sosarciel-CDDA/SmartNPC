@@ -1,5 +1,5 @@
 import { SpellID } from "@sosarciel-cdda/schema";
-import { CastAIData } from "@/src/CastAI/Interface";
+import { CastAIData } from "@/src/Submod/CastAI/Interface";
 import { getSpellByID } from "@/src/Define";
 import { CastCondDataTable, CastCondFuncTable } from "./Define";
 

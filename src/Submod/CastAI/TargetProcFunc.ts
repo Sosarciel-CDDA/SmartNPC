@@ -1,6 +1,6 @@
-import { JObject} from "@zwa73/utils";
+import { JObject } from "@zwa73/utils";
 import { SNDef, CON_SPELL_FLAG, getSpellByID } from "@/src/Define";
-import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt, BoolExpr} from "@sosarciel-cdda/schema";
+import { Spell, Eoc, SpellFlag, Resp, EocEffect, zh, awt, BoolExpr } from "@sosarciel-cdda/schema";
 import { InteractHookList, DataManager } from "@sosarciel-cdda/event";
 import { getCDName, getCostExpr, getEventWeight, getRangeExpr, nv, uv } from "./UtilFunc";
 import { BaseCondTable, CastProcData, MergeCondTable, TargetType } from "./Interface";

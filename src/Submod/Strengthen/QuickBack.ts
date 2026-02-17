@@ -1,5 +1,5 @@
 import { Spell, TalkTopic } from "@sosarciel-cdda/schema";
-import { CombatRuleTopicID, CON_SPELL_FLAG, SNDef } from "../Define";
+import { CombatRuleTopicID, CON_SPELL_FLAG, SNDef } from "@/src/Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 const QuickBackRange = 10;
