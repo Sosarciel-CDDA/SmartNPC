@@ -1,7 +1,7 @@
 import { JObject } from "@zwa73/utils";
 import { SNDef, getSpellByID } from "@/src/Define";
 import { SpellEnergySource, EocEffect, NumberExpr, JM, BoolExpr } from "@sosarciel-cdda/schema";
-import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Common";
+import { SPELL_CT_MODMOVE, SPELL_CT_MODMOVE_VAR } from "@/src/Submod/Common";
 import { DataManager } from "@sosarciel-cdda/event";
 import { getCastTimeExpr, getCDName, getCostExpr, getEnableSpellVar, parseSpellNumObj, uv } from "./UtilFunc";
 import { BaseCondTable, CastAIData, CastProcData } from "./Interface";

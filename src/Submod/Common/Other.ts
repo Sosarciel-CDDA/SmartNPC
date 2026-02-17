@@ -1,5 +1,5 @@
 import { MagicType } from "@sosarciel-cdda/schema";
-import { SNDef } from "../Define";
+import { SNDef } from "../../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 

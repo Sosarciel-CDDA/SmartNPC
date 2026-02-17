@@ -2,7 +2,7 @@ import { DataManager } from "@sosarciel-cdda/event";
 import { buildQuickBack } from "./QuickBack";
 import { buildTacticalTransfer } from "./TacticalTransfer";
 import { buildStaticEffect } from "./StaticEffect";
-import { buildProtect } from "./Protect";
+import { buildProtect } from "../Submod/SpawnPoint/Protect";
 
 
 

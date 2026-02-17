@@ -1,7 +1,7 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Effect, Eoc, JM, listCtor, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
-import { CON_SPELL_FLAG, SNDef } from "../Define";
-import { CONTROL_MAGIC_TYPE_ID, EOC_FULL_RECIVERY } from "@/src/Common";
+import { Effect, Eoc, JM, listCtor, ModInfo, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { CON_SPELL_FLAG, SNDef } from "@/src/Define";
+import { CommonModinfo, CONTROL_MAGIC_TYPE_ID, EOC_FULL_RECIVERY } from "@/src/Submod/Common";
 
 const IslandModId = "skyisland";
 const IslandModOrigLocId = 'OM_HQ_origin';
@@ -52,8 +52,22 @@ const isVaildPtr = `${UID}_IsVaildPtr`;
 //npc注册的索引
 const inListIdx  = `${UID}_InListIdx`;
 
+
+const modinfo:ModInfo = {
+    "type": "MOD_INFO",
+    id:"smartnpc-spawnpoint",
+    name:"SmartNpc-SpawnPoint",
+    "authors": ["zwa73"],
+    "maintainers": ["zwa73"],
+    "description": "增加对npc的召集/召回法术, 设置启用重生点的npc与玩家可在死亡时传送至重生点复活",
+    "category": "other",
+    "dependencies": ["dda",CommonModinfo.id]
+}
+
+
+
 //npc保护
-export async function buildProtect(dm:DataManager){
+export async function buildSpawnPoint(dm:DataManager){
 
     //#region 召集
     //传送到出生点
@@ -132,35 +146,70 @@ export async function buildProtect(dm:DataManager){
     }
     //#endregion 传送到出生点
 
-    //死亡保护
-    const RebirthEoc:Eoc=SNDef.genActEoc(`${UID}_DeathRebirth`,[
-        {u_add_effect:Weak.id,duration:'4 h'},
-        {run_eocs:[EOC_FULL_RECIVERY,teleportToSpawn.id]},
-        {if:"u_is_npc",then:[ {math:[JM.npcTrust('u'),'=','100']} ]},
-    ],{or:[
+    //#region 死亡保护
+    const RebirthEoc:Eoc={
+        id:SNDef.genEocID(`${UID}_DeathRebirth`),
+        type:'effect_on_condition',
+        eoc_type:'ACTIVATION',
+        condition:{or:[
         {u_has_trait:ProtectMut.id},
         'u_is_avatar',
-    ]});
-    dm.addInvokeID('DeathPrev',-100,RebirthEoc.id);
-
+        ]},
+        effect:[
+            {u_add_effect:Weak.id,duration:'4 h'},
+            {run_eocs:[EOC_FULL_RECIVERY,teleportToSpawn.id]},
+            {if:"u_is_npc",then:[ {math:[JM.npcTrust('u'),'=','100']} ]},
+        ],
+    };
+    const DeathPrev:Eoc = {
+        id:SNDef.genEocID(`${UID}_DeathPrev`),
+        type:'effect_on_condition',
+        eoc_type:'ACTIVATION',
+        effect:[
+        {run_eocs:[RebirthEoc.id]},
+        {
+            if:{or:[{math:["u_hp('head')","<=","0"]},{math:["u_hp('torso')","<=","0"]}]},
+            then:[],
+            else:["u_prevent_death"]
+        }]
+    }
+    const AvatarDeathPrev:Eoc = {
+        id:SNDef.genEocID(`${UID}_AvatarDeathPrev`),
+        type:'effect_on_condition',
+        eoc_type: "PREVENT_DEATH",
+        condition:"u_is_avatar",
+        effect:[{run_eocs:[DeathPrev.id]}]
+    };
+    const NpcDeathPrev:Eoc = {
+        id:SNDef.genEocID(`${UID}_NpcDeathPrev`),
+        type:'effect_on_condition',
+        eoc_type: "EVENT",
+        required_event: "character_dies",
+        condition:"u_is_npc",
+        effect:[{run_eocs:[DeathPrev.id]}]
+    }
+    //#endregion 死亡保护
 
     //出生点设置
-    const SetSpawnLocEoc:Eoc=SNDef.genActEoc(`${UID}_SpawnLocSet`,[
-        {u_location_variable:{global_val:SPAWN_LOC_ID}},
-    ]);
-    dm.addInvokeID('GameStart',0,SetSpawnLocEoc.id);
+    const SetSpawnLocEoc:Eoc = {
+        id:SNDef.genEocID(`${UID}_SpawnLocSet`),
+        type:'effect_on_condition',
+        eoc_type:'EVENT',
+        required_event:'game_start',
+        effect:[{u_location_variable:{global_val:SPAWN_LOC_ID}},]
+    }
 
     //初始化
     const init:Eoc = {
         id:SNDef.genEocID(`${UID}_Init`),
-        eoc_type:"ACTIVATION",
-        type:"effect_on_condition",
+        type:'effect_on_condition',
+        eoc_type:'EVENT',
+        required_event:'game_begin',
         effect:[
             {math:[JM.spellLevel('u',`'${GatherNpcSpell.id}'`),'=','0']},
             {math:[JM.spellLevel('u',`'${RecallNpcSpell.id}'`),'=','0']},
         ]
     }
-    dm.addInvokeID("GameBegin",0,init.id);
 
     //#region 开关
     //启用保护
@@ -215,11 +264,14 @@ export async function buildProtect(dm:DataManager){
     //#endregion
 
     dm.addData([
+        AvatarDeathPrev,NpcDeathPrev,DeathPrev,RebirthEoc,
         ProtectMut,Weak,
-        teleportToSpawn,teleportToPos,RebirthEoc,
+        teleportToSpawn,teleportToPos,
         SetSpawnLocEoc,StartProtectEoc,StopProtectEoc,talkTopic,
         GatherNpcEoc,GatherNpcSpell,
         RecallNpcEoc,RecallNpcSpell,
         init,
-    ],'Strength','Protect.json');
+    ],'SpawnPoint','Protect.json');
+
+    dm.addData([modinfo],'SpawnPoint','modinfo');
 }

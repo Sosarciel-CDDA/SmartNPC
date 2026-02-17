@@ -1,5 +1,5 @@
 import { TalkTopic } from "@sosarciel-cdda/schema";
-import { CombatRuleTopicID } from "../Define";
+import { CombatRuleTopicID } from "../../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 //战斗对话
