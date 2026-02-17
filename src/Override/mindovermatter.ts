@@ -1,4 +1,5 @@
 import { DataManager } from "@sosarciel-cdda/event";
+import path from 'pathe';
 
 const mom = [
     {
@@ -56,6 +57,6 @@ const mom = [
 ];
 
 
-export const buildMomOverride = (dm: DataManager) => {
-    dm.addData([...mom], "mod_interactions", "mindovermatter", "Override");
+export const buildMomOverride = (dm: DataManager,...outpath:string[]) => {
+    dm.addData([...mom], path.join(...outpath), "mod_interactions", "mindovermatter", "Override");
 };

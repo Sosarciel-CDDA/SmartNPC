@@ -1,5 +1,5 @@
 //data/mods/Xedra_Evolved/mutations
-
+import path from 'pathe';
 import { DataManager } from "@sosarciel-cdda/event";
 
 //移除施法
@@ -24,6 +24,6 @@ const xedra = [
     },
 ];
 
-export const buildXedraOverride = (dm: DataManager) => {
-    dm.addData([...xedra], "mod_interactions", "xedra_evolved", "Override");
+export const buildXedraOverride = (dm: DataManager,...outpath:string[]) => {
+    dm.addData([...xedra], path.join(...outpath),"mod_interactions", "xedra_evolved", "Override");
 };

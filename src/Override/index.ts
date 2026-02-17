@@ -6,9 +6,9 @@ import { buildMomOverride } from "./mindovermatter";
 
 
 
-export const buildOverride = async (dm:DataManager)=>{
+export const buildOverride = async (dm:DataManager,...outapth:string[])=>{
     await Promise.all([
-        buildXedraOverride(dm),
-        buildMomOverride(dm),
+        buildXedraOverride(dm,...outapth),
+        buildMomOverride(dm,...outapth),
     ]);
 }
