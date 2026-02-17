@@ -1,7 +1,7 @@
 import { DataManager } from "@sosarciel-cdda/event";
-import { Effect, Eoc, JM, listCtor, ModInfo, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { Effect, Eoc, JM, listCtor, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SNDef } from "@/src/Define";
-import { CommonModinfo, CONTROL_MAGIC_TYPE_ID, EOC_FULL_RECIVERY } from "@/src/Submod/Common";
+import { CONTROL_MAGIC_TYPE_ID, EOC_FULL_RECIVERY } from "@/src/Submod/Common";
 
 const IslandModId = "skyisland";
 const IslandModOrigLocId = 'OM_HQ_origin';
@@ -53,21 +53,8 @@ const isVaildPtr = `${UID}_IsVaildPtr`;
 const inListIdx  = `${UID}_InListIdx`;
 
 
-const modinfo:ModInfo = {
-    "type": "MOD_INFO",
-    id:"smartnpc-spawnpoint",
-    name:"SmartNpc-SpawnPoint",
-    "authors": ["zwa73"],
-    "maintainers": ["zwa73"],
-    "description": "增加对npc的召集/召回法术, 设置启用重生点的npc与玩家可在死亡时传送至重生点复活",
-    "category": "other",
-    "dependencies": ["dda",CommonModinfo.id]
-}
-
-
-
 //npc保护
-export async function buildSpawnPoint(dm:DataManager){
+export async function buildProtect(dm:DataManager){
 
     //#region 召集
     //传送到出生点
@@ -271,7 +258,5 @@ export async function buildSpawnPoint(dm:DataManager){
         GatherNpcEoc,GatherNpcSpell,
         RecallNpcEoc,RecallNpcSpell,
         init,
-    ],'SpawnPoint','Protect.json');
-
-    dm.addData([modinfo],'SpawnPoint','modinfo');
+    ],'SpawnPoint','Protect');
 }
