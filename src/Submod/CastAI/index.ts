@@ -19,7 +19,8 @@ export const CastAIModInfo:ModInfo = {
     "maintainers": ["zwa73"],
     "description": "SmartNpc的施法AI",
     "category": "other",
-    "dependencies": ["dda",CommonModinfo.id]
+    "dependencies": ["dda",CommonModinfo.id],
+    "conflicts": [ "smartnpc" ],
 }
 
 export const buildCastAI = async (dm:DataManager)=>{

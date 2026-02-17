@@ -11,7 +11,8 @@ const modinfo:ModInfo = {
     "maintainers": ["zwa73"],
     "description": "添加一个NPC[施法]对话下可用的64秒CD短距传送法术",
     "category": "other",
-    "dependencies": ["dda",CastAIModInfo.id]
+    "dependencies": ["dda",CastAIModInfo.id],
+    "conflicts": [ "smartnpc" ],
 }
 
 export const buildTacticalTransfer = async (dm:DataManager)=>{

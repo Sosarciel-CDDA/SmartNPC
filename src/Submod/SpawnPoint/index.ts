@@ -14,7 +14,8 @@ const modinfo:ModInfo = {
     "maintainers": ["zwa73"],
     "description": "增加对npc的召集/召回法术, 设置启用重生点的npc与玩家可在死亡时传送至重生点复活",
     "category": "other",
-    "dependencies": ["dda",CommonModinfo.id]
+    "dependencies": ["dda",CommonModinfo.id],
+    "conflicts": [ "smartnpc" ],
 }
 export const buildSpawnPoint = async (dm:DataManager)=>{
     dm.addData([modinfo],"SpawnPoint","modinfo");

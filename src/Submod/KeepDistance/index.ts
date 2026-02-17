@@ -11,7 +11,8 @@ export const KeepDistanceModinfo:ModInfo = {
     "maintainers": ["zwa73"],
     "description": "添加一个位于[战斗]对话下的选项, 使NPC与怪物保持距离",
     "category": "other",
-    "dependencies": ["dda",CastAIModInfo.id]
+    "dependencies": ["dda",CastAIModInfo.id],
+    "conflicts": [ "smartnpc" ],
 }
 
 export const buildKeepDistance = async (dm:DataManager)=>{

@@ -19,7 +19,8 @@ export const CommonModinfo:ModInfo = {
     "maintainers": ["zwa73"],
     "description": "SmartNpc共用依赖",
     "category": "other",
-    "dependencies": ["dda"]
+    "dependencies": ["dda"],
+    "conflicts": [ "smartnpc" ],
 }
 
 export async function buildCommon(dm:DataManager){
