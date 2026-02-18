@@ -11,17 +11,17 @@ export * from './Interface';
 export * from './DefineCastCondition';
 
 
-export const CastAIModInfo:ModInfo = {
-    "type": "MOD_INFO",
-    id:"smartnpc-castai",
-    name:"SmartNpc-CastAI",
-    "authors": ["zwa73"],
-    "maintainers": ["zwa73"],
-    "description": "SmartNpc的施法AI",
-    "category": "other",
-    "dependencies": ["dda",CommonModinfo.id],
-    "conflicts": [ "smartnpc" ],
-}
+export const CastAIModInfo: ModInfo = {
+    type: "MOD_INFO",
+    id: "smartnpc-castai",
+    name: "SmartNpc-CastAI",
+    authors: ["zwa73"],
+    maintainers: ["zwa73"],
+    description: "SmartNpc的施法AI",
+    category: "other",
+    dependencies: ["dda", CommonModinfo.id],
+    conflicts: ["smartnpc"],
+};
 
 export const buildCastAI = async (dm:DataManager)=>{
     dm.addData([CastAIModInfo],"CastAI",'modinfo');

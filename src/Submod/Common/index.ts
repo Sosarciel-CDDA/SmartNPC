@@ -11,17 +11,17 @@ export * from "./UtilTopic";
 export * from "./MathFunc";
 export * from "./Other";
 
-export const CommonModinfo:ModInfo = {
-    "type": "MOD_INFO",
-    id:"smartnpc-common",
-    name:"SmartNpc-Common",
-    "authors": ["zwa73"],
-    "maintainers": ["zwa73"],
-    "description": "SmartNpc共用依赖",
-    "category": "other",
-    "dependencies": ["dda"],
-    "conflicts": [ "smartnpc" ],
-}
+export const CommonModinfo: ModInfo = {
+    type: "MOD_INFO",
+    id: "smartnpc-common",
+    name: "SmartNpc-Common",
+    authors: ["zwa73"],
+    maintainers: ["zwa73"],
+    description: "SmartNpc共用依赖",
+    category: "other",
+    dependencies: ["dda"],
+    conflicts: ["smartnpc"],
+};
 
 export async function buildCommon(dm:DataManager){
     dm.addData([CommonModinfo],"Common","modinfo");
