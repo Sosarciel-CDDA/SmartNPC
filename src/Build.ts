@@ -2,6 +2,7 @@ import { DataManager } from "@sosarciel-cdda/event";
 import { DATA_PATH, OUT_PATH } from "./Define";
 import { buildOverride } from "./Override";
 import { buildSubmod } from "./Submod";
+import { buildMonster } from "./Monster";
 
 
 
@@ -18,6 +19,6 @@ export async function build(){
     });
     await buildSubmod(AIDm);
     await buildOverride(AIDm);
-    //await buildMonster(AIDm);
+    await buildMonster(AIDm);
     await AIDm.saveAllData();
 }

@@ -64,6 +64,8 @@ const WrapperMonster:Monster = {
     speed:1000,
     symbol:'O',
     special_attacks:[{
+        type:"leap",
+        max_range: 1,
         allow_no_target:true,
         range:100,
         eoc:[WrapperEoc.id],
