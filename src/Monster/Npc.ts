@@ -1,5 +1,5 @@
-import { Eoc, Monster, Mutation, NpcClass, NpcInstance } from "@sosarciel-cdda/schema";
-import { SNDef } from "../Define";
+import { Eoc, Monster, Mutation, NpcClass, NpcInstance, Spell } from "@sosarciel-cdda/schema";
+import { CON_SPELL_FLAG, SNDef } from "../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
 
@@ -47,7 +47,21 @@ const WrapperNpc:NpcInstance = {
 const WrapperEoc:Eoc = {
     id:SNDef.genEocID('WrapperEoc'),
     type:"effect_on_condition",
-    effect:[ {u_spawn_npc:WrapperNpc.id} , 'u_die'],
+    effect:[
+        {u_spawn_npc:WrapperNpc.id,real_count:1},
+    ],
+}
+
+const WrapperSpell:Spell = {
+    id:SNDef.genSpellID('WrapperSpell'),
+    type:"SPELL",
+    name:"WrapperSpell",
+    description:"SmartNPC的包装法术",
+    effect:"effect_on_condition",
+    effect_str:WrapperEoc.id,
+    valid_targets:["self","ground"],
+    flags: [...CON_SPELL_FLAG],
+    shape:"blast"
 }
 
 const WrapperMonster:Monster = {
@@ -63,15 +77,14 @@ const WrapperMonster:Monster = {
     weight:'1 g',
     speed:1000,
     symbol:'O',
-    special_attacks:[{
-        type:"leap",
-        max_range: 1,
-        allow_no_target:true,
-        range:100,
-        eoc:[WrapperEoc.id],
-    }]
+    special_attacks: [ [ "DISAPPEAR", 1 ] ],
+    death_function: {
+        message:"O",
+        corpse_type:"NO_CORPSE",
+        effect:{hit_self:true,id:WrapperSpell.id}
+    }
 }
 
 export const buildNpcMonster = (dm:DataManager)=>{
-    dm.addData([MonsterMut,WrapperNpcClass,WrapperNpc,WrapperEoc,WrapperMonster],'Monster');
+    dm.addData([MonsterMut,WrapperNpcClass,WrapperNpc,WrapperEoc,WrapperSpell,WrapperMonster],'Monster');
 }
