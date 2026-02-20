@@ -48,7 +48,7 @@ const WrapperEoc:Eoc = {
     id:SNDef.genEocID('WrapperEoc'),
     type:"effect_on_condition",
     effect:[
-        {u_spawn_npc:WrapperNpc.id,real_count:1},
+        {npc_spawn_npc:WrapperNpc.id,real_count:1},
     ],
 }
 
