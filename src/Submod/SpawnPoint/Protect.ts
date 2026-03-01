@@ -1,5 +1,5 @@
-import { DataManager } from "@sosarciel-cdda/event";
-import { Effect, Eoc, JM, listCtor, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
+import { DataManager, listCtor } from "@sosarciel-cdda/event";
+import { Effect, Eoc, JM, Mutation, Spell, TalkTopic } from "@sosarciel-cdda/schema";
 import { CON_SPELL_FLAG, SNDef } from "@/src/Define";
 import { CONTROL_MAGIC_TYPE_ID, EOC_FULL_RECIVERY } from "@/src/Submod/Common";
 
