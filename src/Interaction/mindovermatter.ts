@@ -57,6 +57,6 @@ const mom = [
 ];
 
 
-export const buildMomOverride = (dm: DataManager,...outpath:string[]) => {
+export const buildMomInteraction = (dm: DataManager,...outpath:string[]) => {
     dm.addData([...mom], path.join(...outpath), "mod_interactions", "mindovermatter", "Override");
 };

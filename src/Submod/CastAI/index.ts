@@ -3,7 +3,7 @@ import { createCastAITalkTopic } from './TalkTopic';
 import { buildSkill } from './CastAI';
 import { CommonModinfo } from '../Common';
 import { ModInfo } from '@sosarciel-cdda/schema';
-import { buildOverride } from '@/src/Override';
+import { buildInteraction } from '@/src/Interaction';
 import { buildStaticEffect } from './StaticEffect';
 
 export * from './CastAI';
@@ -28,6 +28,6 @@ export const buildCastAI = async (dm:DataManager)=>{
     await buildSkill(dm);
     //创建对话
     await createCastAITalkTopic(dm);
-    await buildOverride(dm,"CastAI");
+    await buildInteraction(dm,"CastAI");
     await buildStaticEffect(dm);
 }

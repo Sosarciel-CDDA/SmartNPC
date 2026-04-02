@@ -24,6 +24,6 @@ const xedra = [
     },
 ];
 
-export const buildXedraOverride = (dm: DataManager,...outpath:string[]) => {
+export const buildXedraInteraction = (dm: DataManager,...outpath:string[]) => {
     dm.addData([...xedra], path.join(...outpath),"mod_interactions", "xedra_evolved", "Override");
 };
