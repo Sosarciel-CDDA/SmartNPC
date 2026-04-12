@@ -3,62 +3,77 @@
     table: {
         //夜视术
         //给你在黑暗中视物的能力。
+        // 分析: effect=attack + effect_str=night_sight(夜视效果) + 无伤害 + valid_targets=self + duration=3min-3h → AlawaySelfBuff
         night_sight: null,
 
         //恐惧重担
         //你周围的一切都面临着生存恐惧，因此行动缓慢。包括那些你通常不认为会有生存恐惧的东西，比如不死生物。目标四肢周围的空气急剧冷却。等级越高，范围越大，影响越久。
+        // 分析: effect=attack + effect_str=effect_dread_weight + 正数伤害(10-30) + valid_targets=hostile + range=5-20 + aoe=2-20 → TargetDebuff (减速效果)
         dread_weight: null,
 
         //模糊术
         //你身体的边缘看起来模糊扭曲，增加了你在一个回合中所能闪避攻击的次数。
+        // 分析: effect=spawn_item + effect_str=blurred_aura + valid_targets=self + duration=3.5min-15min → 特殊: 生成物品法术，暂不处理
         blur: null,
 
         //伤害转移
         //让你将一些伤害从自身转移到其他人身上。通常人们不喜欢这个法术，但现在谁在乎呢？
+        // 分析: effect=attack + 无effect_str + 正数伤害(5-25) + valid_targets=hostile + range=1 + 有extra_effects治疗自己 → TargetDamage (带自愈效果)
         damage_transfer: null,
 
         //Damage Transfer Heal
         //A spell that will heal you for a bit.  You can see it only in debug mode.
+        // 分析: effect=attack + 负数伤害(-2到-12,即治疗) + valid_targets=self + 内部法术 → 特殊: 内部法术，暂不处理
         damage_transfer_heal: null,
 
         //炎爆传送
         //将你从一个地方传送到另一个地方，并在终点处造成巨大的火焰爆炸。
+        // 分析: effect=short_range_teleport + valid_targets=ground + 有extra_effects → 特殊: 传送法术，暂不处理
         fire_teleport: null,
 
         //Pyroportation Explosion
         //Makes a pretty big fire explosion around you.
+        // 分析: effect=attack + 正数伤害(30-80) + valid_targets=hostile,ground + aoe=3-6 + 内部法术 → 特殊: 内部法术，暂不处理
         fire_teleport_explosion: null,
 
         //召唤水仙
         //几名水仙战士出现在你身边。他们会为你而战，但一天后便会消散。
+        // 分析: effect=effect_on_condition + effect_str=EOC_CALL_DAFFODIL + valid_targets=self → 特殊: effect_on_condition暂不处理
         call_daffodil: null,
 
         //召唤水仙
         //Hidden spell that spawns the daffodil
+        // 分析: effect=summon + effect_str=mon_fetch_daffodil_warrior + valid_targets=ground + duration=24h → BattleSummonMonster
         call_daffodil_real: null,
 
         //Boann's retaliation targeting
         //Intended to be hidden.  This is how Boann teleport away monsters that hit her.
+        // 分析: effect=attack + effect_str=boann_retaliation_mark + 内部法术 → 特殊: 内部法术，暂不处理
         boann_retaliation_mark: null,
 
         //Boann's retaliation
         //Intended to be hidden.  Makes Boann teleport the player away, spawns some huntsmen and hounds then cure all her ailments and injuries if she survives being hit by the player.
+        // 分析: effect=effect_on_condition + effect_str=EOC_BOANN_RETALIATION + 内部法术 → 特殊: 内部法术，暂不处理
         boann_retaliation: null,
 
         //Boann Heal
         //Will heal injuries all over Boann's body.
+        // 分析: effect=attack + 负数伤害(-300,即治疗) + valid_targets=self + 内部法术 → 特殊: 内部法术，暂不处理
         boann_heal: null,
 
         //Boann's retaliation against monsters check
         //Boann's about to retaliate against monsters, deleting them as they are "teleported" away.  You shouldn't see this
+        // 分析: effect=attack + 无effect_str + 无伤害 + 内部法术 → 特殊: 内部法术，暂不处理
         boann_banish_monsters_check: null,
 
         //Boann's retaliation against monsters
         //Boann's retaliation against monsters, deleting them as they are "teleported" away.  You shouldn't see this
+        // 分析: effect=attack + 无effect_str + 无伤害 + 内部法术 → 特殊: 内部法术，暂不处理
         boann_banish_monsters: null,
 
         //Banish Self
         //Banish the caster, killing them and destroying their body.  Having this spell is a bug, and casting it would be suicidal.
+        // 分析: effect=banishment + 正数伤害(9999) + valid_targets=self → 特殊: 自杀法术，暂不处理
         xedra_self_banish: null,
     }
 }
