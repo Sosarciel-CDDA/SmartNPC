@@ -170,7 +170,7 @@
         //在目标周围创造一个坚不可摧的力场囚笼，令其在法术持续期间无法移动或做出任何行动。
         //此囚笼内外隔绝，身处其中的目标亦会免疫一切伤害。
         //金刚之牢无法被驱散。
-        magus_cannot_move_attack_or_damage_target: null,
+        magus_cannot_move_attack_or_damage_target: "ControlCast",
 
         //斥力波
         //释放一道力场波，将附近所有目标从你身边震开。
