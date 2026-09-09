@@ -15,7 +15,7 @@ const Courage:Effect={
     ],
 }
 
-//Npc属性优化
+//Npc属性强化
 const SmartNpcMut:Mutation={
     type:'mutation',
     id:SNDef.genMutationID('SmartNpc'),
@@ -25,8 +25,8 @@ const SmartNpcMut:Mutation={
         "NO_HEDGE_MAGICK", "NO_VAMPIRE_BLOOD_POWERS",
         "NO_WEREWOLF_POWERS"
     ] as any,//关闭自动施法
-    name:"NPC属性优化",
-    description:"NPC属性优化",
+    name:"NPC属性强化",
+    description:"NPC属性强化",
     points:0,
     purifiable:false,
     valid:false,
@@ -97,6 +97,16 @@ const resetNeed:Eoc = {
         { math: [JM.val('u',`'thirst'`),'=','0'] },
         { math: [JM.val('u',`'sleepiness'`),'=','0'] },
         { math: [JM.val('u',`'sleep_deprivation'`),'=','0'] },
+
+        {if:{math:[JM.vitamin('u',`'iron'`),'<','0']},then:[
+            { math: [JM.vitamin('u',`'iron'`),'=','0']},
+        ]},
+        {if:{math:[JM.vitamin('u',`'calcium'`),'<','0']},then:[
+            { math: [JM.vitamin('u',`'calcium'`),'=','0']},
+        ]},
+        {if:{math:[JM.vitamin('u',`'vitC'`),'<','0']},then:[
+            { math: [JM.vitamin('u',`'vitC'`),'=','0']},
+        ]},
     ],
     condition:'u_is_npc'
 }

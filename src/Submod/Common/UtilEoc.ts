@@ -1,4 +1,4 @@
-import { Eoc } from "@sosarciel-cdda/schema";
+import { Eoc, JM } from "@sosarciel-cdda/schema";
 import { SNDef } from "../../Define";
 import { DataManager } from "@sosarciel-cdda/event";
 
@@ -23,6 +23,17 @@ const FullRecivery: Eoc = {
         { math: ["u_val('rad')", "=", "0" ] },
         { math: ["u_val('pkill')", "=", "0" ] },
         { math: ["u_hp('ALL')", "=", "999"] },
+
+        {if:{math:[JM.vitamin('u',`'iron'`),'<','0']},then:[
+            { math: [JM.vitamin('u',`'iron'`),'=','0']},
+        ]},
+        {if:{math:[JM.vitamin('u',`'calcium'`),'<','0']},then:[
+            { math: [JM.vitamin('u',`'calcium'`),'=','0']},
+        ]},
+        {if:{math:[JM.vitamin('u',`'vitC'`),'<','0']},then:[
+            { math: [JM.vitamin('u',`'vitC'`),'=','0']},
+        ]},
+
         //{ u_set_hp: 1000, max: true},
         { u_add_effect: "cureall", duration: "1 s", intensity: 1 },
         { u_add_effect: "panacea", duration: "30 s", intensity: 1 },

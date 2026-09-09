@@ -36,6 +36,8 @@ const useCost = (costType:SpellEnergySource,num:string):EocEffect[]=>{
             return hplist.map(v=>({math:[v,"-=",`(${num})/6`]}))
         }
         case "STAMINA":{
+            //因设为1/2魔力后 获得3高变异后的耐力系法术显得过强
+            //所以采用1/1魔力并给予 6000max + 0.5Regen
             return [{math:["u_val('mana')",'-=',num]}]
         }
         default:{
